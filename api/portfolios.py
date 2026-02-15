@@ -1,0 +1,371 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
+from typing import List, Optional
+from db.connection import get_connection
+from api.auth import get_current_user
+import datetime
+
+router = APIRouter()
+
+# --- Models ---
+class PortfolioCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class PortfolioItemAdd(BaseModel):
+    ticker: str
+
+class PortfolioMetadata(BaseModel):
+    id: int
+    name: str
+    description: Optional[str]
+    created_at: str
+    holdings_count: Optional[int] = 0
+
+class PortfolioIntelligence(BaseModel):
+    id: int
+    name: str
+    description: Optional[str]
+    
+    # Aggregate Stats
+    risk_score: int
+    risk_delta: int
+    active_flags_count: int
+    escalating_count: int
+    
+    # Holdings
+    holdings: List[dict]
+    
+    # Escalations (Feed)
+    escalations: List[dict]
+    
+    # Concentration
+    concentration: List[dict]
+
+# --- Endpoints ---
+
+@router.get("/", response_model=List[PortfolioMetadata])
+def list_portfolios(current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT p.id, p.name, p.description, p.created_at, COUNT(pi.id) as holdings_count
+        FROM portfolios p
+        LEFT JOIN portfolio_items pi ON p.id = pi.portfolio_id
+        WHERE p.user_id = %s
+        GROUP BY p.id
+    """, (current_user["id"],))
+    portfolios = cursor.fetchall()
+    # Convert datetime to string
+    for p in portfolios:
+        p["created_at"] = str(p["created_at"])
+    
+    cursor.close()
+    conn.close()
+    return portfolios
+
+@router.post("/", response_model=PortfolioMetadata)
+def create_portfolio(item: PortfolioCreate, current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "INSERT INTO portfolios (user_id, name, description) VALUES (%s, %s, %s)",
+            (current_user["id"], item.name, item.description)
+        )
+        conn.commit()
+        pid = cursor.lastrowid
+        return {
+            "id": pid,
+            "name": item.name,
+            "description": item.description,
+            "created_at": str(datetime.datetime.now())
+        }
+    finally:
+        cursor.close()
+        conn.close()
+
+@router.get("/{portfolio_id}", response_model=PortfolioIntelligence)
+def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    # 1. Verify Ownership
+    cursor.execute("SELECT * FROM portfolios WHERE id = %s AND user_id = %s", (portfolio_id, current_user["id"]))
+    pf = cursor.fetchone()
+    if not pf:
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+        
+    # 2. Get Holdings
+    cursor.execute("""
+        SELECT c.id, c.ticker, c.name, c.sector 
+        FROM portfolio_items pi
+        JOIN companies c ON pi.company_id = c.id
+        WHERE pi.portfolio_id = %s
+    """, (portfolio_id,))
+    companies = cursor.fetchall()
+    
+    # --- Intelligence & Intelligence Logic ---
+    
+    # 1. Determine Quarters
+    today = datetime.date.today()
+    current_month = today.month
+    q_start_month = ((current_month - 1) // 3) * 3 + 1
+    current_quarter_start = datetime.date(today.year, q_start_month, 1)
+    previous_quarter_end = current_quarter_start - datetime.timedelta(days=1)
+    
+    # Helpers
+    weights = {"Critical": 15, "High": 10, "Medium": 5, "Low": 2}
+    
+    holdings = []
+    total_current_risk = 0
+    total_previous_risk = 0 # To calc delta
+    total_flags_active = 0
+    escalating = []
+    concentration_map = {}
+    
+    for c in companies:
+        # Fetch ALL flags to determine history vs current
+        cursor.execute("""
+            SELECT flag_name, severity, period_type, created_at 
+            FROM flags 
+            WHERE company_id = %s
+            ORDER BY created_at DESC
+        """, (c["id"],))
+        all_flags = cursor.fetchall()
+        
+        # --- Company Risk Calculation ---
+        c_current_score = 0
+        c_previous_score = 0
+        c_active_flags_count = len(all_flags)
+        c_drivers = {}
+        
+        # Latest Date
+        latest_flag_date = all_flags[0]["created_at"] if all_flags else None
+        
+        for f in all_flags:
+            # Parse Date matches DB types (datetime or date) or string
+            f_date_raw = f["created_at"]
+            if isinstance(f_date_raw, datetime.datetime):
+                f_date = f_date_raw.date()
+            elif isinstance(f_date_raw, datetime.date):
+                f_date = f_date_raw
+            elif isinstance(f_date_raw, str):
+                # Handle string format (assuming ISO YYYY-MM-DD or similar)
+                try:
+                    # Take first 10 chars for YYYY-MM-DD
+                    f_date = datetime.datetime.strptime(f_date_raw[:10], "%Y-%m-%d").date()
+                except ValueError:
+                    # Fallback to today if parsing fails to avoid crash
+                    f_date = datetime.date.today()
+            else:
+                f_date = datetime.date.today()
+
+            # Severity Weight
+            sev = f["severity"].capitalize() if f["severity"] else "Medium"
+            w = weights.get(sev, 5) # Default 5 (Medium)
+            
+            # 1. Current Score (All Active Flags)
+            c_current_score += w
+            
+            # 2. Previous Score (Only flags existing BEFORE this quarter)
+            if f_date <= previous_quarter_end:
+                c_previous_score += w
+            
+            # 3. Escalations (New This Quarter)
+            if f_date >= current_quarter_start:
+                urgency = "Normal"
+                event_type = "Flag"
+                
+                # Type 3: Severity Impact (New Critical Flag)
+                if f["severity"] == "CRITICAL":
+                    urgency = "High"
+                    
+                escalating.append({
+                    "ticker": c["ticker"],
+                    "flag": f["flag_name"],
+                    "severity": f["severity"],
+                    "date": str(f["created_at"]),
+                    "is_new": True,
+                    "event_type": event_type,
+                    "urgency": urgency
+                })
+
+            # 4. Driver Mapping
+            driver = "Operational"
+            fn = f["flag_name"] or ""
+            if "Interest" in fn or "Debt" in fn: driver = "Balance Sheet Stress"
+            elif "Profit" in fn or "Cash" in fn or "Margin" in fn: driver = "Earnings Quality"
+            elif "Governance" in fn or "Pledge" in fn: driver = "Governance"
+            elif "Valuation" in fn: driver = "Valuation"
+            
+            c_drivers[driver] = c_drivers.get(driver, 0) + 1
+
+        # Cap Score
+        c_current_score = min(c_current_score, 100)
+        c_previous_score = min(c_previous_score, 100)
+        
+        # Delta & Momentum
+        delta = c_current_score - c_previous_score
+        
+        if delta > 0: momentum = "Increasing"
+        elif delta < 0: momentum = "Improving"
+        if delta > 0: momentum = "Increasing"
+        elif delta < 0: momentum = "Improving"
+        else: momentum = "Stable"
+        
+        # Type 2: Risk Jump (Sudden Deterioration)
+        if delta > 8:
+            escalating.append({
+                "ticker": c["ticker"],
+                "flag": f"Risk Score Jump (+{delta})",
+                "severity": "CRITICAL",
+                "date": str(datetime.date.today()), # Detected now
+                "is_new": True,
+                "event_type": "Jump",
+                "urgency": "High"
+            })
+        
+        # Primary Driver
+        primary_driver = max(c_drivers, key=c_drivers.get) if c_drivers else "None"
+        if primary_driver != "None":
+            concentration_map[primary_driver] = concentration_map.get(primary_driver, 0) + 1
+            
+        holdings.append({
+            "ticker": c["ticker"],
+            "name": c["name"],
+            "sector": c["sector"],
+            "risk_score": c_current_score,
+            "risk_delta": delta,
+            "momentum": momentum,
+            "active_flags": c_active_flags_count,
+            "primary_driver": primary_driver,
+            "latest_flag_date": str(latest_flag_date) if latest_flag_date else None
+        })
+        
+        total_current_risk += c_current_score
+        total_previous_risk += c_previous_score
+        total_flags_active += c_active_flags_count
+        
+    # --- Portfolio Aggregates ---
+    
+    # 1. Avg Risk Score
+    if companies:
+        pf_current_score = round(total_current_risk / len(companies))
+        pf_previous_score = round(total_previous_risk / len(companies))
+    else:
+        pf_current_score = 0
+        pf_previous_score = 0
+        
+    pf_delta = pf_current_score - pf_previous_score
+
+    # Concentration List
+    concentration_list = []
+    for k, v in concentration_map.items():
+        pct = round((v / len(companies)) * 100) if companies else 0
+        concentration_list.append({"driver": k, "percent": pct, "count": v})
+    concentration_list.sort(key=lambda x: x["percent"], reverse=True)
+
+    cursor.close()
+    conn.close()
+    
+    # Sort Escalations by Date DESC
+    escalating.sort(key=lambda x: x["date"], reverse=True)
+    
+    return {
+        "id": pf["id"],
+        "name": pf["name"],
+        "description": pf["description"],
+        "risk_score": pf_current_score,
+        "risk_delta": pf_delta,
+        "active_flags_count": total_flags_active,
+        "escalating_count": len(escalating),
+        "holdings": holdings,
+        "escalations": escalating, # Now contains real recent flags
+        "concentration": concentration_list
+    }
+
+@router.post("/{portfolio_id}/items")
+def add_portfolio_item(portfolio_id: int, item: PortfolioItemAdd, current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # Verify Owner
+    cursor.execute("SELECT id FROM portfolios WHERE id=%s AND user_id=%s", (portfolio_id, current_user["id"]))
+    if not cursor.fetchone():
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+        
+    # Find Company
+    cursor.execute("SELECT id FROM companies WHERE ticker=%s", (item.ticker,))
+    company = cursor.fetchone()
+    if not company:
+         raise HTTPException(status_code=404, detail="Company not found")
+         
+    try:
+        cursor.execute(
+            "INSERT INTO portfolio_items (portfolio_id, company_id) VALUES (%s, %s)",
+            (portfolio_id, company[0])
+        )
+        conn.commit()
+    except Exception as e:
+        # Ignore duplicate
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return {"status": "added", "ticker": item.ticker}
+
+
+@router.delete("/{portfolio_id}/items/{ticker}")
+def remove_portfolio_item(portfolio_id: int, ticker: str, current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # Verify Owner
+    cursor.execute("SELECT id FROM portfolios WHERE id=%s AND user_id=%s", (portfolio_id, current_user["id"]))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+        
+    try:
+        # Get Company ID
+        cursor.execute("SELECT id FROM companies WHERE ticker=%s", (ticker,))
+        company = cursor.fetchone()
+        if company:
+            cursor.execute(
+                "DELETE FROM portfolio_items WHERE portfolio_id=%s AND company_id=%s",
+                (portfolio_id, company[0])
+            )
+            conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return {"status": "removed", "ticker": ticker}
+
+@router.delete("/{portfolio_id}")
+def delete_portfolio(portfolio_id: int, current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # Verify Owner
+    cursor.execute("SELECT id FROM portfolios WHERE id=%s AND user_id=%s", (portfolio_id, current_user["id"]))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+        
+    try:
+        # Delete items first (foreign key cascade might handle this but explicit is safer/clearer)
+        cursor.execute("DELETE FROM portfolio_items WHERE portfolio_id=%s", (portfolio_id,))
+        # Delete portfolio
+        cursor.execute("DELETE FROM portfolios WHERE id=%s", (portfolio_id,))
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return {"status": "deleted", "id": portfolio_id}
+

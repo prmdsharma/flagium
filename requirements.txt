@@ -1,0 +1,14 @@
+mysql-connector-python
+pandas
+openpyxl
+lxml
+requests
+tabulate
+beautifulsoup4
+playwright
+fastapi
+uvicorn[standard]
+PyJWT
+passlib[bcrypt]
+python-multipart
+bcrypt==3.2.2

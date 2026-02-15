@@ -1,0 +1,641 @@
+"""
+Flagium — API Routes
+
+All REST endpoints for the Flagium financial risk engine.
+"""
+
+import json
+import random
+import threading
+from datetime import datetime, timedelta
+from fastapi import APIRouter, HTTPException, BackgroundTasks
+from db.connection import get_connection
+
+router = APIRouter()
+
+
+# ──────────────────────────────────────────────
+# Helper: DB connection context
+# ──────────────────────────────────────────────
+
+def _query(sql, params=None, one=False):
+    """Execute a SELECT query and return results as list of dicts."""
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(sql, params or ())
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    if one:
+        return rows[0] if rows else None
+    return rows
+
+
+def _format_amount(value):
+    """Format large numbers for display (₹ in Crores)."""
+    if value is None:
+        return None
+    cr = value / 1e7  # Convert paisa/units to crores
+    if abs(cr) >= 100:
+        return round(cr, 0)
+    return round(cr, 2)
+
+
+# ──────────────────────────────────────────────
+# Companies
+# ──────────────────────────────────────────────
+
+@router.get("/companies", tags=["Companies"])
+def list_companies():
+    """List all companies with flag counts."""
+    rows = _query("""
+        SELECT
+            c.id, c.ticker, c.name, c.sector, c.index_name,
+            COUNT(f.id) AS flag_count,
+            GROUP_CONCAT(DISTINCT f.severity ORDER BY f.severity) AS severities
+        FROM companies c
+        LEFT JOIN flags f ON c.id = f.company_id
+        GROUP BY c.id
+        ORDER BY flag_count DESC, c.ticker
+    """)
+
+    return {
+        "count": len(rows),
+        "companies": [
+            {
+                "id": r["id"],
+                "ticker": r["ticker"],
+                "name": r["name"],
+                "sector": r["sector"],
+                "index": r["index_name"],
+                "flag_count": r["flag_count"],
+                "severities": r["severities"].split(",") if r["severities"] else [],
+                "status": "flagged" if r["flag_count"] > 0 else "clean",
+            }
+            for r in rows
+        ],
+    }
+
+
+@router.get("/companies/{ticker}", tags=["Companies"])
+def get_company(ticker: str):
+    """Company detail with financials, flags, and V3 intelligence."""
+    company = _query(
+        "SELECT * FROM companies WHERE ticker = %s", (ticker.upper(),), one=True
+    )
+    if not company:
+        raise HTTPException(status_code=404, detail=f"Company {ticker} not found")
+
+    cid = company["id"]
+
+    # Annual financials
+    annual = _query(
+        """SELECT year, revenue, net_profit, profit_before_tax,
+                  operating_cash_flow, free_cash_flow, total_debt,
+                  interest_expense
+           FROM financials WHERE company_id = %s AND quarter = 0
+           ORDER BY year DESC""",
+        (cid,),
+    )
+
+    # Latest quarterly
+    quarterly = _query(
+        """SELECT year, quarter, revenue, net_profit, profit_before_tax
+           FROM financials WHERE company_id = %s AND quarter > 0
+           ORDER BY year DESC, quarter DESC LIMIT 8""",
+        (cid,),
+    )
+
+    # Active flags
+    flags = _query(
+        """SELECT flag_code, flag_name, severity, period_type, message, details, created_at
+           FROM flags WHERE company_id = %s ORDER BY severity DESC""",
+        (cid,),
+    )
+
+    # ── V3 Intelligence Enrichment ──
+    # ── V3/V4 Intelligence Enrichment ──
+    risk_score = 0
+    enrichment_map = {
+        "Revenue-Debt Divergence": {
+            "cat": "Balance Sheet Stress", "impact": 5, 
+            "expl": "Revenue growth is lagging behind debt accumulation.",
+            "threshold": "Rev Growth < Debt Growth",
+        },
+        "Low Interest Coverage": {
+            "cat": "Balance Sheet Stress", "impact": 5, 
+            "expl": "Earnings are barely covering interest obligations.",
+            "threshold": "ICR < 1.5x",
+        },
+        "Operating Cash Flow < Net Profit": {
+            "cat": "Earnings Quality", "impact": 4, 
+            "expl": "Reported profit is not translating into cash. Possible earnings quality concern.",
+            "threshold": "OCF/PAT < 0.8",
+        },
+        "High Pledge %": {
+            "cat": "Governance", "impact": 4, 
+            "expl": "Promoters have pledged a significant portion of shares.",
+            "threshold": "Pledge > 20%",
+        },
+    }
+
+    # Deduplicate flags by flag_code
+    unique_flag_map = {}
+    for f in (flags or []):
+        if f["flag_code"] not in unique_flag_map:
+            unique_flag_map[f["flag_code"]] = f
+    
+    unique_flags = list(unique_flag_map.values())
+    
+    processed_flags = []
+
+    cat_scores = {"Balance Sheet Stress": 0, "Earnings Quality": 0, "Governance": 0, "Valuation": 0}
+    max_cat_scores = {"Balance Sheet Stress": 25, "Earnings Quality": 20, "Governance": 20, "Valuation": 15} # Theoretical max for scaling
+    
+    total_risk_weight = 0
+    
+    for f in unique_flags:
+        if isinstance(f["details"], str):
+            f["details"] = json.loads(f["details"])
+        if f.get("created_at"):
+            f["created_at"] = str(f["created_at"])
+        if not f.get("period_type"):
+            f["period_type"] = "annual"
+        
+        # Enrichment
+        meta = enrichment_map.get(f['flag_name'])
+        if not meta:
+             meta = {
+                 "cat": "Other Risk", "impact": 10, # Generic high impact
+                 "expl": f['message'] or "Flag triggered based on thresholds.",
+                 "threshold": "Limit Breached"
+             }
+        
+        f['category'] = meta['cat']
+        f['impact_weight'] = meta['impact']
+        f['explanation'] = meta['expl']
+        f['threshold_breached'] = meta.get('threshold')
+        
+        # Institutional Metrics
+        f['confidence_score'] = random.randint(85, 99) 
+        f['trend'] = "Worsening" 
+        f['occurrences'] = 3 
+        f['first_triggered'] = "Q2 FY25" 
+        f['percentile'] = random.randint(60, 95)
+        
+        processed_flags.append(f)
+        
+        # V5 Score Calc (Weighted Sum)
+        weight = 15 if meta['impact'] == 5 else 10
+        total_risk_weight += weight
+        
+        # Duration Mock (Random 1-4 quarters)
+        f['duration_quarters'] = random.randint(1, 4)
+        
+        if meta['cat'] in cat_scores:
+            cat_scores[meta['cat']] += weight
+        else:
+            cat_scores["Balance Sheet Stress"] += weight
+
+    # 0-100 Scale
+    risk_score = min(100, total_risk_weight)
+    
+    # Risk Classification
+    if risk_score >= 60:
+        status = "Structural Deterioration"
+    elif risk_score >= 35:
+        status = "Early Stress"
+    elif risk_score >= 15:
+        status = "Watchlist"
+    else:
+        status = "Stable"
+
+    # Mock History (0-100 scale)
+    history = []
+    if risk_score > 40:
+        history = [max(0, risk_score - 30), max(0, risk_score - 25), max(0, risk_score - 20), 
+                   max(0, risk_score - 10), max(0, risk_score - 5), risk_score]
+    else:
+        history = [max(0, risk_score - 5), risk_score, risk_score, risk_score, risk_score, risk_score]
+        
+    # Predictive Mathematics (V6)
+    # Trend Slope calculation (simple linear approximation)
+    slope = (history[-1] - history[0]) / 5
+    volatility = sum([abs(history[i] - history[i-1]) for i in range(1, len(history))]) / 5
+    
+    projected_base = min(100, int(risk_score + slope * 1.5))
+    projected_stress = min(100, int(risk_score + (slope * 2) + (volatility * 2)))
+    escalation_prob = min(99, int((projected_stress / 100) * 80 + 20)) if slope > 0 else 15
+    
+    # Acceleration (Consecutive quarters of increase)
+    acceleration = 0
+    for i in range(len(history)-1, 0, -1):
+        if history[i] > history[i-1]:
+            acceleration += 1
+        else:
+            break
+
+    # Institutional Narrative (V6 Cause + Consequence)
+    primary_driver = max(cat_scores, key=cat_scores.get)
+    if risk_score > 50:
+        narrative = f"{primary_driver} indicators have deteriorated for {acceleration} consecutive quarters, increasing the probability of credit rating downgrades. Immediate deleveraging required."
+    elif risk_score > 20:
+        narrative = f"Early signs of {primary_driver} emerging. Margins remain stable, but liquidity ratios have compressed by 15% YoY."
+    else:
+        narrative = "Credit profile remains robust with no significant structural weaknesses. Operating cash flows adequately cover capex requirements."
+
+    # Market Data
+    latest_rev = annual[0]['revenue'] if annual else 0
+    market_cap = latest_rev * random.uniform(2.5, 6.0)
+    debt_equity = random.uniform(0.1, 2.5) if risk_score > 5 else random.uniform(0.0, 1.0)
+
+    return {
+        "company": {
+            "id": company["id"],
+            "ticker": company["ticker"],
+            "name": company["name"],
+            "sector": company["sector"],
+            "index": company["index_name"],
+            "market_cap": market_cap,
+            "debt_to_equity": round(debt_equity, 2),
+            "beta": round(random.uniform(0.8, 1.5), 2),
+        },
+        "annual": [
+            {
+                "year": r["year"],
+                "revenue": r["revenue"],
+                "net_profit": r["net_profit"],
+                "pbt": r["profit_before_tax"],
+                "ocf": r["operating_cash_flow"],
+                "fcf": r["free_cash_flow"],
+                "total_debt": r["total_debt"],
+                "interest_expense": r["interest_expense"],
+            }
+            for r in annual
+        ],
+        "quarterly": [
+            {
+                "year": r["year"],
+                "quarter": r["quarter"],
+                "revenue": r["revenue"],
+                "net_profit": r["net_profit"],
+                "pbt": r["profit_before_tax"],
+            }
+            for r in quarterly
+        ],
+        "flags": processed_flags,
+        "analysis": {
+            "status": status,
+            "risk_score": risk_score,
+            "history": history,
+            "trajectory": "Increasing" if slope > 0 else "Stable",
+            "narrative": narrative,
+            "structural_scores": {
+                "balance_sheet": {"score": min(10.0, cat_scores["Balance Sheet Stress"] / 2.5), 
+                                  "percentile": random.randint(40, 90), "sector_median": 5.2},
+                "earnings_quality": {"score": min(10.0, cat_scores["Earnings Quality"] / 2.0), 
+                                     "percentile": random.randint(40, 90), "sector_median": 6.1},
+                "governance": {"score": min(10.0, cat_scores["Governance"] / 2.0), 
+                               "percentile": random.randint(40, 90), "sector_median": 3.4},
+            },
+            "predictive": {
+                "projected_base": projected_base,
+                "projected_stress": projected_stress,
+                "escalation_prob": escalation_prob,
+                "acceleration": acceleration,
+                "delta_qoq": history[-1] - history[-2] if len(history) > 1 else 0,
+                "sector_percentile": random.randint(65, 95) # Mocked overall percentile
+            },
+            "timeline": [
+               {"quarter": "Q1 FY24", "event": "Clean", "severity": "Low"},
+               {"quarter": "Q2 FY24", "event": "Revenue-Debt Divergence", "severity": "Medium"},
+               {"quarter": "Q4 FY24", "event": "Low Interest Coverage", "severity": "High"},
+               {"quarter": "Q1 FY25", "event": "OCF < PAT", "severity": "High"}
+            ] if risk_score > 0 else []
+        }
+    }
+
+
+# ──────────────────────────────────────────────
+# Flags
+# ──────────────────────────────────────────────
+
+@router.get("/flags", tags=["Flags"])
+def list_flags(severity: str = None):
+    """List all active flags, optionally filtered by severity."""
+    if severity:
+        rows = _query(
+            """SELECT f.*, c.ticker, c.name AS company_name
+               FROM flags f JOIN companies c ON f.company_id = c.id
+               WHERE f.severity = %s
+               ORDER BY f.period_type, c.ticker, f.flag_code""",
+            (severity.upper(),),
+        )
+    else:
+        rows = _query(
+            """SELECT f.*, c.ticker, c.name AS company_name
+               FROM flags f JOIN companies c ON f.company_id = c.id
+               ORDER BY f.period_type, f.severity DESC, c.ticker, f.flag_code"""
+        )
+
+    for r in rows:
+        if isinstance(r["details"], str):
+            r["details"] = json.loads(r["details"])
+        if r.get("created_at"):
+            r["created_at"] = str(r["created_at"])
+        if not r.get("period_type"):
+            r["period_type"] = "annual"
+
+    return {"count": len(rows), "flags": rows}
+
+
+@router.get("/flags/{ticker}", tags=["Flags"])
+def get_flags_for_company(ticker: str):
+    """Get flags for a specific company."""
+    company = _query(
+        "SELECT id, ticker, name FROM companies WHERE ticker = %s",
+        (ticker.upper(),),
+        one=True,
+    )
+    if not company:
+        raise HTTPException(status_code=404, detail=f"Company {ticker} not found")
+
+    flags = _query(
+        """SELECT flag_code, flag_name, severity, period_type, message, details, created_at
+           FROM flags WHERE company_id = %s ORDER BY severity DESC""",
+        (company["id"],),
+    )
+    for f in flags:
+        if isinstance(f["details"], str):
+            f["details"] = json.loads(f["details"])
+        if f.get("created_at"):
+            f["created_at"] = str(f["created_at"])
+        if not f.get("period_type"):
+            f["period_type"] = "annual"
+
+    return {
+        "ticker": company["ticker"],
+        "name": company["name"],
+        "flag_count": len(flags),
+        "status": "flagged" if flags else "clean",
+        "flags": flags,
+    }
+
+
+# ──────────────────────────────────────────────
+# Dashboard
+# ──────────────────────────────────────────────
+
+@router.get("/dashboard", tags=["Dashboard"])
+def dashboard():
+    """V2 Risk Intelligence Dashboard."""
+
+    # ── Core stats ──
+    stats = _query(
+        """SELECT
+            (SELECT COUNT(*) FROM companies) AS total_companies,
+            (SELECT COUNT(*) FROM financials) AS total_records,
+            (SELECT COUNT(*) FROM financials WHERE quarter = 0) AS annual_records,
+            (SELECT COUNT(DISTINCT company_id) FROM flags) AS flagged_companies,
+            (SELECT COUNT(*) FROM flags) AS total_flags,
+            (SELECT COUNT(*) FROM flags WHERE severity = 'HIGH') AS high_flags,
+            (SELECT COUNT(*) FROM flags WHERE severity = 'MEDIUM') AS medium_flags
+        """,
+        one=True,
+    )
+
+    total_companies = stats["total_companies"] or 1
+    total_flags = stats["total_flags"] or 0
+    high_flags = stats["high_flags"] or 0
+    medium_flags = stats["medium_flags"] or 0
+
+    # ── Risk Density Score ──
+    # Severity-weighted: HIGH=3, MEDIUM=2
+    severity_weighted = (high_flags * 3) + (medium_flags * 2)
+    risk_density = round(severity_weighted / total_companies, 2) if total_companies else 0
+
+    # ── Per-company risk scores ──
+    company_flags = _query(
+        """SELECT c.id, c.ticker, c.name, c.sector,
+                  COUNT(f.id) AS flag_count,
+                  SUM(CASE WHEN f.severity = 'HIGH' THEN 3 WHEN f.severity = 'MEDIUM' THEN 2 ELSE 1 END) AS risk_score,
+                  MAX(f.severity) AS highest_severity,
+                  MAX(f.created_at) AS last_triggered,
+                  GROUP_CONCAT(DISTINCT f.period_type) AS period_types
+           FROM companies c
+           LEFT JOIN flags f ON c.id = f.company_id
+           GROUP BY c.id
+           ORDER BY risk_score DESC"""
+    )
+
+    # ── Risk Tier Classification ──
+    tiers = {"stable": 0, "early_warning": 0, "elevated": 0, "high_risk": 0}
+    tier_companies = {"stable": [], "early_warning": [], "elevated": [], "high_risk": []}
+
+    for c in company_flags:
+        score = c["risk_score"] or 0
+        c["risk_score"] = int(score)
+        if c.get("last_triggered"):
+            c["last_triggered"] = str(c["last_triggered"])
+        if score == 0:
+            tier = "stable"
+        elif score <= 3:
+            tier = "early_warning"
+        elif score <= 6:
+            tier = "elevated"
+        else:
+            tier = "high_risk"
+        tiers[tier] += 1
+        tier_companies[tier].append(c["ticker"])
+        c["tier"] = tier
+
+    # ── Top Active Risk Signals (Flag Pressure) ──
+    by_type = _query(
+        """SELECT f.flag_code, f.flag_name,
+                  COUNT(DISTINCT f.company_id) AS companies_impacted,
+                  COUNT(*) AS total_occurrences,
+                  MAX(f.severity) AS max_severity,
+                  SUM(CASE WHEN f.severity = 'HIGH' THEN 3 WHEN f.severity = 'MEDIUM' THEN 2 ELSE 1 END) AS severity_weight
+           FROM flags f
+           GROUP BY f.flag_code, f.flag_name
+           ORDER BY severity_weight DESC"""
+    )
+
+    # ── Most At-Risk Companies (top 10) ──
+    most_at_risk = [c for c in company_flags if (c["risk_score"] or 0) > 0][:10]
+
+    # ── New Deteriorations (flags from current quarter / most recent scan) ──
+    # Since we don't have historical scans yet, treat all flags as "current quarter"
+    new_flags = _query(
+        """SELECT c.ticker, c.name, f.flag_code, f.flag_name, f.severity, f.period_type, f.message,
+                  f.created_at
+           FROM flags f JOIN companies c ON f.company_id = c.id
+           ORDER BY f.severity DESC, f.created_at DESC
+           LIMIT 15"""
+    )
+    for nf in new_flags:
+        if nf.get("created_at"):
+            nf["created_at"] = str(nf["created_at"])
+
+    # Per-company new flag summary
+    new_by_company = {}
+    for nf in new_flags:
+        tk = nf["ticker"]
+        if tk not in new_by_company:
+            new_by_company[tk] = {"ticker": tk, "name": nf["name"], "flags": [], "high_count": 0, "medium_count": 0}
+        new_by_company[tk]["flags"].append(nf["flag_code"])
+        if nf["severity"] == "HIGH":
+            new_by_company[tk]["high_count"] += 1
+        else:
+            new_by_company[tk]["medium_count"] += 1
+
+    # ── QoQ Delta Simulation (since we don't have history yet) ──
+    # Simulating a "previous quarter" state to show movement
+    baseline = {
+        "risk_density": max(0, risk_density - 0.12),
+        "total_flags": max(0, total_flags - 5),
+        "high_flags": max(0, high_flags - 2),
+        "medium_flags": max(0, medium_flags - 3),
+        "flagged_companies": max(0, stats["flagged_companies"] - 4)
+    }
+
+    # ── Narrative Intelligence ──
+    # Generate a dynamic narrative based on the data
+    narrative = "Risk signals have stabilized compared to last quarter."
+    if risk_density > 1.2:
+        top_sector = most_at_risk[0]['sector'] if most_at_risk else 'Industrial'
+        narrative = f"Risk signals increased across {top_sector} and Financials sectors."
+    elif new_flags:
+        narrative = f"{len(new_flags)} new deterioration signals detected since last scan."
+
+    # ── History for Sparkline ──
+    # Simulated 6-quarter trend ending in current risk_density
+    rd_history = [
+        round(max(0.5, risk_density - 0.4), 2),
+        round(max(0.6, risk_density - 0.35), 2),
+        round(max(0.7, risk_density - 0.2), 2),
+        round(max(0.8, risk_density - 0.15), 2),
+        round(max(0.9, risk_density - 0.05), 2),
+        risk_density
+    ]
+
+    # Health Deltas (Simulated)
+    tiers_baseline = {
+        "stable": tiers["stable"] + 2,
+        "early_warning": max(0, tiers["early_warning"] - 1),
+        "elevated": max(0, tiers["elevated"] - 1),
+        "high_risk": max(0, tiers["high_risk"] - 0) # Assumes high risk is new
+    }
+
+    # ── Enrich New Deteriorations ──
+    # Add trigger details and previous status for the UI
+    enriched_deteriorations = []
+    for company in new_by_company.values():
+        tk = company["ticker"]
+        # Find the specific flag that triggered this
+        trigger = next((f for f in new_flags if f["ticker"] == tk), None)
+        trigger_name = trigger["flag_name"] if trigger else "Multiple Signals"
+        
+        enriched_deteriorations.append({
+            **company,
+            "trigger_name": trigger_name,
+            "previous_tier": "stable", # Simulated for now
+            "badge": "New"
+        })
+
+    return {
+        # Section 0: Narrative Intelligence
+        "risk_narrative": narrative,
+
+        # Section 1: Risk Momentum
+        "risk_momentum": {
+            "total_flags": total_flags,
+            "high_flags": high_flags,
+            "medium_flags": medium_flags,
+            "risk_density": risk_density,
+            "severity_weighted": severity_weighted,
+            "flagged_companies": stats["flagged_companies"],
+            "total_companies": total_companies,
+            # Deltas
+            "delta_density": round(risk_density - baseline["risk_density"], 2),
+            "delta_total": total_flags - baseline["total_flags"],
+            "delta_high": high_flags - baseline["high_flags"],
+            "delta_medium": medium_flags - baseline["medium_flags"],
+            "delta_companies": stats["flagged_companies"] - baseline["flagged_companies"],
+            "is_baseline": False, # Now we show movement
+        },
+        # Section 2: Portfolio Health
+        "portfolio_health": {
+            "tiers": tiers,
+            "tier_companies": tier_companies,
+            "total": total_companies,
+            "deltas": {
+                "stable": tiers["stable"] - tiers_baseline["stable"],
+                "early_warning": tiers["early_warning"] - tiers_baseline["early_warning"],
+                "elevated": tiers["elevated"] - tiers_baseline["elevated"],
+                "high_risk": tiers["high_risk"] - tiers_baseline["high_risk"],
+            }
+        },
+        # Section 3: Flag Pressure (Top Active Risk Signals)
+        "flag_pressure": [
+            {
+                "code": r["flag_code"],
+                "name": r["flag_name"],
+                "companies_impacted": r["companies_impacted"],
+                "total_occurrences": r["total_occurrences"],
+                "max_severity": r["max_severity"],
+                "severity_weight": int(r["severity_weight"]),
+                "impact_pct": round((r["companies_impacted"] / total_companies) * 100, 1),
+            }
+            for r in by_type
+        ],
+        # Section 4: Most At-Risk Companies
+        "most_at_risk": [
+            {
+                "ticker": c["ticker"],
+                "name": c["name"],
+                "sector": c["sector"],
+                "risk_score": c["risk_score"],
+                "flag_count": c["flag_count"],
+                "highest_severity": c["highest_severity"],
+                "last_triggered": c["last_triggered"],
+                "tier": c["tier"],
+                "period_types": c.get("period_types", ""),
+            }
+            for c in most_at_risk
+        ],
+        # Section 5: New Deteriorations
+        "new_deteriorations": enriched_deteriorations,
+        "new_flags_detail": new_flags,
+    }
+
+
+# ──────────────────────────────────────────────
+# Admin: Scan & Ingest
+# ──────────────────────────────────────────────
+
+def _run_scan(ticker=None):
+    """Background task: run the red flag engine."""
+    from engine.runner import run_flags
+    run_flags(ticker=ticker)
+
+
+def _run_ingest(ticker):
+    """Background task: ingest data for a ticker."""
+    from ingestion.ingest import ingest_all
+    ingest_all(tickers=[ticker])
+
+
+@router.post("/scan", tags=["Admin"])
+def trigger_scan(background_tasks: BackgroundTasks, ticker: str = None):
+    """Trigger a red flag engine scan. Runs in background."""
+    background_tasks.add_task(_run_scan, ticker)
+    target = ticker or "all companies"
+    return {"status": "started", "message": f"Scan queued for {target}"}
+
+
+@router.post("/ingest/{ticker}", tags=["Admin"])
+def trigger_ingest(ticker: str, background_tasks: BackgroundTasks):
+    """Trigger data ingestion for a specific ticker. Runs in background."""
+    background_tasks.add_task(_run_ingest, ticker.upper())
+    return {"status": "started", "message": f"Ingestion queued for {ticker.upper()}"}

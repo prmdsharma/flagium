@@ -1,0 +1,23 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+.npm/
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Artifacts
+artifacts/
+brain/
+
+# Data
+data/

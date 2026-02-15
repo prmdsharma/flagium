@@ -64,6 +64,7 @@ export const api = {
   removePortfolioItem: (id, ticker) => fetchJSON(`/portfolios/${id}/items/${ticker}`, { method: "DELETE" }),
 
   // Admin
+  getIngestionStatus: () => fetchJSON("/admin/ingestion-status"),
   triggerScan: () => fetch(`${API_BASE}/scan`, { method: "POST" }).then((r) => r.json()),
   triggerIngest: (ticker) => fetch(`${API_BASE}/ingest/${ticker}`, { method: "POST" }).then((r) => r.json()),
 };

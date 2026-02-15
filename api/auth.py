@@ -66,6 +66,23 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         user_id: int = payload.get("id")
         if email is None:
             raise credentials_exception
+        
+        # Fetch fresh role from DB to handle promotions without re-login
+        try:
+            conn = get_connection()
+            cursor = conn.cursor()
+            cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+            row = cursor.fetchone()
+            if row:
+                role = row[0]
+            cursor.close()
+            conn.close()
+        except Exception as e:
+            print(f"Error fetching fresh role: {e}")
+            # Fallback to token role if DB fails? Or just fail? 
+            # Let's fallback to token role or just continue with token role if DB fails
+            pass
+
         return {"id": user_id, "email": email, "role": role}
     except jwt.PyJWTError:
         raise credentials_exception

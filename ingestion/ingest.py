@@ -146,6 +146,8 @@ def ingest_company(session, conn, ticker, download_dir=None):
         result["status"] = "no_filings"
         return result
 
+    import hashlib
+    
     # Step 3: Download XBRL files
     all_records = []
     for filing in filings:
@@ -154,7 +156,10 @@ def ingest_company(session, conn, ticker, download_dir=None):
             continue
 
         period_str = _extract_period(filing)
-        filename = f"{ticker}_{period_str}.xml"
+        
+        # Add hash to filename to prevent collisions between Standalone/Consolidated
+        link_hash = hashlib.md5(xbrl_link.encode("utf-8")).hexdigest()[:6]
+        filename = f"{ticker}_{period_str}_{link_hash}.xml"
         save_path = os.path.join(download_dir, filename)
 
         # Skip pre-2019 filings (old XBRL format, unparseable)

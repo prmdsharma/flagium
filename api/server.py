@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routes import router
-from api import auth, portfolios
+from api import auth, portfolios, admin
 
 app = FastAPI(title="Flagium Analysis Engine")
 
@@ -22,3 +22,4 @@ app.add_middleware(
 app.include_router(router, prefix="/api")
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(portfolios.router, prefix="/api/portfolios", tags=["Portfolios"])
+app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])

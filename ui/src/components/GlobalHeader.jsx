@@ -118,7 +118,7 @@ export default function GlobalHeader() {
                             to="/"
                             className={`text-sm font-medium transition-colors ${location.pathname === '/' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                         >
-                            Dashboard
+                            Market Risk Monitor (Beta)
                         </Link>
 
                         {/* Portfolios Dropdown */}
@@ -171,6 +171,16 @@ export default function GlobalHeader() {
                         >
                             Flag Library
                         </Link>
+
+                        {/* Admin Reports Link - Moved to End */}
+                        {user?.role === 'admin' && (
+                            <Link
+                                to="/reports"
+                                className={`text-sm font-medium transition-colors ${location.pathname === '/reports' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                            >
+                                Reports
+                            </Link>
+                        )}
                     </nav>
                 </div>
 
@@ -231,6 +241,6 @@ export default function GlobalHeader() {
                     </div>
                 </div>
             </div>
-        </header>
+        </header >
     );
 }

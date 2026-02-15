@@ -8,7 +8,10 @@ export function ThemeProvider({ children }) {
     const [theme, setTheme] = useState(() => localStorage.getItem("flagium-theme") || "dark");
 
     useEffect(() => {
-        document.documentElement.setAttribute("data-theme", theme);
+        const root = window.document.documentElement;
+        root.classList.remove("light", "dark");
+        root.classList.add(theme);
+        root.setAttribute("data-theme", theme);
         localStorage.setItem("flagium-theme", theme);
     }, [theme]);
 

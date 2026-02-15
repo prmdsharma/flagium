@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api } from "../api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
+
+import ConfirmModal from "../components/common/ConfirmModal";
 
 export default function PortfolioDashboard() {
     const { user } = useAuth();
@@ -9,6 +11,9 @@ export default function PortfolioDashboard() {
     const { id } = useParams(); // Get ID from URL
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    // Refs
+    const autocompleteRef = useRef(null);
 
     // Create / Setup State
     const [showCreate, setShowCreate] = useState(false);
@@ -22,6 +27,38 @@ export default function PortfolioDashboard() {
     const [allCompanies, setAllCompanies] = useState([]);
     const [filteredCompanies, setFilteredCompanies] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
+
+    // Confirmation State
+    const [confirmModal, setConfirmModal] = useState({
+        isOpen: false,
+        title: "",
+        message: "",
+        onConfirm: () => { },
+        confirmText: "Confirm",
+        isDanger: false
+    });
+
+    // Handle Click Outside & Escape
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (autocompleteRef.current && !autocompleteRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        };
+
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscape);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, []);
 
     useEffect(() => {
         if (!user) navigate("/login");
@@ -78,7 +115,7 @@ export default function PortfolioDashboard() {
         ).slice(0, 8); // Top 8 matches
 
         setFilteredCompanies(matches);
-        setShowDropdown(matches.length > 0);
+        setShowDropdown(true); // Always show dropdown if we have input
     }, [tickerInput, allCompanies]);
 
     const selectCompany = (ticker) => {
@@ -112,26 +149,42 @@ export default function PortfolioDashboard() {
         }
     };
 
-    const handleRemoveStock = async (ticker) => {
-        if (!window.confirm(`Are you sure you want to remove ${ticker} from this portfolio?`)) return;
-        try {
-            await api.removePortfolioItem(id, ticker);
-            loadDetail(id); // Refresh
-        } catch (err) {
-            alert("Failed to remove stock: " + err.message);
-        }
+    const handleRemoveStock = (ticker) => {
+        setConfirmModal({
+            isOpen: true,
+            title: `Remove ${ticker}?`,
+            message: "This stock will be removed from your portfolio tracking.",
+            confirmText: "Remove Stock",
+            isDanger: true,
+            onConfirm: async () => {
+                try {
+                    await api.removePortfolioItem(id, ticker);
+                    loadDetail(id); // Refresh
+                } catch (err) {
+                    alert("Failed to remove stock: " + err.message);
+                }
+            }
+        });
     };
 
-    const handleDeletePortfolio = async () => {
-        if (!window.confirm("Are you sure you want to DELETE this portfolio permanently? This action cannot be undone.")) return;
-        try {
-            await api.deletePortfolio(id);
-            navigate('/');
-            // Force reload to update sidebar
-            setTimeout(() => window.location.reload(), 100);
-        } catch (err) {
-            alert("Failed to delete portfolio: " + err.message);
-        }
+    const handleDeletePortfolio = () => {
+        setConfirmModal({
+            isOpen: true,
+            title: "Delete Portfolio?",
+            message: "This action cannot be undone. All holdings and history will be permanently deleted.",
+            confirmText: "Delete Permanently",
+            isDanger: true,
+            onConfirm: async () => {
+                try {
+                    await api.deletePortfolio(id);
+                    navigate('/');
+                    // Force reload to update sidebar
+                    setTimeout(() => window.location.reload(), 100);
+                } catch (err) {
+                    alert("Failed to delete portfolio: " + err.message);
+                }
+            }
+        });
     };
 
     // ── RENDER ──
@@ -355,39 +408,82 @@ export default function PortfolioDashboard() {
                 </div>
             </div>
 
-            {/* Add Stock Modal */}
+            {/* Modals */}
+            <ConfirmModal
+                isOpen={confirmModal.isOpen}
+                onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+                onConfirm={() => {
+                    confirmModal.onConfirm();
+                    setConfirmModal(prev => ({ ...prev, isOpen: false }));
+                }}
+                title={confirmModal.title}
+                message={confirmModal.message}
+                confirmText={confirmModal.confirmText}
+                isDanger={confirmModal.isDanger}
+            />
+
+
+            {/* Add Stock Modal - Refactored to match design system */}
             {showAddStock && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h3>Add Stock to Portfolio</h3>
-                        <form onSubmit={handleAddStock} style={{ display: 'flex', flexDirection: 'column' }}>
-                            <div style={{ position: 'relative' }}>
+                <div className="fixed inset-0 z-[1500] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-enter">
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100 dark:border-slate-700 p-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Add Stock to Portfolio</h3>
+                            <button
+                                onClick={() => setShowAddStock(false)}
+                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleAddStock} className="flex flex-col gap-4">
+                            <div className="relative" ref={autocompleteRef}>
                                 <input
                                     autoFocus
-                                    className="mono-input"
-                                    placeholder="Ticker (e.g. RELIANCE) or Name"
+                                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm font-mono text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
+                                    placeholder="Ticker (e.g. RELIANCE)"
                                     value={tickerInput}
                                     onChange={e => setTickerInput(e.target.value)}
-                                    style={{ width: '100%', margin: '20px 0' }}
+                                    onFocus={() => { if (tickerInput.length >= 1) setShowDropdown(true); }}
                                 />
                                 {showDropdown && (
-                                    <div className="autocomplete-dropdown">
-                                        {filteredCompanies.map(c => (
-                                            <div
-                                                key={c.id}
-                                                className="autocomplete-item"
-                                                onClick={() => selectCompany(c.ticker)}
-                                            >
-                                                <span className="autocomplete-ticker">{c.ticker}</span>
-                                                <span className="autocomplete-name">{c.name}</span>
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50">
+                                        {filteredCompanies.length > 0 ? (
+                                            filteredCompanies.map(c => (
+                                                <div
+                                                    key={c.id}
+                                                    className="px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex justify-between items-center transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0"
+                                                    onClick={() => selectCompany(c.ticker)}
+                                                >
+                                                    <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">{c.ticker}</span>
+                                                    <span className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[180px]">{c.name}</span>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 text-center italic">
+                                                No companies found matching "{tickerInput}"
                                             </div>
-                                        ))}
+                                        )}
                                     </div>
                                 )}
                             </div>
-                            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-                                <button type="button" className="btn-sm-text" onClick={() => setShowAddStock(false)}>Cancel</button>
-                                <button type="submit" className="btn-sm-solid">Add Company</button>
+                            <div className="flex gap-3 justify-end mt-2">
+                                <button
+                                    type="button"
+                                    className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                                    onClick={() => setShowAddStock(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-500/20 transition-all"
+                                >
+                                    Add Company
+                                </button>
                             </div>
                         </form>
                     </div>

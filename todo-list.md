@@ -6,4 +6,8 @@
     - *Proposed Fix*: Subtract (Year, Quarter-1) value from (Year, Quarter) if the context indicates YTD.
 
 ## UI & UX
-- [ ] **Data Sanity Dashboard**: (In-progress) Integrate the automated sanity report into the Admin Reports tab.
+- [x] **Data Sanity Dashboard**: Integrated the automated sanity report into the Admin Reports tab.
+
+## Deployment & Data Migration
+- [ ] **Initial Data Migration**: Take a database dump from the development environment and restore it on the production database. This avoids re-running historical ingestion (8 quarters) on production.
+- [ ] **Incremental Ingestion Flow**: Configure the production environment to perform only incremental, quarter-to-quarter data fetching and flags execution.

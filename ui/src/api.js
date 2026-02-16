@@ -59,10 +59,13 @@ export const api = {
 
   // Portfolios
   getPortfolios: () => fetchJSON("/portfolios/"),
+  getAggregatedHealth: () => fetchJSON("/portfolios/aggregated/health"),
   createPortfolio: (name) => fetchJSON("/portfolios/", { method: "POST", body: { name } }),
   deletePortfolio: (id) => fetchJSON(`/portfolios/${id}`, { method: "DELETE" }),
+  renamePortfolio: (id, name) => fetchJSON(`/portfolios/${id}`, { method: "PATCH", body: { name } }),
   getPortfolioDetail: (id) => fetchJSON(`/portfolios/${id}`),
-  addPortfolioItem: (id, ticker) => fetchJSON(`/portfolios/${id}/items`, { method: "POST", body: { ticker } }),
+  addPortfolioItem: (id, ticker, investment = 100000) => fetchJSON(`/portfolios/${id}/items`, { method: "POST", body: { ticker, investment } }),
+  updatePortfolioItem: (id, ticker, investment) => fetchJSON(`/portfolios/${id}/items/${ticker}`, { method: "PUT", body: { investment } }),
   removePortfolioItem: (id, ticker) => fetchJSON(`/portfolios/${id}/items/${ticker}`, { method: "DELETE" }),
 
   // Admin

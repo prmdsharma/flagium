@@ -115,10 +115,10 @@ export default function GlobalHeader() {
                     {/* Navigation */}
                     <nav className="hidden md:flex items-center gap-6">
                         <Link
-                            to="/"
-                            className={`text-sm font-medium transition-colors ${location.pathname === '/' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                            to="/dashboard"
+                            className={`text-sm font-medium transition-colors ${location.pathname === '/dashboard' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                         >
-                            Market Risk Monitor (Beta)
+                            Dashboard
                         </Link>
 
                         {/* Portfolios Dropdown */}
@@ -136,28 +136,31 @@ export default function GlobalHeader() {
                                 <>
                                     <div className="fixed inset-0 z-30" onClick={() => setShowPortfolioMenu(false)} />
                                     <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-100 dark:border-slate-700 py-1 z-40 animate-in fade-in zoom-in-95 duration-100">
-                                        {portfolios.map(p => (
-                                            <Link
-                                                key={p.id}
-                                                to={`/portfolio/${p.id}`}
-                                                className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
-                                                onClick={() => setShowPortfolioMenu(false)}
-                                            >
-                                                {p.name}
-                                            </Link>
-                                        ))}
-                                        <div className="my-1 border-t border-slate-100 dark:border-slate-700" />
-                                        <Link
-                                            to="/portfolio"
-                                            className="block px-4 py-2 text-sm text-blue-600 dark:text-blue-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-700"
-                                            onClick={() => setShowPortfolioMenu(false)}
-                                        >
-                                            + Create New
-                                        </Link>
+                                        {portfolios.length > 0 ? (
+                                            portfolios.map(p => (
+                                                <Link
+                                                    key={p.id}
+                                                    to={`/portfolio/${p.id}`}
+                                                    className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
+                                                    onClick={() => setShowPortfolioMenu(false)}
+                                                >
+                                                    {p.name}
+                                                </Link>
+                                            ))
+                                        ) : (
+                                            <div className="px-4 py-3 text-xs text-slate-400 dark:text-slate-500 text-center">No portfolios yet</div>
+                                        )}
                                     </div>
                                 </>
                             )}
                         </div>
+
+                        <Link
+                            to="/market-monitor"
+                            className={`text-sm font-medium transition-colors ${location.pathname === '/market-monitor' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                        >
+                            Market Risk Monitor (Beta)
+                        </Link>
 
                         <Link
                             to="/companies"
@@ -165,6 +168,7 @@ export default function GlobalHeader() {
                         >
                             Companies
                         </Link>
+
                         <Link
                             to="/flags"
                             className={`text-sm font-medium transition-colors ${isActive('/flags') ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
@@ -172,7 +176,7 @@ export default function GlobalHeader() {
                             Flag Library
                         </Link>
 
-                        {/* Admin Reports Link - Moved to End */}
+                        {/* Admin Reports Link */}
                         {user?.role === 'admin' && (
                             <Link
                                 to="/reports"

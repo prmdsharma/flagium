@@ -25,14 +25,11 @@ export default function LoginPage() {
         try {
             if (isLogin) {
                 await login(email, password);
-                navigate("/portfolio");
+                navigate("/dashboard");
             } else {
                 await register(email, password, name);
-                // After register, verify flow. Implementation plan said /register returns profile.
-                // Let's auto-login or ask to login.
-                // For simplicity:
                 await login(email, password);
-                navigate("/portfolio");
+                navigate("/dashboard");
             }
         } catch (err) {
             setError(err.message || "Authentication failed");

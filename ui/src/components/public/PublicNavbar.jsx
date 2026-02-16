@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function PublicNavbar({ onOpenAuthModal }) {
+    const { user } = useAuth();
     const location = useLocation();
     const isActive = (path) => location.pathname === path;
 
@@ -29,22 +31,41 @@ export default function PublicNavbar({ onOpenAuthModal }) {
                     >
                         Methodology
                     </Link>
+                    {user && (
+                        <Link
+                            to="/dashboard"
+                            className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                        >
+                            Dashboard
+                        </Link>
+                    )}
                 </div>
 
                 {/* Auth Actions */}
                 <div className="flex items-center gap-4">
-                    <button
-                        onClick={() => onOpenAuthModal("login")}
-                        className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
-                    >
-                        Log in
-                    </button>
-                    <button
-                        onClick={() => onOpenAuthModal("register")}
-                        className="h-9 px-4 bg-slate-900 text-white text-sm font-medium rounded-lg flex items-center hover:bg-slate-800 transition-colors"
-                    >
-                        Create Account
-                    </button>
+                    {!user ? (
+                        <>
+                            <button
+                                onClick={() => onOpenAuthModal("login")}
+                                className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                            >
+                                Log in
+                            </button>
+                            <button
+                                onClick={() => onOpenAuthModal("register")}
+                                className="h-9 px-4 bg-slate-900 text-white text-sm font-medium rounded-lg flex items-center hover:bg-slate-800 transition-colors"
+                            >
+                                Create Account
+                            </button>
+                        </>
+                    ) : (
+                        <Link
+                            to="/dashboard"
+                            className="h-9 px-4 bg-slate-900 text-white text-sm font-medium rounded-lg flex items-center hover:bg-slate-800 transition-colors"
+                        >
+                            Go to Dashboard
+                        </Link>
+                    )}
                 </div>
             </div>
         </nav>

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import Dashboard from "./pages/Dashboard";
+import MarketMonitor from "./pages/MarketMonitor";
 import Companies from "./pages/Companies";
 import CompanyDetail from "./pages/CompanyDetail";
 import Flags from "./pages/Flags";
@@ -29,10 +30,7 @@ function AppContent() {
     <Routes>
       {/* Public Routes */}
       <Route element={<PublicLayout />}>
-        {/* If user is logged in, redirect home to dashboard is common pattern, 
-            but for a public site, maybe they WANT to see the landing page.
-            Let's redirect for now as per plan. */}
-        <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/methodology" element={<MethodologyPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
@@ -46,7 +44,9 @@ function AppContent() {
 
       {/* Protected App Routes */}
       <Route element={<AppLayout />}>
+        <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/market-monitor" element={<MarketMonitor />} />
         <Route path="/companies" element={<Companies />} />
         <Route path="/company/:ticker" element={<CompanyDetail />} />
         <Route path="/flags" element={<Flags />} />

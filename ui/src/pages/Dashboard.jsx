@@ -1,414 +1,247 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api";
-import {
-    PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
-    BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid,
-} from "recharts";
-
-const TIER_CONFIG = {
-    stable: { label: "Stable", color: "#10b981", icon: "🟢" },
-    early_warning: { label: "Early Warning", color: "#f59e0b", icon: "🟡" },
-    elevated: { label: "Elevated Risk", color: "#f97316", icon: "🟠" },
-    high_risk: { label: "High Risk", color: "#ef4444", icon: "🔴" },
-};
-
-const SEVERITY_COLORS = { HIGH: "#ef4444", MEDIUM: "#f59e0b" };
-
-function RiskScoreBar({ score, max = 12 }) {
-    const pct = Math.min((score / max) * 100, 100);
-    const color = score >= 7 ? "#ef4444" : score >= 4 ? "#f97316" : score >= 1 ? "#f59e0b" : "#10b981";
-    return (
-        <div className="risk-score-bar-bg">
-            <div className="risk-score-bar-fill" style={{ width: `${pct}%`, background: color }} />
-        </div>
-    );
-}
 
 export default function Dashboard() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    const [activePid, setActivePid] = useState(null);
+
     useEffect(() => {
-        api.getDashboard().then(setData).finally(() => setLoading(false));
+        api.getAggregatedHealth()
+            .then(res => {
+                setData(res);
+                if (res.summaries && res.summaries.length > 0) {
+                    setActivePid(res.summaries[0].id);
+                }
+            })
+            .finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <div className="loading"><div className="spinner" /> Loading intelligence…</div>;
-    if (!data) return <div className="loading">Failed to load</div>;
+    if (loading) return <div className="loading"><div className="spinner" /> Loading Portfolio Intelligence…</div>;
 
-    const { risk_momentum, portfolio_health, flag_pressure, most_at_risk, new_deteriorations, risk_narrative } = data;
-    const rm = risk_momentum;
-    const ph = portfolio_health;
-
-    // Prepare health donut data
-    const healthData = Object.entries(ph.tiers).map(([key, count]) => ({
-        name: TIER_CONFIG[key].label,
-        value: count,
-        color: TIER_CONFIG[key].color,
-    }));
-
-    // Helper for deltas
-    const renderDelta = (value, isInverse = false) => {
-        if (!value || value === 0) return null;
-        const isPositive = value > 0;
-        // Default: Up is Bad (Red)
-        // Inverse (Stable): Up is Good (Green)
-        const isBad = isInverse ? !isPositive : isPositive;
-        const colorClass = isBad ? 'up-bad' : 'down-good';
-        const arrow = isPositive ? '▲' : '▼';
-        // Use custom class for health legend to adjust size/margin
-        const className = isInverse !== undefined ? "legend-delta" : "qs-delta";
-
+    if (!data || data.portfolio_count === 0) {
         return (
-            <span className={`${className} ${colorClass}`}>
-                {arrow} {Math.abs(value)}
-            </span>
+            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4 animate-enter">
+                <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-4xl mb-6">
+                    📊
+                </div>
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Welcome to Flagium</h1>
+                <p className="text-slate-500 dark:text-slate-400 max-w-md mb-8">
+                    You haven't initialized any portfolios yet. Create your first portfolio to start monitoring capital risk.
+                </p>
+                <Link to="/portfolio" className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/20 transition-all">
+                    Initialize First Portfolio
+                </Link>
+            </div>
         );
+    }
+
+    const { risk_score, risk_delta, total_capital, summaries, escalations, status, escalation_prob, acceleration } = data;
+    const activePf = summaries.find(s => s.id === activePid) || summaries[0];
+
+    const getStatusColor = (s) => {
+        if (s === 'High Risk') return 'text-red-500';
+        if (s === 'Monitoring') return 'text-yellow-500';
+        return 'text-green-500';
     };
 
-    const renderQsDelta = (value) => {
-        if (!value || value === 0) return null;
-        const isPositive = value > 0;
-        const isBad = isPositive; // For risk metrics, up is bad
-        const colorClass = isBad ? 'up-bad' : 'down-good';
-        const arrow = isPositive ? '▲' : '▼';
-        return (
-            <span className={`qs-delta ${colorClass}`}>
-                {arrow} {Math.abs(value)}
-            </span>
-        );
+    const getStatusIcon = (s) => {
+        if (s === 'High Risk') return '🔴';
+        if (s === 'Monitoring') return '🟡';
+        return '🟢';
     };
 
     return (
-        <>
-            {/* ══════════════════════════════════════════
-                SECTION 0 — NARRATIVE INTELLIGENCE
-                ══════════════════════════════════════════ */}
-            <div className="risk-narrative-banner">
-                <span className="narrative-icon">⚡</span>
-                <span className="narrative-text">{risk_narrative}</span>
-            </div>
-
-            {/* ══════════════════════════════════════════
-                SECTION 1 — RISK MOMENTUM HERO
-                ══════════════════════════════════════════ */}
-            <div className="risk-momentum-hero">
-                <div className="momentum-main">
-                    <div className="momentum-left">
-                        <div className="momentum-label">RISK MOMENTUM</div>
-                        <div className="momentum-headline">
-                            <span className="momentum-density">{rm.risk_density}</span>
-                            <div className="momentum-density-context">
-                                <span className="momentum-density-label">Portfolio Risk Density</span>
-                                <div className="info-tooltip" title="Severity-weighted flags divided by total companies. Checks for concentration of high-severity risks.">
-                                    ℹ️
-                                </div>
-                            </div>
-                            {rm.rd_history && (
-                                <div className="density-sparkline" style={{ width: 120, height: 40, marginTop: 5 }}>
-                                    <ResponsiveContainer>
-                                        <LineChart data={rm.rd_history.map((v, i) => ({ i, v }))}>
-                                            <Line type="monotone" dataKey="v" stroke="#ef4444" strokeWidth={2} dot={false} isAnimationActive={false} />
-                                        </LineChart>
-                                    </ResponsiveContainer>
-                                </div>
-                            )}
+        <div className="space-y-8 animate-enter">
+            {/* 1️⃣ Top: Overall Capital Risk (Aggregated) */}
+            <div className="glass-card p-8 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 text-[100px] opacity-5 pointer-events-none">🛡️</div>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div>
+                        <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-bold tracking-wider text-slate-400 uppercase">Overall Capital Risk</span>
+                            <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[10px] font-bold text-slate-500">AGGREGATED</span>
                         </div>
-                        <div className="momentum-sub">
-                            {rm.is_baseline ? (
-                                <span className="momentum-baseline">📍 Baseline Scan — QoQ trends begin next quarter</span>
-                            ) : (
-                                <span className="momentum-delta up">▲ +18% vs Last Quarter</span>
-                            )}
+                        <div className="flex items-center gap-3">
+                            <h1 className={`text-4xl font-black ${getStatusColor(status)}`}>
+                                {getStatusIcon(status)} {status}
+                            </h1>
+                        </div>
+                        <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                            Across {data.portfolio_count} portfolios • Capital-weighted exposure
                         </div>
                     </div>
-                    <div className="momentum-right">
-                        <div className="momentum-stats">
-                            <div className="m-stat">
-                                <div className="m-stat-value red">{rm.high_flags}</div>
-                                <div className="m-stat-label">High Severity</div>
-                                {!rm.is_baseline && (
-                                    <div className={`m-stat-delta ${rm.delta_high > 0 ? 'up-bad' : 'down-good'}`}>
-                                        {rm.delta_high > 0 ? '+' : ''}{rm.delta_high}
-                                    </div>
-                                )}
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+                        <div className="flex flex-col">
+                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">Risk Score</span>
+                            <span className="text-3xl font-black text-slate-900 dark:text-white">{risk_score}</span>
+                            <span className={`text-[10px] font-bold ${risk_delta > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                                {risk_delta > 0 ? '▲' : '▼'} {Math.abs(risk_delta)} QoQ
+                            </span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">Escalation Prob</span>
+                            <span className="text-3xl font-black text-slate-900 dark:text-white">{escalation_prob}%</span>
+                            <div className="w-16 h-1 bg-slate-100 dark:bg-slate-800 rounded-full mt-2 overflow-hidden">
+                                <div className="h-full bg-blue-500" style={{ width: `${escalation_prob}%` }} />
                             </div>
-                            <div className="m-stat">
-                                <div className="m-stat-value amber">{rm.medium_flags}</div>
-                                <div className="m-stat-label">Medium Severity</div>
-                                {!rm.is_baseline && (
-                                    <div className={`m-stat-delta ${rm.delta_medium > 0 ? 'up-bad' : 'down-good'}`}>
-                                        {rm.delta_medium > 0 ? '+' : ''}{rm.delta_medium}
-                                    </div>
-                                )}
-                            </div>
-                            <div className="m-stat">
-                                <div className="m-stat-value blue">{rm.total_flags}</div>
-                                <div className="m-stat-label">Total Signals</div>
-                                {!rm.is_baseline && (
-                                    <div className={`m-stat-delta ${rm.delta_total > 0 ? 'up-bad' : 'down-good'}`}>
-                                        {rm.delta_total > 0 ? '+' : ''}{rm.delta_total}
-                                    </div>
-                                )}
-                            </div>
-                            <div className="m-stat">
-                                <div className="m-stat-value red">{rm.flagged_companies}</div>
-                                <div className="m-stat-label">Companies Flagged</div>
-                                {!rm.is_baseline && (
-                                    <div className={`m-stat-delta ${rm.delta_companies > 0 ? 'up-bad' : 'down-good'}`}>
-                                        {rm.delta_companies > 0 ? '+' : ''}{rm.delta_companies}
-                                    </div>
-                                )}
-                            </div>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">Acceleration</span>
+                            <span className="text-lg font-bold text-slate-900 dark:text-white mt-1">{acceleration}</span>
+                            <span className="text-[10px] font-medium text-slate-500 uppercase tracking-tighter">Status</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">Total Capital</span>
+                            <span className="text-lg font-bold text-slate-900 dark:text-white mt-1">₹{(total_capital / 1e7).toFixed(1)} Cr</span>
+                            <span className="text-[10px] font-medium text-slate-500 uppercase tracking-tighter">Deployed</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* ══════════════════════════════════════════
-                SECTION 2 — PORTFOLIO HEALTH INTELLIGENCE
-                ══════════════════════════════════════════ */}
-            <div className="glass-card section-health">
-                <h2>🏥 Portfolio Health Distribution</h2>
-                <div className="health-layout">
-                    {/* Stacked bar */}
-                    <div className="health-bar-container">
-                        <div className="health-bar">
-                            {Object.entries(ph.tiers).map(([tier, count]) => {
-                                if (count === 0) return null;
-                                const pct = ((count / ph.total) * 100).toFixed(1);
+            {/* 2️⃣ Below: Portfolio Breakdown (Selector + Active Tile) */}
+            <div>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                        {data.portfolio_count === 1 ? "Your Portfolio" : "Portfolio Attribution"}
+                    </h2>
+                    <Link to="/portfolio?new=true" className="text-sm font-bold text-blue-600 hover:text-blue-700">+ New Portfolio</Link>
+                </div>
+
+                {/* 2.1 Mini-Tiles (Selector) - Only show if > 1 portfolio */}
+                {data.portfolio_count > 1 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {summaries.map(pf => (
+                            <button
+                                key={pf.id}
+                                onClick={() => setActivePid(pf.id)}
+                                className={`px-3 py-1.5 rounded-md border text-xs font-bold transition-all flex items-center gap-2 ${activePid === pf.id
+                                    ? 'bg-slate-700 text-white border-slate-700 shadow-sm'
+                                    : 'bg-white dark:bg-slate-900 text-slate-500 border-slate-200 dark:border-slate-800 hover:border-slate-400'}`}
+                            >
+                                <span className={`w-1.5 h-1.5 rounded-full ${pf.tier === 'high_risk' ? 'bg-red-500' : (pf.tier === 'elevated' ? 'bg-amber-500' : 'bg-green-500')}`} />
+                                {pf.name}
+                                <span className="opacity-50 text-[9px] ml-1">{pf.score}</span>
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                {/* 2.2 Active Detail Card (Shown Tile) */}
+                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div
+                        onClick={() => navigate(`/portfolio/${activePf.id}`)}
+                        className={`glass-card flex items-center justify-between hover:border-blue-500 cursor-pointer transition-all group ${activePf.tier !== 'stable' ? 'bg-amber-50/5' : ''} ${data.portfolio_count > 1 ? 'p-5' : 'p-6'}`}
+                    >
+                        <div className="flex items-center gap-6">
+                            <div className={`w-3 rounded-full ${data.portfolio_count > 1 ? 'h-12' : 'h-16'} ${activePf.tier === 'high_risk' ? 'bg-red-500' : (activePf.tier === 'elevated' ? 'bg-amber-500' : 'bg-green-500')}`} />
+                            <div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{activePf.tier.replace('_', ' ')}</div>
+                                <div className={`${data.portfolio_count > 1 ? 'text-xl' : 'text-2xl'} font-black text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors`}>{activePf.name}</div>
+                                <div className="text-sm text-slate-500 mt-1">₹{(activePf.capital / 1e7).toFixed(2)} Cr Capital Deployed</div>
+                            </div>
+                        </div>
+                        <div className="text-right flex flex-col items-end">
+                            <div className={`${data.portfolio_count > 1 ? 'text-4xl' : 'text-5xl'} font-black text-slate-900 dark:text-white leading-none`}>{activePf.score}</div>
+                            <div className="text-[10px] font-bold text-slate-400 mt-2 tracking-widest uppercase">Risk Score</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 2.3 Risk Distribution Strip */}
+                <div className="flex flex-wrap gap-6 mt-8 py-4 border-t border-slate-100 dark:border-slate-800/50">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase">Risk Density:</div>
+                    <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                        <span className="text-[10px] text-slate-500">STABLE:</span>
+                        <span className="text-sm font-black text-slate-900 dark:text-white">{summaries.filter(s => s.tier === 'stable').length}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                        <span className="text-[10px] text-slate-500">MONITORING:</span>
+                        <span className="text-sm font-black text-slate-900 dark:text-white">{summaries.filter(s => s.tier === 'elevated').length}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                        <span className="text-[10px] text-slate-500">ELEVATED:</span>
+                        <span className="text-sm font-black text-slate-900 dark:text-white">{summaries.filter(s => s.tier === 'high_risk').length}</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* 3️⃣ Attention Required Section */}
+            {(escalations.length > 0 || summaries.some(p => p.tier !== 'stable')) && (
+                <div className={`glass-card border-t-4 shadow-lg ${status === 'Monitoring'
+                    ? 'border-t-amber-500 border-x-slate-100 border-b-slate-100 dark:border-slate-800 bg-amber-50/10'
+                    : 'border-t-red-600 border-x-slate-100 border-b-slate-100 dark:border-slate-800 bg-red-50/10'}`}>
+                    <div className={`p-4 border-b flex items-center justify-between ${status === 'Monitoring' ? 'border-amber-100 dark:border-amber-900/20' : 'border-red-100 dark:border-red-900/20'}`}>
+                        <h2 className={`text-base font-bold flex items-center gap-2 ${status === 'Monitoring' ? 'text-amber-700 dark:text-amber-400' : 'text-red-700 dark:text-red-400'}`}>
+                            <span>{status === 'Monitoring' ? '👁️' : '⚠️'}</span> {status === 'Monitoring' ? 'ACTIVE MONITORING' : 'ATTENTION REQUIRED'}
+                        </h2>
+                        {summaries.filter(p => p.tier !== 'stable').length > 0 && (
+                            <span className={`text-[10px] font-black text-white px-2 py-0.5 rounded animate-pulse ${status === 'Monitoring' ? 'bg-amber-500' : 'bg-red-600'}`}>
+                                {summaries.filter(p => p.tier !== 'stable').length} AT RISK
+                            </span>
+                        )}
+                    </div>
+                    <div className="p-0">
+                        {/* Portfolios needing attention */}
+                        {summaries.filter(p => p.tier !== 'stable').map(pf => (
+                            <div key={pf.id} className="p-5 flex items-center justify-between border-b border-slate-50 dark:border-slate-900/10 last:border-0 hover:bg-slate-50/50 cursor-pointer" onClick={() => navigate(`/portfolio/${pf.id}`)}>
+                                <div className="flex items-center gap-3">
+                                    <div className={`text-sm font-bold ${pf.tier === 'high_risk' ? 'text-red-700 dark:text-red-300' : 'text-amber-700 dark:text-amber-300'}`}>
+                                        {pf.name} <span className="text-slate-400 mx-1">•</span> {pf.tier.toUpperCase()} Status
+                                    </div>
+                                </div>
+                                <div className={`text-xs font-semibold decoration-dotted underline underline-offset-4 ${pf.tier === 'high_risk' ? 'text-red-600' : 'text-amber-600'}`}>
+                                    {pf.tier === 'high_risk' ? 'Mitigate Risk →' : 'Review Signals →'}
+                                </div>
+                            </div>
+                        ))}
+
+                        {/* Deduplicated Escalations */}
+                        {(() => {
+                            // Group escalations by ticker
+                            const groups = escalations.reduce((acc, esc) => {
+                                if (!acc[esc.ticker]) acc[esc.ticker] = [];
+                                acc[esc.ticker].push(esc);
+                                return acc;
+                            }, {});
+
+                            return Object.entries(groups).slice(0, 3).map(([ticker, items], i) => {
+                                const count = items.length;
+                                const severity = items.some(i => i.severity === 'CRITICAL') ? 'CRITICAL' : (items.some(i => i.severity === 'HIGH') ? 'HIGH' : 'MEDIUM');
+                                const quarters = items.map(i => `Q${i.quarter}`).filter((v, i, a) => a.indexOf(v) === i).sort();
+                                const range = quarters.length > 1 ? `${quarters[0]}-${quarters[quarters.length - 1]}` : quarters[0];
+                                const year = items[0].year || '2025';
+
                                 return (
-                                    <div
-                                        key={tier}
-                                        className="health-bar-segment"
-                                        style={{ width: `${pct}%`, background: TIER_CONFIG[tier].color }}
-                                        title={`${TIER_CONFIG[tier].label}: ${count} (${pct}%)`}
-                                    >
-                                        {parseFloat(pct) > 8 && <span>{count}</span>}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div className="health-legend">
-                            {Object.entries(ph.tiers).map(([tier, count]) => (
-                                <div key={tier} className="health-legend-item">
-                                    <span className="legend-dot" style={{ background: TIER_CONFIG[tier].color }} />
-                                    <span className="legend-label">{TIER_CONFIG[tier].label}</span>
-                                    <span className="legend-count">{count}</span>
-                                    {ph.deltas && renderDelta(ph.deltas[tier], tier === 'stable')}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Mini donut */}
-                    <div className="health-donut">
-                        <ResponsiveContainer width="100%" height={200}>
-                            <PieChart>
-                                <Pie
-                                    data={healthData}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={55}
-                                    outerRadius={80}
-                                    dataKey="value"
-                                    strokeWidth={2}
-                                    stroke="var(--bg-primary)"
-                                >
-                                    {healthData.map((entry, i) => (
-                                        <Cell key={i} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                                <Tooltip
-                                    contentStyle={{
-                                        background: "var(--bg-card)",
-                                        border: "1px solid var(--border)",
-                                        borderRadius: "8px",
-                                        color: "var(--text-primary)",
-                                        fontSize: 13,
-                                    }}
-                                    formatter={(value, name) => [`${value} companies`, name]}
-                                />
-                            </PieChart>
-                        </ResponsiveContainer>
-                        <div className="donut-center-label">
-                            <span className="donut-center-num">{ph.total}</span>
-                            <span className="donut-center-text">Total</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* ══════════════════════════════════════════
-                LOWER GRID — 70/30 LAYOUT
-                ══════════════════════════════════════════ */}
-            <div className="dashboard-lower-grid">
-                {/* LEFT 70% */}
-                <div className="dashboard-lower-left">
-                    {/* SECTION 3 — TOP ACTIVE RISK SIGNALS */}
-                    <div className="glass-card">
-                        <h2>📡 Top Active Risk Signals</h2>
-                        <table className="intelligence-table">
-                            <thead>
-                                <tr>
-                                    <th style={{ width: '35%' }}>SIGNAL</th>
-                                    <th style={{ width: '15%' }}>COMPANIES HIT</th>
-                                    <th style={{ width: '25%' }}>IMPACT</th>
-                                    <th style={{ width: '15%' }}>SEVERITY</th>
-                                    <th style={{ width: '10%' }}>WEIGHT</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {flag_pressure.slice(0, 5).map(fp => (
-                                    <tr key={fp.code}>
-                                        <td>
-                                            <div className="signal-name">
-                                                <span className="flag-code-sm">{fp.code}</span>
-                                                {fp.name}
+                                    <div key={ticker} className="p-4 flex items-center justify-between border-b border-slate-50 dark:border-slate-800/50 last:border-0 hover:bg-slate-50/30 cursor-pointer" onClick={() => navigate(`/company/${ticker}`)}>
+                                        <div className="flex flex-col">
+                                            <div className="text-sm font-bold text-slate-900 dark:text-white">
+                                                {ticker}
                                             </div>
-                                        </td>
-                                        <td><div className="companies-hit">{fp.companies_impacted}</div></td>
-                                        <td>
-                                            <div className="impact-bar-bg">
-                                                <div className="impact-bar-fill" style={{ width: `${fp.impact_pct}%`, backgroundColor: fp.max_severity === 'HIGH' ? '#ef4444' : '#f59e0b' }}></div>
-                                            </div>
-                                            <span className="impact-pct">{fp.impact_pct}%</span>
-                                        </td>
-                                        <td>
-                                            <span className={`severity-badge ${fp.max_severity.toLowerCase()}`}>
-                                                {fp.max_severity}
-                                            </span>
-                                        </td>
-                                        <td><div className="weight-cell">{fp.severity_weight}</div></td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {/* SECTION 4 — MOST AT-RISK COMPANIES */}
-                    <div className="glass-card">
-                        <h2>🎯 Most At-Risk Companies</h2>
-                        <table className="intelligence-table">
-                            <thead>
-                                <tr>
-                                    <th style={{ width: '30%' }}>TICKER</th>
-                                    <th style={{ width: '20%' }}>RISK SCORE <span className="header-context">(0-15)</span></th>
-                                    <th style={{ width: '10%' }}>FLAGS</th>
-                                    <th style={{ width: '15%' }}>SEVERITY</th>
-                                    <th style={{ width: '25%' }}>LAST TRIGGERED</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {most_at_risk.map(c => (
-                                    <tr key={c.ticker} className={`risk-row tier-${c.tier || 'stable'}`} onClick={() => window.location.href = `/company/${c.ticker}`}>
-                                        <td>
-                                            <div className="company-cell">
-                                                <div className="ticker clickable bold-ticker">{c.ticker}</div>
-                                                <div className="company-name-sm">{c.name}</div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="risk-score-cell">
-                                                <span className={`risk-score-num tier-${c.tier}`}>{c.risk_score}</span>
-                                                <div className="risk-score-bar-bg">
-                                                    <div className="risk-score-bar-fill" style={{
-                                                        width: `${Math.min(100, (c.risk_score / 15) * 100)}%`,
-                                                        backgroundColor: c.tier === 'high_risk' ? '#ef4444' : (c.tier === 'elevated' ? '#f97316' : '#f59e0b')
-                                                    }}></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><span className="flag-count-badge">{c.flag_count}</span></td>
-                                        <td>
-                                            <span className={`severity-badge ${c.highest_severity.toLowerCase()}`}>
-                                                {c.highest_severity}
-                                            </span>
-                                        </td>
-                                        <td><div className="date-cell">{c.last_triggered}</div></td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* RIGHT 30% */}
-                <div className="dashboard-lower-right">
-                    {/* SECTION 5 — NEW DETERIORATIONS */}
-                    <div className="glass-card deterioration-card">
-                        <div className="det-header-row">
-                            <h2 className="det-title">⚠️ New Deteriorations</h2>
-                            <div className="live-status">LIVE</div>
-                        </div>
-                        <div className="section-subtitle">Since last quarter results</div>
-
-                        <div className="deterioration-list">
-                            {new_deteriorations && new_deteriorations.length > 0 ? (
-                                new_deteriorations.slice(0, 6).map(d => (
-                                    <div key={d.ticker} className="deterioration-item-v2" onClick={() => window.location.href = `/company/${d.ticker}`}>
-                                        <div className="det-stripe" style={{ backgroundColor: d.high_count > 0 ? '#ef4444' : '#f59e0b' }}></div>
-                                        <div className="det-content">
-                                            <div className="det-top-row">
-                                                <span className="det-ticker">{d.ticker}</span>
-                                                <span className="det-badge-sm">{d.high_count > 0 ? 'High Risk' : 'Medium'}</span>
-                                            </div>
-                                            <div className="det-trigger-row">
-                                                <span className="det-trigger-icon">⚡</span>
-                                                <span className="det-trigger-text">{d.trigger_name || "New Signal Detect"}</span>
+                                            <div className="text-xs text-slate-500 mt-0.5 font-medium">
+                                                <span className={severity === 'CRITICAL' ? 'text-red-600 font-bold' : 'text-amber-600 font-bold'}>
+                                                    {count} {severity} Signals
+                                                </span>
+                                                <span className="mx-1">•</span>
+                                                {range} {year}
                                             </div>
                                         </div>
+                                        <button className="text-[10px] font-bold text-blue-600 uppercase tracking-wide hover:underline">Review Signals →</button>
                                     </div>
-                                ))
-                            ) : (
-                                <div className="empty-state-sm">No new deteriorations detected.</div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* QUICK STATS */}
-                    <div className="glass-card quick-stats-card">
-                        <h2>📊 Quick Stats</h2>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Total Companies</span>
-                            <span className="qs-value">{rm.total_companies}</span>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Companies Flagged</span>
-                            <div className="qs-value-group">
-                                <span className="qs-value red">{rm.flagged_companies}</span>
-                                {renderQsDelta(rm.delta_companies)}
-                            </div>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Severity-Weighted Score</span>
-                            <span className="qs-value">{rm.severity_weighted}</span>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Risk Density</span>
-                            <div className="qs-value-group">
-                                <span className="qs-value amber">{rm.risk_density}</span>
-                                {renderQsDelta(rm.delta_density)}
-                            </div>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">High Severity Flags</span>
-                            <div className="qs-value-group">
-                                <span className="qs-value red">{rm.high_flags}</span>
-                                {renderQsDelta(rm.delta_high)}
-                            </div>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Medium Severity Flags</span>
-                            <div className="qs-value-group">
-                                <span className="qs-value amber">{rm.medium_flags}</span>
-                                {renderQsDelta(rm.delta_medium)}
-                            </div>
-                        </div>
+                                );
+                            });
+                        })()}
                     </div>
                 </div>
-            </div>
-        </>
+            )}
+        </div>
     );
 }

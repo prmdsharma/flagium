@@ -12,8 +12,16 @@ class PortfolioCreate(BaseModel):
     name: str
     description: Optional[str] = None
 
+class PortfolioUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+
 class PortfolioItemAdd(BaseModel):
     ticker: str
+    investment: Optional[int] = 100000
+
+class PortfolioItemUpdate(BaseModel):
+    investment: int
 
 class PortfolioMetadata(BaseModel):
     id: int
@@ -98,7 +106,7 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
         
     # 2. Get Holdings
     cursor.execute("""
-        SELECT c.id, c.ticker, c.name, c.sector 
+        SELECT c.id, c.ticker, c.name, c.sector, pi.investment 
         FROM portfolio_items pi
         JOIN companies c ON pi.company_id = c.id
         WHERE pi.portfolio_id = %s
@@ -127,7 +135,7 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
     for c in companies:
         # Fetch ALL flags to determine history vs current
         cursor.execute("""
-            SELECT flag_name, severity, period_type, created_at 
+            SELECT flag_name, severity, period_type, fiscal_year, fiscal_quarter, created_at 
             FROM flags 
             WHERE company_id = %s
             ORDER BY created_at DESC
@@ -186,6 +194,8 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
                     "flag": f["flag_name"],
                     "severity": f["severity"],
                     "date": str(f["created_at"]),
+                    "year": f["fiscal_year"],
+                    "quarter": f["fiscal_quarter"],
                     "is_new": True,
                     "event_type": event_type,
                     "urgency": urgency
@@ -210,8 +220,6 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
         
         if delta > 0: momentum = "Increasing"
         elif delta < 0: momentum = "Improving"
-        if delta > 0: momentum = "Increasing"
-        elif delta < 0: momentum = "Improving"
         else: momentum = "Stable"
         
         # Type 2: Risk Jump (Sudden Deterioration)
@@ -221,6 +229,8 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
                 "flag": f"Risk Score Jump (+{delta})",
                 "severity": "CRITICAL",
                 "date": str(datetime.date.today()), # Detected now
+                "year": today.year,
+                "quarter": (today.month - 1) // 3 + 1,
                 "is_new": True,
                 "event_type": "Jump",
                 "urgency": "High"
@@ -238,6 +248,7 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
             "risk_score": c_current_score,
             "risk_delta": delta,
             "momentum": momentum,
+            "investment": c["investment"],
             "active_flags": c_active_flags_count,
             "primary_driver": primary_driver,
             "latest_flag_date": str(latest_flag_date) if latest_flag_date else None
@@ -269,6 +280,15 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
     cursor.close()
     conn.close()
     
+    # Deduplicate escalations by (ticker, flag, year, quarter)
+    unique_escalating = {}
+    for esc in escalating:
+        key = (esc["ticker"], esc["flag"], esc["year"], esc["quarter"])
+        if key not in unique_escalating:
+            unique_escalating[key] = esc
+    
+    escalating = list(unique_escalating.values())
+
     # Sort Escalations by Date DESC
     escalating.sort(key=lambda x: x["date"], reverse=True)
     
@@ -283,6 +303,123 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
         "holdings": holdings,
         "escalations": escalating, # Now contains real recent flags
         "concentration": concentration_list
+    }
+
+@router.get("/aggregated/health")
+def get_aggregated_health(current_user: dict = Depends(get_current_user)):
+    """GET health across all portfolios, capital-weighted."""
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    # 1. Get all portfolios for user
+    cursor.execute("SELECT id, name FROM portfolios WHERE user_id = %s", (current_user["id"],))
+    pfs = cursor.fetchall()
+    
+    if not pfs:
+        return {
+            "risk_score": 0,
+            "risk_delta": 0,
+            "total_capital": 0,
+            "portfolio_count": 0,
+            "summaries": [],
+            "escalations": [],
+            "status": "Stable",
+            "escalation_prob": 0,
+            "acceleration": "Stable"
+        }
+
+    all_portfolio_details = []
+    total_weighted_score = 0
+    total_capital = 0
+    all_escalations = []
+    
+    for pf in pfs:
+        # We reuse the logic or just fetch enough to calc
+        # For efficiency, let's fetch holdings and their risk scores directly
+        cursor.execute("""
+            SELECT pi.investment, c.id as company_id, c.ticker
+            FROM portfolio_items pi
+            JOIN companies c ON pi.company_id = c.id
+            WHERE pi.portfolio_id = %s
+        """, (pf["id"],))
+        items = cursor.fetchall()
+        
+        pf_total_investment = sum(item["investment"] for item in items)
+        pf_weighted_sum = 0
+        
+        # Determine each company's score (reusing weights)
+        weights = {"Critical": 15, "High": 10, "Medium": 5, "Low": 2}
+        
+        for item in items:
+            cursor.execute("SELECT flag_name, severity, created_at, fiscal_year, fiscal_quarter FROM flags WHERE company_id = %s", (item["company_id"],))
+            flags = cursor.fetchall()
+            c_score = sum(weights.get(f["severity"].capitalize() if f["severity"] else "Medium", 5) for f in flags)
+            c_score = min(c_score, 100)
+            
+            pf_weighted_sum += (c_score * item["investment"])
+            
+            # Also collect recent escalations (last 30 days)
+            thirty_days_ago = datetime.date.today() - datetime.timedelta(days=30)
+            for f in flags:
+                f_date_raw = f["created_at"]
+                if isinstance(f_date_raw, datetime.datetime): f_date = f_date_raw.date()
+                elif isinstance(f_date_raw, datetime.date): f_date = f_date_raw
+                else: f_date = datetime.date.today()
+                
+                if f_date >= thirty_days_ago:
+                    all_escalations.append({
+                        "portfolio_name": pf["name"],
+                        "ticker": item["ticker"],
+                        "flag": f["flag_name"],
+                        "severity": f["severity"],
+                        "date": str(f["created_at"]),
+                        "year": f["fiscal_year"],
+                        "quarter": f["fiscal_quarter"]
+                    })
+
+        pf_score = round(pf_weighted_sum / pf_total_investment) if pf_total_investment > 0 else 0
+        
+        # Tier logic
+        if pf_score < 30: tier = "stable"
+        elif pf_score < 60: tier = "elevated"
+        else: tier = "high_risk"
+        
+        all_portfolio_details.append({
+            "id": pf["id"],
+            "name": pf["name"],
+            "score": pf_score,
+            "tier": tier,
+            "capital": pf_total_investment
+        })
+        
+        total_weighted_score += pf_weighted_sum
+        total_capital += pf_total_investment
+
+    avg_weighted_score = round(total_weighted_score / total_capital) if total_capital > 0 else 0
+    
+    # Status Tiers
+    if avg_weighted_score < 25: status = "Stable"
+    elif avg_weighted_score < 50: status = "Monitoring"
+    else: status = "High Risk"
+
+    # Deduplicate escalations by (ticker, flag, year, quarter)
+    unique_escalations = {}
+    for esc in all_escalations:
+        key = (esc["ticker"], esc["flag"], esc["year"], esc["quarter"])
+        if key not in unique_escalations:
+            unique_escalations[key] = esc
+            
+    # Aggregated Response
+    return {
+        "risk_score": avg_weighted_score,
+        "risk_delta": 2, # Sim for now
+        "total_capital": total_capital,
+        "portfolio_count": len(pfs),
+        "summaries": all_portfolio_details,
+        "escalations": sorted(unique_escalations.values(), key=lambda x: x["date"], reverse=True)[:10],
+        "status": status,
+        "escalation_prob": min(99, int(avg_weighted_score * 0.8 + 10)),
+        "acceleration": "Moderate" if avg_weighted_score > 30 else "Stable"
     }
 
 @router.post("/{portfolio_id}/items")
@@ -303,8 +440,8 @@ def add_portfolio_item(portfolio_id: int, item: PortfolioItemAdd, current_user: 
          
     try:
         cursor.execute(
-            "INSERT INTO portfolio_items (portfolio_id, company_id) VALUES (%s, %s)",
-            (portfolio_id, company[0])
+            "INSERT INTO portfolio_items (portfolio_id, company_id, investment) VALUES (%s, %s, %s)",
+            (portfolio_id, company[0], item.investment)
         )
         conn.commit()
     except Exception as e:
@@ -315,6 +452,37 @@ def add_portfolio_item(portfolio_id: int, item: PortfolioItemAdd, current_user: 
         conn.close()
     
     return {"status": "added", "ticker": item.ticker}
+
+
+@router.put("/{portfolio_id}/items/{ticker}")
+def update_portfolio_item(portfolio_id: int, ticker: str, item: PortfolioItemUpdate, current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # Verify Owner
+    cursor.execute("SELECT id FROM portfolios WHERE id=%s AND user_id=%s", (portfolio_id, current_user["id"]))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+        
+    try:
+        # Get Company ID
+        cursor.execute("SELECT id FROM companies WHERE ticker=%s", (ticker,))
+        company = cursor.fetchone()
+        if not company:
+            raise HTTPException(status_code=404, detail="Company not found")
+            
+        cursor.execute(
+            "UPDATE portfolio_items SET investment = %s WHERE portfolio_id = %s AND company_id = %s",
+            (item.investment, portfolio_id, company[0])
+        )
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return {"status": "updated", "ticker": ticker, "investment": item.investment}
 
 
 @router.delete("/{portfolio_id}/items/{ticker}")
@@ -344,6 +512,43 @@ def remove_portfolio_item(portfolio_id: int, ticker: str, current_user: dict = D
         conn.close()
     
     return {"status": "removed", "ticker": ticker}
+
+@router.patch("/{portfolio_id}")
+def update_portfolio(portfolio_id: int, item: PortfolioUpdate, current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # Verify Owner
+    cursor.execute("SELECT id FROM portfolios WHERE id=%s AND user_id=%s", (portfolio_id, current_user["id"]))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+        
+    try:
+        updates = []
+        values = []
+        if item.name is not None:
+            updates.append("name = %s")
+            values.append(item.name.strip())
+        if item.description is not None:
+            updates.append("description = %s")
+            values.append(item.description.strip())
+        
+        if not updates:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        values.append(portfolio_id)
+        cursor.execute(
+            f"UPDATE portfolios SET {', '.join(updates)} WHERE id = %s",
+            tuple(values)
+        )
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return {"status": "updated", "id": portfolio_id, "name": item.name}
 
 @router.delete("/{portfolio_id}")
 def delete_portfolio(portfolio_id: int, current_user: dict = Depends(get_current_user)):

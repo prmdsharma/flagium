@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { api } from "../api";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 import ConfirmModal from "../components/common/ConfirmModal";
 
@@ -9,11 +9,24 @@ export default function PortfolioDashboard() {
     const { user } = useAuth();
     const navigate = useNavigate();
     const { id } = useParams(); // Get ID from URL
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const isCreatingNew = queryParams.get('new') === 'true';
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     // Refs
     const autocompleteRef = useRef(null);
+    const moreMenuRef = useRef(null);
+
+    // More Menu State
+    const [showMoreMenu, setShowMoreMenu] = useState(false);
+
+    // Rename State
+    const [isRenaming, setIsRenaming] = useState(false);
+    const [renameValue, setRenameValue] = useState("");
+    const renameInputRef = useRef(null);
 
     // Create / Setup State
     const [showCreate, setShowCreate] = useState(false);
@@ -44,11 +57,15 @@ export default function PortfolioDashboard() {
             if (autocompleteRef.current && !autocompleteRef.current.contains(event.target)) {
                 setShowDropdown(false);
             }
+            if (moreMenuRef.current && !moreMenuRef.current.contains(event.target)) {
+                setShowMoreMenu(false);
+            }
         };
 
         const handleEscape = (event) => {
             if (event.key === 'Escape') {
                 setShowDropdown(false);
+                setShowMoreMenu(false);
             }
         };
 
@@ -75,6 +92,9 @@ export default function PortfolioDashboard() {
     useEffect(() => {
         if (id) {
             loadDetail(id);
+        } else if (isCreatingNew) {
+            setData(null);
+            setError(null);
         } else {
             // Check if user has portfolios
             api.getPortfolios().then(res => {
@@ -85,16 +105,18 @@ export default function PortfolioDashboard() {
                 }
             }).catch(() => setData(null));
         }
-    }, [id, navigate]);
+    }, [id, navigate, isCreatingNew]);
 
     const loadDetail = async (portfolioId) => {
         setLoading(true);
+        setError(null);
         try {
             const d = await api.getPortfolioDetail(portfolioId);
             setData(d);
         } catch (e) {
             console.error("Failed to load portfolio detail", e);
-            // Optionally redirect to root or show error
+            setError(e.message);
+            setData(null);
         } finally {
             setLoading(false);
         }
@@ -126,11 +148,11 @@ export default function PortfolioDashboard() {
     const handleCreate = async () => {
         if (!newName) return;
         try {
-            await api.createPortfolio(newName);
+            const res = await api.createPortfolio(newName);
             setNewName("");
             setShowCreate(false);
-            // Force reload to refresh sidebar
-            window.location.reload();
+            // Navigate to the new portfolio
+            navigate(`/portfolio/${res.id}`);
         } catch (e) {
             alert("Failed to create portfolio: " + e.message);
         }
@@ -167,19 +189,27 @@ export default function PortfolioDashboard() {
         });
     };
 
-    const handleDeletePortfolio = () => {
+    const handleUpdateInvestment = async (ticker, newInv) => {
+        try {
+            await api.updatePortfolioItem(id, ticker, newInv);
+            loadDetail(id); // Refresh
+        } catch (err) {
+            alert("Failed to update investment: " + err.message);
+        }
+    };
+
+    const handleDeletePortfolio = async () => {
+        if (!id) return;
         setConfirmModal({
             isOpen: true,
             title: "Delete Portfolio?",
-            message: "This action cannot be undone. All holdings and history will be permanently deleted.",
+            message: "This will permanently remove this portfolio and all its contents. This action cannot be undone.",
             confirmText: "Delete Permanently",
             isDanger: true,
             onConfirm: async () => {
                 try {
                     await api.deletePortfolio(id);
-                    navigate('/');
-                    // Force reload to update sidebar
-                    setTimeout(() => window.location.reload(), 100);
+                    navigate("/portfolio", { replace: true });
                 } catch (err) {
                     alert("Failed to delete portfolio: " + err.message);
                 }
@@ -187,34 +217,92 @@ export default function PortfolioDashboard() {
         });
     };
 
+    const startRename = () => {
+        setRenameValue(data?.name || "");
+        setIsRenaming(true);
+        setShowMoreMenu(false);
+        setTimeout(() => renameInputRef.current?.focus(), 50);
+    };
+
+    const handleRenamePortfolio = async () => {
+        const trimmed = renameValue.trim();
+        if (!trimmed || trimmed === data.name) {
+            setIsRenaming(false);
+            return;
+        }
+        try {
+            await api.renamePortfolio(id, trimmed);
+            setIsRenaming(false);
+            loadDetail(id); // Refresh with new name
+        } catch (err) {
+            alert("Failed to rename portfolio: " + err.message);
+        }
+    };
+
     // ── RENDER ──
 
     // 1. Loading
     if (loading) return <div className="loading">Loading Risk Terminal...</div>;
 
-    // 2. No Selection (Library / Zero State)
-    if (!id || !data) {
+    // 2. Error or No Selection / Creation Mode
+    if (!id || !data || error || isCreatingNew) {
         return (
-            <div className="portfolio-empty-state">
-                <div className="login-card" style={{ textAlign: 'center', width: 450 }}>
-                    <h1 style={{ fontSize: 24, marginBottom: 10 }}>Portfolio Intelligence</h1>
-                    <p style={{ marginBottom: 30, color: 'var(--text-secondary)' }}>
-                        Select a portfolio from the sidebar or initialize a new one.
-                    </p>
-
-                    <div className="form-group">
-                        <label>Create New Portfolio</label>
-                        <input
-                            className="mono-input"
-                            value={newName}
-                            onChange={(e) => setNewName(e.target.value)}
-                            placeholder="e.g. High Growth Tech"
-                            style={{ width: '100%' }}
-                        />
+            <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 animate-enter">
+                <div className="glass-card p-8 w-full max-w-md text-center">
+                    <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">
+                        {error ? '🔒' : (isCreatingNew ? '📁' : '📊')}
                     </div>
-                    <button className="login-btn" onClick={handleCreate} style={{ width: '100%' }}>
-                        Initialize Portfolio
-                    </button>
+
+                    <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+                        {error ? 'Access Restricted' : (isCreatingNew ? 'Initialize Portfolio' : 'Portfolio Detail')}
+                    </h1>
+
+                    {error ? (
+                        <div className="mb-8 text-left">
+                            <div className="p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 rounded-xl text-sm text-red-600 dark:text-red-400">
+                                {error}. Please verify you have ownership of this portfolio.
+                            </div>
+                            <button
+                                className="mt-6 w-full py-3 bg-slate-900 dark:bg-slate-700 text-white font-bold rounded-xl hover:bg-slate-800 transition-colors"
+                                onClick={() => navigate('/dashboard')}
+                            >
+                                Return to Dashboard
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="space-y-6">
+                            <p className="text-slate-500 dark:text-slate-400 text-sm">
+                                {isCreatingNew
+                                    ? 'Give your new portfolio a name to start tracking capital risk across your holdings.'
+                                    : 'Select a portfolio from the navigation menu or initialize a new one.'}
+                            </p>
+
+                            <div className="text-left">
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Portfolio Name</label>
+                                <input
+                                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none block text-slate-900 dark:text-white transition-all shadow-sm"
+                                    value={newName}
+                                    onChange={(e) => setNewName(e.target.value)}
+                                    placeholder="e.g. High Growth Tech"
+                                />
+                            </div>
+                            <button
+                                className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
+                                onClick={handleCreate}
+                            >
+                                {isCreatingNew ? 'Initialize Portfolio' : 'Create First Portfolio'}
+                            </button>
+
+                            {(isCreatingNew || !id) && (
+                                <button
+                                    className="w-full py-3 text-sm font-bold text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
+                                    onClick={() => navigate('/dashboard')}
+                                >
+                                    Cancel
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         );
@@ -223,23 +311,63 @@ export default function PortfolioDashboard() {
     // 3. Detail View
     return (
         <div className="portfolio-dashboard animate-enter">
-            {/* [A] PAGE HEADER (Identity & Actions) */}
-            <div className="page-header-container" style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'end', padding: '0 8px' }}>
+            {/* [A] PAGE HEADER (Identity & Portfolio-Level Actions) */}
+            <div className="page-header-container" style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 8px' }}>
                 <div className="header-left">
-                    <h1 className="page-title" style={{ fontSize: '28px', marginBottom: '8px' }}>{data.name}</h1>
-                    <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
+                    {isRenaming ? (
+                        <input
+                            ref={renameInputRef}
+                            className="rename-input"
+                            value={renameValue}
+                            onChange={(e) => setRenameValue(e.target.value)}
+                            onBlur={handleRenamePortfolio}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleRenamePortfolio();
+                                if (e.key === 'Escape') setIsRenaming(false);
+                            }}
+                        />
+                    ) : (
+                        <h1 className="page-title" style={{ fontSize: '28px', marginBottom: '4px' }}>{data.name}</h1>
+                    )}
+                    <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
                         {data.holdings.length} Holdings • Q3 FY25 Strategy
                     </div>
                 </div>
-                <div className="header-right" style={{ display: 'flex', gap: '12px' }}>
+                <div className="header-right" style={{ position: 'relative' }} ref={moreMenuRef}>
                     <button
-                        className="btn-sm-text text-red"
-                        onClick={handleDeletePortfolio}
-                        style={{ color: '#EF4444', border: '1px solid #FECACA', background: '#FEF2F2' }}
+                        className="btn-icon-more"
+                        onClick={() => setShowMoreMenu(prev => !prev)}
+                        title="Portfolio options"
                     >
-                        Delete Portfolio
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <circle cx="10" cy="4" r="1.5" />
+                            <circle cx="10" cy="10" r="1.5" />
+                            <circle cx="10" cy="16" r="1.5" />
+                        </svg>
                     </button>
-                    <button className="btn-sm-solid" onClick={() => setShowAddStock(true)}>+ Add Stock</button>
+                    {showMoreMenu && (
+                        <div className="more-menu-dropdown">
+                            <button
+                                className="more-menu-item"
+                                onClick={startRename}
+                            >
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M11.333 2A1.886 1.886 0 0114 4.667l-9 9-3.667 1L2.667 11l9-9z" />
+                                </svg>
+                                Rename Portfolio
+                            </button>
+                            <div style={{ height: '1px', background: 'var(--border)', margin: '4px 8px' }}></div>
+                            <button
+                                className="more-menu-item more-menu-danger"
+                                onClick={() => { setShowMoreMenu(false); handleDeletePortfolio(); }}
+                            >
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M2 4h12M5.333 4V2.667a1.333 1.333 0 011.334-1.334h2.666a1.333 1.333 0 011.334 1.334V4m2 0v9.333a1.333 1.333 0 01-1.334 1.334H4.667a1.333 1.333 0 01-1.334-1.334V4h9.334z" />
+                                </svg>
+                                Delete Portfolio
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -277,27 +405,6 @@ export default function PortfolioDashboard() {
                 </div>
             </div>
 
-            {/* [C] Escalation Alerts (Now Clickable) */}
-            <div className="exec-section">
-                <h3 className="section-title">Escalation Events</h3>
-                <div className="exec-feed">
-                    {data.escalations.length === 0 ? <div className="text-muted">No active alerts</div> :
-                        data.escalations.map((a, idx) => (
-                            <div
-                                key={idx}
-                                className={`exec-alert ${a.severity.toLowerCase()} hover-lift`}
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => navigate(`/company/${a.ticker}`)}
-                            >
-                                <div className="alert-ticker">{a.ticker}</div>
-                                <div className="alert-issue">{a.flag || a.issue}</div>
-                                <div className="alert-meta">{a.date}</div>
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-
             {/* [C.1] Risk Trajectory (Separate Section - Fixed) */}
             <div className="exec-section" style={{ marginBottom: '48px' }}>
                 <div className="pf-grid-12">
@@ -327,9 +434,93 @@ export default function PortfolioDashboard() {
                 </div>
             </div>
 
-            {/* [C] Risk Heatmap (Full Width) */}
+            {/* [C] Escalation Alerts (Grouped & Structured) */}
             <div className="exec-section">
-                <h3 className="section-title">Risk Heatmap</h3>
+                <h3 className="section-title">Risk Intelligence</h3>
+                <div className="flex flex-col gap-4">
+                    {data.escalations.length === 0 ? <div className="text-slate-500 italic p-4">No active risk signals.</div> :
+                        Object.entries(data.escalations.reduce((acc, curr) => {
+                            if (!acc[curr.ticker]) acc[curr.ticker] = [];
+                            acc[curr.ticker].push(curr);
+                            return acc;
+                        }, {})).map(([ticker, signals]) => {
+                            // Group by flag within the ticker
+                            const flagGroups = signals.reduce((fAcc, curr) => {
+                                const key = curr.flag || curr.issue || 'General Risk';
+                                if (!fAcc[key]) fAcc[key] = [];
+                                fAcc[key].push(curr);
+                                return fAcc;
+                            }, {});
+
+                            return (
+                                <div
+                                    key={ticker}
+                                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-500 transition-all cursor-pointer shadow-sm group"
+                                    onClick={() => navigate(`/company/${ticker}`)}
+                                >
+                                    <div className="flex items-start justify-between mb-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-black text-slate-700 dark:text-slate-300 text-sm">
+                                                {ticker.substring(0, 2)}
+                                            </div>
+                                            <div>
+                                                <h4 className="text-lg font-black text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 transition-colors">
+                                                    {ticker}
+                                                </h4>
+                                                <span className="text-xs font-bold text-red-600 uppercase tracking-wider">
+                                                    {signals.length} Active Signals
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <button className="text-xs font-bold text-slate-400 group-hover:text-blue-600 uppercase tracking-widest transition-colors flex items-center gap-1">
+                                            Analyze <span className="text-lg">→</span>
+                                        </button>
+                                    </div>
+
+                                    <div className="space-y-2 pl-[52px]">
+                                        {Object.entries(flagGroups).map(([flag, items]) => {
+                                            const quarters = items.map(i => i.quarter ? `Q${i.quarter}` : '').filter(Boolean).sort();
+                                            const uniqueQuarters = [...new Set(quarters)];
+                                            const timeRange = uniqueQuarters.length > 0
+                                                ? (uniqueQuarters.length > 1 ? `${uniqueQuarters[0]}–${uniqueQuarters[uniqueQuarters.length - 1]}` : uniqueQuarters[0])
+                                                : '';
+                                            const year = items[0].year || '';
+
+                                            return (
+                                                <div key={flag} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-red-500 mt-0.5"></span>
+                                                    <span className="font-semibold text-slate-900 dark:text-white">
+                                                        {items.length} {flag}
+                                                    </span>
+                                                    {timeRange && (
+                                                        <span className="opacity-60 text-xs">
+                                                            ({timeRange} {year})
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                        {/* Placeholder for 'Risk Jump' if we had the data */}
+                                        {/* <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5"></span>
+                                            <span className="font-semibold">Risk Jump +40</span>
+                                        </div> */}
+                                    </div>
+                                </div>
+                            );
+                        })
+                    }
+                </div>
+            </div>
+
+
+
+            {/* [C] Risk Heatmap (Full Width) */}
+            <div className="exec-section" style={{ marginBottom: '48px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0' }}>
+                    <h3 className="section-title" style={{ marginBottom: 0 }}>Risk Heatmap</h3>
+                    <button className="btn-sm-solid" onClick={() => setShowAddStock(true)}>+ Add Stock</button>
+                </div>
                 {data.holdings.length === 0 ? (
                     <div className="zero-state-card">
                         <div style={{ fontSize: 48, marginBottom: 16 }}>📊</div>
@@ -343,31 +534,49 @@ export default function PortfolioDashboard() {
                             <thead>
                                 <tr>
                                     <th>COMPANY</th>
-                                    <th>RISK SCORE</th>
-                                    <th>SIGNALS</th>
+                                    <th>SECTOR</th>
+                                    <th>STOCK SCORE</th>
+                                    <th>FLAGS</th>
+                                    <th>INVESTMENT</th>
                                     <th style={{ textAlign: 'right' }}>ACTION</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.holdings.sort((a, b) => b.risk_score - a.risk_score).map(h => (
-                                    <tr key={h.ticker} style={{ cursor: 'pointer' }} onClick={() => navigate(`/company/${h.ticker}`)}>
+                                {[...data.holdings].sort((a, b) => (b.risk_score || 0) - (a.risk_score || 0)).map(h => (
+                                    <tr key={h.ticker} className="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer" onClick={() => navigate(`/company/${h.ticker}`)}>
                                         <td className="row-company">
-                                            <span className="row-ticker">{h.ticker}</span>
-                                            <span className="row-name">{h.name}</span>
+                                            <span className="row-ticker font-bold text-slate-900 dark:text-white">{h.ticker}</span>
+                                            <span className="row-name text-xs text-slate-500 block">{h.name}</span>
+                                        </td>
+                                        <td className="row-sector">
+                                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{h.sector || "N/A"}</span>
                                         </td>
                                         <td className="row-score">
-                                            <span className="score-big">{h.risk_score}</span>
-                                            <span className={`score-delta ${h.risk_delta > 0 ? 'text-red' : 'text-green'}`}>
-                                                {h.risk_delta > 0 ? "+" : ""}{h.risk_delta} QoQ
-                                            </span>
+                                            <div className="flex items-center gap-2">
+                                                <span className={`px-2 py-0.5 rounded text-xs font-bold ${h.risk_score > 60 ? 'bg-red-100 text-red-600' : (h.risk_score > 30 ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600')}`}>
+                                                    {h.risk_score}
+                                                </span>
+                                            </div>
                                         </td>
                                         <td className="row-meta">
-                                            <div style={{ fontWeight: 500 }}>{h.active_flags} Active Signals</div>
-                                            <div>Primary: {h.primary_driver}</div>
+                                            <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs font-bold text-slate-600 dark:text-slate-400">
+                                                🚩 {h.active_flags}
+                                            </span>
+                                        </td>
+                                        <td className="row-investment">
+                                            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                                <span className="text-xs font-mono text-slate-500">₹</span>
+                                                <input
+                                                    type="number"
+                                                    defaultValue={h.investment || 100000}
+                                                    onBlur={(e) => handleUpdateInvestment(h.ticker, parseInt(e.target.value))}
+                                                    className="w-24 bg-transparent border-b border-dashed border-slate-300 focus:border-blue-500 focus:outline-none text-xs font-mono text-slate-900 dark:text-white"
+                                                />
+                                            </div>
                                         </td>
                                         <td style={{ textAlign: 'right', verticalAlign: 'middle' }}>
                                             <button
-                                                className="btn-icon-danger"
+                                                className="btn-icon-danger opacity-0 group-hover:opacity-100 transition-opacity"
                                                 onClick={(e) => { e.stopPropagation(); handleRemoveStock(h.ticker); }}
                                             >
                                                 ✕
@@ -424,71 +633,73 @@ export default function PortfolioDashboard() {
 
 
             {/* Add Stock Modal - Refactored to match design system */}
-            {showAddStock && (
-                <div className="fixed inset-0 z-[1500] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-enter">
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100 dark:border-slate-700 p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Add Stock to Portfolio</h3>
-                            <button
-                                onClick={() => setShowAddStock(false)}
-                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <form onSubmit={handleAddStock} className="flex flex-col gap-4">
-                            <div className="relative" ref={autocompleteRef}>
-                                <input
-                                    autoFocus
-                                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm font-mono text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
-                                    placeholder="Ticker (e.g. RELIANCE)"
-                                    value={tickerInput}
-                                    onChange={e => setTickerInput(e.target.value)}
-                                    onFocus={() => { if (tickerInput.length >= 1) setShowDropdown(true); }}
-                                />
-                                {showDropdown && (
-                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50">
-                                        {filteredCompanies.length > 0 ? (
-                                            filteredCompanies.map(c => (
-                                                <div
-                                                    key={c.id}
-                                                    className="px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex justify-between items-center transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0"
-                                                    onClick={() => selectCompany(c.ticker)}
-                                                >
-                                                    <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">{c.ticker}</span>
-                                                    <span className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[180px]">{c.name}</span>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 text-center italic">
-                                                No companies found matching "{tickerInput}"
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                            <div className="flex gap-3 justify-end mt-2">
+            {
+                showAddStock && (
+                    <div className="fixed inset-0 z-[1500] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-enter">
+                        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100 dark:border-slate-700 p-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Add Stock to Portfolio</h3>
                                 <button
-                                    type="button"
-                                    className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
                                     onClick={() => setShowAddStock(false)}
+                                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                                 >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-500/20 transition-all"
-                                >
-                                    Add Company
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
                                 </button>
                             </div>
-                        </form>
+
+                            <form onSubmit={handleAddStock} className="flex flex-col gap-4">
+                                <div className="relative" ref={autocompleteRef}>
+                                    <input
+                                        autoFocus
+                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm font-mono text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
+                                        placeholder="Ticker (e.g. RELIANCE)"
+                                        value={tickerInput}
+                                        onChange={e => setTickerInput(e.target.value)}
+                                        onFocus={() => { if (tickerInput.length >= 1) setShowDropdown(true); }}
+                                    />
+                                    {showDropdown && (
+                                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50">
+                                            {filteredCompanies.length > 0 ? (
+                                                filteredCompanies.map(c => (
+                                                    <div
+                                                        key={c.id}
+                                                        className="px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex justify-between items-center transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0"
+                                                        onClick={() => selectCompany(c.ticker)}
+                                                    >
+                                                        <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">{c.ticker}</span>
+                                                        <span className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[180px]">{c.name}</span>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 text-center italic">
+                                                    No companies found matching "{tickerInput}"
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex gap-3 justify-end mt-2">
+                                    <button
+                                        type="button"
+                                        className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                                        onClick={() => setShowAddStock(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-500/20 transition-all"
+                                    >
+                                        Add Company
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

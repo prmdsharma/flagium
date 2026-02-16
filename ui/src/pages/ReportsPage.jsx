@@ -32,6 +32,34 @@ export default function ReportsPage() {
         }
     }, [user, authLoading, navigate]);
 
+    const [scanLoading, setScanLoading] = useState(false);
+    const [ingestLoading, setIngestLoading] = useState(null); // Ticker or null
+
+    const handleRunScan = async () => {
+        if (!confirm("Are you sure you want to trigger a full flag engine scan? This happens in the background.")) return;
+        setScanLoading(true);
+        try {
+            await api.triggerScan();
+            alert("Scan triggered successfully.");
+        } catch (err) {
+            alert("Failed to trigger scan: " + err.message);
+        } finally {
+            setScanLoading(false);
+        }
+    };
+
+    const handleRunIngest = async (ticker) => {
+        setIngestLoading(ticker);
+        try {
+            await api.triggerIngest(ticker);
+            alert(`Ingestion triggered for ${ticker}.`);
+        } catch (err) {
+            alert(`Failed to trigger ingestion for ${ticker}: ` + err.message);
+        } finally {
+            setIngestLoading(null);
+        }
+    };
+
     if (authLoading || loading) {
         return (
             <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-24 px-8 flex items-center justify-center">
@@ -101,36 +129,57 @@ export default function ReportsPage() {
                     </div>
 
                     {/* Flag Engine */}
-                    <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
-                        <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Flag Engine Status</div>
-                        <div className="flex flex-col gap-1">
-                            <div className="flex justify-between items-center">
-                                <span className="text-slate-600 dark:text-slate-300">Active Flags</span>
-                                <span className="font-bold text-slate-900 dark:text-white">{flag_engine.total_active_flags}</span>
-                            </div>
-                            <div className="flex justify-between items-center mt-2">
-                                <span className="text-slate-600 dark:text-slate-300">Last Run</span>
-                                <span className="text-sm text-slate-500 font-mono">
-                                    {flag_engine.last_run ? new Date(flag_engine.last_run).toLocaleString() : 'Never'}
-                                </span>
+                    <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Flag Engine Status</div>
+                            <div className="flex flex-col gap-1">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-slate-600 dark:text-slate-300">Active Flags</span>
+                                    <span className="font-bold text-slate-900 dark:text-white">{flag_engine.total_active_flags}</span>
+                                </div>
+                                <div className="flex justify-between items-center mt-2">
+                                    <span className="text-slate-600 dark:text-slate-300">Last Run</span>
+                                    <span className="text-sm text-slate-500 font-mono">
+                                        {flag_engine.last_run ? new Date(flag_engine.last_run).toLocaleString() : 'Never'}
+                                    </span>
+                                </div>
                             </div>
                         </div>
+                        <button
+                            onClick={handleRunScan}
+                            disabled={scanLoading}
+                            className={`mt-4 w-full py-2 px-4 rounded-lg text-sm font-medium text-white transition-colors ${scanLoading ? 'bg-slate-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
+                        >
+                            {scanLoading ? 'Scanning...' : 'Run Flag Engine'}
+                        </button>
                     </div>
                 </div>
 
                 {/* Detailed List */}
                 {ingestion.at_risk_list.length > 0 && (
                     <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-                        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700">
+                        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
                             <h3 className="font-semibold text-slate-900 dark:text-white">Companies with Data Gaps</h3>
+                            <button className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                                Export CSV
+                            </button>
                         </div>
                         <div className="divide-y divide-slate-100 dark:divide-slate-700 max-h-96 overflow-y-auto">
                             {ingestion.at_risk_list.map((item) => (
                                 <div key={item.ticker} className="px-6 py-3 flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <span className="font-medium text-slate-900 dark:text-white">{item.ticker}</span>
-                                    <span className="text-sm text-red-500 font-medium bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">
-                                        Only {item.quarters} Qtrs
-                                    </span>
+                                    <div className="flex items-center gap-4">
+                                        <span className="font-medium text-slate-900 dark:text-white w-24">{item.ticker}</span>
+                                        <span className="text-sm text-red-500 font-medium bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">
+                                            Only {item.quarters} Qtrs
+                                        </span>
+                                    </div>
+                                    <button
+                                        onClick={() => handleRunIngest(item.ticker)}
+                                        disabled={ingestLoading === item.ticker}
+                                        className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {ingestLoading === item.ticker ? 'Ingesting...' : 'Ingest Data'}
+                                    </button>
                                 </div>
                             ))}
                         </div>

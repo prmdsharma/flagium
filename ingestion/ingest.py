@@ -212,7 +212,21 @@ def ingest_company(session, conn, ticker, download_dir=None):
         for err in db_result["errors"]:
             print(f"  ❌ {err}")
 
-    # Step 6: Backfill Annual PBT from Q4 if missing
+    # Step 6: Cleanup XBRL files (User Request)
+    if result["status"] == "success":
+        print(f"  🧹 Cleaning up {len(filings)} XBRL files...")
+        for filing in filings:
+            xbrl_link = _extract_xbrl_link(filing)
+            if not xbrl_link:
+                continue
+            period_str = _extract_period(filing)
+            link_hash = hashlib.md5(xbrl_link.encode("utf-8")).hexdigest()[:6]
+            filename = f"{ticker}_{period_str}_{link_hash}.xml"
+            save_path = os.path.join(download_dir, filename)
+            if os.path.exists(save_path):
+                os.remove(save_path)
+
+    # Step 7: Backfill Annual PBT from Q4 if missing
     _backfill_annual_pbt(conn, ticker)
 
     return result

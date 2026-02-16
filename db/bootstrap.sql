@@ -77,6 +77,8 @@ CREATE TABLE IF NOT EXISTS flags (
     flag_name VARCHAR(100),
     severity VARCHAR(20),
     period_type VARCHAR(20) DEFAULT 'annual',  -- 'annual' or 'quarterly'
+    fiscal_year INT,
+    fiscal_quarter INT DEFAULT 0,
     message TEXT,
     details JSON,
     

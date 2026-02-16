@@ -16,7 +16,7 @@ LOOKBACK = 3
 SUPPORTS_QUARTERLY = False
 
 
-def check(conn, company_id, ticker, period_type="annual"):
+def check(conn, company_id, ticker, period_type="annual", year=None, quarter=None):
     """
     Check if OCF < Net Profit in 2 of last 3 years.
     Only runs on annual data (quarterly OCF not available).
@@ -26,14 +26,24 @@ def check(conn, company_id, ticker, period_type="annual"):
 
     cursor = conn.cursor(dictionary=True)
 
-    query = """
-        SELECT year, net_profit, operating_cash_flow
-        FROM financials
-        WHERE company_id = %s AND quarter = 0
-        ORDER BY year DESC
-        LIMIT %s
-    """
-    cursor.execute(query, (company_id, LOOKBACK))
+    if year:
+        query = """
+            SELECT year, net_profit, operating_cash_flow
+            FROM financials
+            WHERE company_id = %s AND quarter = 0 AND year <= %s
+            ORDER BY year DESC
+            LIMIT %s
+        """
+        cursor.execute(query, (company_id, year, LOOKBACK))
+    else:
+        query = """
+            SELECT year, net_profit, operating_cash_flow
+            FROM financials
+            WHERE company_id = %s AND quarter = 0
+            ORDER BY year DESC
+            LIMIT %s
+        """
+        cursor.execute(query, (company_id, LOOKBACK))
     rows = cursor.fetchall()
     cursor.close()
 

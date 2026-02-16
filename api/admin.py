@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from db.connection import get_connection
 from api.auth import get_current_user
-from ingestion.validate_data import get_data_counts
 
 router = APIRouter()
 
@@ -15,19 +14,51 @@ def get_ingestion_status(current_user: dict = Depends(get_current_user)):
     cursor = conn.cursor(dictionary=True)
 
     try:
-        # 1. Ingestion Stats
-        counts = get_data_counts(conn)
-        total_companies = len(counts)
-        # Assuming MIN_QUARTERS is 8, import it or hardcode? 
-        # Better to match validate_data.py logic. 
-        # Let's peek validate_data to see if MIN_QUARTERS is exportable.
-        # It is defined as a constant. I should probably import it if possible, 
-        # or just use 8 as per requirement.
-        min_quarters = 8
+        # 1. Ingestion Stats - Refined for Recency
+        # Get count AND latest available quarter for each company
+        cursor.execute("""
+            SELECT c.ticker, COUNT(f.id) as q_count, MAX(f.year) as max_year, MAX(f.quarter) as max_quarter
+            FROM companies c
+            LEFT JOIN financials f ON c.id = f.company_id AND f.quarter > 0
+            GROUP BY c.ticker
+        """)
+        rows = cursor.fetchall()
+        total_companies = len(rows)
         
+        # Determine strict "current" quarter from DB max to avoid clock issues
+        max_db_year = 0
+        max_db_quarter = 0
+        for r in rows:
+            if r["max_year"] and r["max_year"] > max_db_year:
+                max_db_year = r["max_year"]
+                max_db_quarter = r["max_quarter"]
+            elif r["max_year"] == max_db_year and r["max_quarter"] and r["max_quarter"] > max_db_quarter:
+                max_db_quarter = r["max_quarter"]
+
+        min_quarters = 8
         at_risk = []
-        for ticker, count in counts.items():
-            if count < min_quarters:
+        
+        for r in rows:
+            ticker = r["ticker"]
+            count = r["q_count"]
+            last_year = r["max_year"] or 0
+            last_q = r["max_quarter"] or 0
+            
+            # A company is "at risk" (needs backfill) ONLY if:
+            # 1. It has < 8 quarters AND
+            # 2. It is NOT a new listing (defined as having data for the latest available quarter in DB)
+            # Actually, even simpler: If it has data for the *latest* quarter, we can't backfill more (it doesn't exist).
+            # So, if (last_year, last_q) matches (max_db_year, max_db_quarter) or close to it, it's fine.
+            
+            is_uptodate = False
+            if last_year == max_db_year:
+                if last_q >= max_db_quarter - 1: # Allow 1 quarter lag
+                    is_uptodate = True
+            elif last_year == max_db_year - 1 and max_db_quarter == 1 and last_q == 4:
+                 # Case: Current is Q1, Last was Q4 prev year
+                 is_uptodate = True
+
+            if count < min_quarters and not is_uptodate:
                 at_risk.append({"ticker": ticker, "quarters": count})
         
         # 2. Flag Engine Status

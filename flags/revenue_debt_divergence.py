@@ -14,7 +14,7 @@ SEVERITY = "MEDIUM"
 SUPPORTS_QUARTERLY = False
 
 
-def check(conn, company_id, ticker, period_type="annual"):
+def check(conn, company_id, ticker, period_type="annual", year=None, quarter=None):
     """
     Check for revenue decline alongside debt increase.
     Only runs on annual data (quarterly debt not available).
@@ -24,14 +24,24 @@ def check(conn, company_id, ticker, period_type="annual"):
 
     cursor = conn.cursor(dictionary=True)
 
-    query = """
-        SELECT year, revenue, total_debt
-        FROM financials
-        WHERE company_id = %s AND quarter = 0
-        ORDER BY year DESC
-        LIMIT 2
-    """
-    cursor.execute(query, (company_id,))
+    if year:
+        query = """
+            SELECT year, revenue, total_debt
+            FROM financials
+            WHERE company_id = %s AND quarter = 0 AND year <= %s
+            ORDER BY year DESC
+            LIMIT 2
+        """
+        cursor.execute(query, (company_id, year))
+    else:
+        query = """
+            SELECT year, revenue, total_debt
+            FROM financials
+            WHERE company_id = %s AND quarter = 0
+            ORDER BY year DESC
+            LIMIT 2
+        """
+        cursor.execute(query, (company_id,))
     rows = cursor.fetchall()
     cursor.close()
 

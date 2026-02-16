@@ -15,7 +15,7 @@ STREAK_YEARS = 3
 SUPPORTS_QUARTERLY = False
 
 
-def check(conn, company_id, ticker, period_type="annual"):
+def check(conn, company_id, ticker, period_type="annual", year=None, quarter=None):
     """
     Check if FCF < 0 for last 3 years consecutively.
     Only runs on annual data (quarterly FCF not available).
@@ -25,14 +25,25 @@ def check(conn, company_id, ticker, period_type="annual"):
 
     cursor = conn.cursor(dictionary=True)
 
-    query = """
-        SELECT year, free_cash_flow
-        FROM financials
-        WHERE company_id = %s AND quarter = 0
-        ORDER BY year DESC
-        LIMIT %s
-    """
-    cursor.execute(query, (company_id, STREAK_YEARS))
+    if year:
+        # Check streak ending in specific year
+        query = """
+            SELECT year, free_cash_flow
+            FROM financials
+            WHERE company_id = %s AND quarter = 0 AND year <= %s
+            ORDER BY year DESC
+            LIMIT %s
+        """
+        cursor.execute(query, (company_id, year, STREAK_YEARS))
+    else:
+        query = """
+            SELECT year, free_cash_flow
+            FROM financials
+            WHERE company_id = %s AND quarter = 0
+            ORDER BY year DESC
+            LIMIT %s
+        """
+        cursor.execute(query, (company_id, STREAK_YEARS))
     rows = cursor.fetchall()
     cursor.close()
 

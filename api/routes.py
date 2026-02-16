@@ -100,7 +100,8 @@ def get_company(ticker: str):
 
     # Latest quarterly
     quarterly = _query(
-        """SELECT year, quarter, revenue, net_profit, profit_before_tax
+        """SELECT year, quarter, revenue, net_profit, profit_before_tax,
+                  operating_cash_flow, free_cash_flow, total_debt
            FROM financials WHERE company_id = %s AND quarter > 0
            ORDER BY year DESC, quarter DESC LIMIT 8""",
         (cid,),
@@ -280,6 +281,9 @@ def get_company(ticker: str):
                 "revenue": r["revenue"],
                 "net_profit": r["net_profit"],
                 "pbt": r["profit_before_tax"],
+                "operating_cash_flow": r["operating_cash_flow"],
+                "free_cash_flow": r["free_cash_flow"],
+                "total_debt": r["total_debt"],
             }
             for r in quarterly
         ],
@@ -328,14 +332,14 @@ def list_flags(severity: str = None):
             """SELECT f.*, c.ticker, c.name AS company_name
                FROM flags f JOIN companies c ON f.company_id = c.id
                WHERE f.severity = %s
-               ORDER BY f.period_type, c.ticker, f.flag_code""",
+               ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC, f.period_type, c.ticker, f.flag_code""",
             (severity.upper(),),
         )
     else:
         rows = _query(
             """SELECT f.*, c.ticker, c.name AS company_name
                FROM flags f JOIN companies c ON f.company_id = c.id
-               ORDER BY f.period_type, f.severity DESC, c.ticker, f.flag_code"""
+               ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC, f.period_type, f.severity DESC, c.ticker, f.flag_code"""
         )
 
     for r in rows:
@@ -345,6 +349,9 @@ def list_flags(severity: str = None):
             r["created_at"] = str(r["created_at"])
         if not r.get("period_type"):
             r["period_type"] = "annual"
+        # Ensure fiscal fields are present (defaults if null)
+        if r.get("fiscal_year") is None: r["fiscal_year"] = 0
+        if r.get("fiscal_quarter") is None: r["fiscal_quarter"] = 0
 
     return {"count": len(rows), "flags": rows}
 
@@ -361,8 +368,9 @@ def get_flags_for_company(ticker: str):
         raise HTTPException(status_code=404, detail=f"Company {ticker} not found")
 
     flags = _query(
-        """SELECT flag_code, flag_name, severity, period_type, message, details, created_at
-           FROM flags WHERE company_id = %s ORDER BY severity DESC""",
+        """SELECT flag_code, flag_name, severity, period_type, fiscal_year, fiscal_quarter, message, details, created_at
+           FROM flags WHERE company_id = %s 
+           ORDER BY fiscal_year DESC, fiscal_quarter DESC, severity DESC""",
         (company["id"],),
     )
     for f in flags:
@@ -614,10 +622,10 @@ def dashboard():
 # Admin: Scan & Ingest
 # ──────────────────────────────────────────────
 
-def _run_scan(ticker=None):
+def _run_scan(ticker=None, backfill_quarters=1):
     """Background task: run the red flag engine."""
     from engine.runner import run_flags
-    run_flags(ticker=ticker)
+    run_flags(ticker=ticker, backfill_quarters=backfill_quarters)
 
 
 def _run_ingest(ticker):
@@ -627,11 +635,11 @@ def _run_ingest(ticker):
 
 
 @router.post("/scan", tags=["Admin"])
-def trigger_scan(background_tasks: BackgroundTasks, ticker: str = None):
+def trigger_scan(background_tasks: BackgroundTasks, ticker: str = None, backfill_quarters: int = 1):
     """Trigger a red flag engine scan. Runs in background."""
-    background_tasks.add_task(_run_scan, ticker)
+    background_tasks.add_task(_run_scan, ticker, backfill_quarters)
     target = ticker or "all companies"
-    return {"status": "started", "message": f"Scan queued for {target}"}
+    return {"status": "started", "message": f"Scan queued for {target} (Backfill: {backfill_quarters})"}
 
 
 @router.post("/ingest/{ticker}", tags=["Admin"])

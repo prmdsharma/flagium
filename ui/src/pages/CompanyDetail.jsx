@@ -9,6 +9,7 @@ export default function CompanyDetail() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [expandedFlag, setExpandedFlag] = useState(null);
+    const [financialsTab, setFinancialsTab] = useState("annual");
 
     useEffect(() => {
         setLoading(true);
@@ -183,9 +184,48 @@ export default function CompanyDetail() {
                         </div>
                     </section>
 
-                    {/* 4. Financials (Compact) */}
+                    {/* 4. Financials (Compact) - Tabbed View */}
                     <section className="financials-section-v4">
-                        <h3 className="section-title-inst">Key Financials (INR Cr)</h3>
+                        <div className="section-header-row" style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                            <h3 className="section-title-inst" style={{ margin: 0 }}>Key Financials (INR Cr)</h3>
+                            <div className="fin-tabs" style={{ display: 'flex', gap: '8px', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
+                                <button
+                                    onClick={() => setFinancialsTab('annual')}
+                                    style={{
+                                        padding: '4px 12px',
+                                        fontSize: '12px',
+                                        fontWeight: 600,
+                                        borderRadius: '6px',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        background: financialsTab === 'annual' ? 'white' : 'transparent',
+                                        color: financialsTab === 'annual' ? '#0f172a' : '#64748b',
+                                        boxShadow: financialsTab === 'annual' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    Annual
+                                </button>
+                                <button
+                                    onClick={() => setFinancialsTab('quarterly')}
+                                    style={{
+                                        padding: '4px 12px',
+                                        fontSize: '12px',
+                                        fontWeight: 600,
+                                        borderRadius: '6px',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        background: financialsTab === 'quarterly' ? 'white' : 'transparent',
+                                        color: financialsTab === 'quarterly' ? '#0f172a' : '#64748b',
+                                        boxShadow: financialsTab === 'quarterly' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    Quarterly
+                                </button>
+                            </div>
+                        </div>
+
                         <table className="inst-table">
                             <thead>
                                 <tr>
@@ -197,15 +237,26 @@ export default function CompanyDetail() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {annual && annual.slice(0, 3).map((r, i) => (
-                                    <tr key={i}>
-                                        <td>{r.year}</td>
-                                        <td>{r.revenue.toLocaleString()}</td>
-                                        <td>{r.net_profit.toLocaleString()}</td>
-                                        <td>{r.ocf.toLocaleString()}</td>
-                                        <td>{r.total_debt.toLocaleString()}</td>
+                                {(financialsTab === 'annual' ? (annual || []) : (data.quarterly || []))
+                                    .slice(0, financialsTab === 'annual' ? 3 : 8)
+                                    .map((r, i) => (
+                                        <tr key={i}>
+                                            <td>
+                                                {r.quarter ? `Q${r.quarter} FY${r.year}` : `FY${r.year}`}
+                                            </td>
+                                            <td>{r.revenue ? (r.revenue / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-"}</td>
+                                            <td>{r.net_profit ? (r.net_profit / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-"}</td>
+                                            <td>{r.operating_cash_flow ? (r.operating_cash_flow / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-"}</td>
+                                            <td>{r.total_debt ? (r.total_debt / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-"}</td>
+                                        </tr>
+                                    ))}
+                                {((financialsTab === 'annual' ? (annual || []) : (data.quarterly || [])).length === 0) && (
+                                    <tr>
+                                        <td colSpan="5" style={{ textAlign: 'center', padding: '24px', color: '#94a3b8' }}>
+                                            No {financialsTab} data available
+                                        </td>
                                     </tr>
-                                ))}
+                                )}
                             </tbody>
                         </table>
                     </section>

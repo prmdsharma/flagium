@@ -15,7 +15,7 @@ SEVERITY = "HIGH"
 SUPPORTS_QUARTERLY = True
 
 
-def check(conn, company_id, ticker, period_type="annual"):
+def check(conn, company_id, ticker, period_type="annual", year=None, quarter=None):
     """
     Check for > 50% drop in Net Profit.
     Annual: compares latest 2 years.
@@ -24,15 +24,25 @@ def check(conn, company_id, ticker, period_type="annual"):
     cursor = conn.cursor(dictionary=True)
 
     if period_type == "quarterly":
-        # Get the latest quarter
-        query = """
-            SELECT year, quarter, net_profit
-            FROM financials
-            WHERE company_id = %s AND quarter > 0
-            ORDER BY year DESC, quarter DESC
-            LIMIT 1
-        """
-        cursor.execute(query, (company_id,))
+        # Get data for the Specific (or Latest) Quarter
+        if year and quarter:
+             query = """
+                SELECT year, quarter, net_profit
+                FROM financials
+                WHERE company_id = %s AND year = %s AND quarter = %s
+                LIMIT 1
+            """
+             cursor.execute(query, (company_id, year, quarter))
+        else:
+            query = """
+                SELECT year, quarter, net_profit
+                FROM financials
+                WHERE company_id = %s AND quarter > 0
+                ORDER BY year DESC, quarter DESC
+                LIMIT 1
+            """
+            cursor.execute(query, (company_id,))
+            
         latest = cursor.fetchone()
 
         if not latest or latest["net_profit"] is None:
@@ -56,16 +66,37 @@ def check(conn, company_id, ticker, period_type="annual"):
         current = latest
     else:
         # Annual path
-        query = """
-            SELECT year, net_profit
-            FROM financials
-            WHERE company_id = %s AND quarter = 0
-            ORDER BY year DESC
-            LIMIT 2
-        """
-        cursor.execute(query, (company_id,))
+        # If specific year provided, we need that year AND previous year
+        if year:
+            query = """
+                SELECT year, net_profit
+                FROM financials
+                WHERE company_id = %s AND quarter = 0 AND year IN (%s, %s)
+                ORDER BY year DESC
+            """
+            cursor.execute(query, (company_id, year, year-1))
+        else:
+            query = """
+                SELECT year, net_profit
+                FROM financials
+                WHERE company_id = %s AND quarter = 0
+                ORDER BY year DESC
+                LIMIT 2
+            """
+            cursor.execute(query, (company_id,))
+            
         rows = cursor.fetchall()
         cursor.close()
+
+        if not rows or len(rows) < 2:
+            return None
+
+        current = rows[0]
+        # Verify we got the right pair if we queried specific
+        if year and current["year"] != year:
+             return None 
+
+        previous = rows[1]
 
         if not rows or len(rows) < 2:
             return None

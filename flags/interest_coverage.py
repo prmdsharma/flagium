@@ -14,7 +14,7 @@ FLAG_NAME = "Low Interest Coverage"
 SUPPORTS_QUARTERLY = True
 
 
-def check(conn, company_id, ticker, period_type="annual"):
+def check(conn, company_id, ticker, period_type="annual", year=None, quarter=None):
     """
     Check if Interest Coverage Ratio is low.
     Supports both annual and quarterly data.
@@ -22,24 +22,43 @@ def check(conn, company_id, ticker, period_type="annual"):
     cursor = conn.cursor(dictionary=True)
 
     if period_type == "quarterly":
-        # Compare latest quarter vs same quarter previous year (YoY)
-        query = """
-            SELECT year, quarter, profit_before_tax, interest_expense
-            FROM financials
-            WHERE company_id = %s AND quarter > 0
-            ORDER BY year DESC, quarter DESC
-            LIMIT 1
-        """
-        cursor.execute(query, (company_id,))
+        # Check specific quarter if provided, else latest
+        if year and quarter:
+            query = """
+                SELECT year, quarter, profit_before_tax, interest_expense
+                FROM financials
+                WHERE company_id = %s AND year = %s AND quarter = %s
+                LIMIT 1
+            """
+            cursor.execute(query, (company_id, year, quarter))
+        else:
+            query = """
+                SELECT year, quarter, profit_before_tax, interest_expense
+                FROM financials
+                WHERE company_id = %s AND quarter > 0
+                ORDER BY year DESC, quarter DESC
+                LIMIT 1
+            """
+            cursor.execute(query, (company_id,))
     else:
-        query = """
-            SELECT year, profit_before_tax, interest_expense
-            FROM financials
-            WHERE company_id = %s AND quarter = 0
-            ORDER BY year DESC
-            LIMIT 1
-        """
-        cursor.execute(query, (company_id,))
+        # Annual check
+        if year:
+            query = """
+                SELECT year, profit_before_tax, interest_expense
+                FROM financials
+                WHERE company_id = %s AND quarter = 0 AND year = %s
+                LIMIT 1
+            """
+            cursor.execute(query, (company_id, year))
+        else:
+            query = """
+                SELECT year, profit_before_tax, interest_expense
+                FROM financials
+                WHERE company_id = %s AND quarter = 0
+                ORDER BY year DESC
+                LIMIT 1
+            """
+            cursor.execute(query, (company_id,))
 
     row = cursor.fetchone()
     cursor.close()

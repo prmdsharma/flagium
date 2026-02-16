@@ -7,6 +7,7 @@ import Flags from "./pages/Flags";
 import LoginPage from "./pages/LoginPage";
 import PortfolioDashboard from "./pages/PortfolioDashboard";
 import ReportsPage from "./pages/ReportsPage";
+import ProfilePage from "./pages/ProfilePage";
 import LandingPage from "./pages/public/LandingPage";
 import MethodologyPage from "./pages/public/MethodologyPage";
 import AboutPage from "./pages/public/AboutPage";
@@ -52,6 +53,7 @@ function AppContent() {
         <Route path="/portfolio" element={<PortfolioDashboard />} />
         <Route path="/portfolio/:id" element={<PortfolioDashboard />} />
         <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
     </Routes>
   );

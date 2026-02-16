@@ -222,7 +222,12 @@ export default function GlobalHeader() {
                                                 <div className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email}</div>
                                             </div>
                                             <div className="py-1">
-                                                <div className="px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer">Profile</div>
+                                                <div
+                                                    className="px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer"
+                                                    onClick={() => { navigate("/profile"); setShowUserMenu(false); }}
+                                                >
+                                                    Profile
+                                                </div>
 
                                             </div>
                                             <div className="border-t border-slate-100 dark:border-slate-700 py-1">

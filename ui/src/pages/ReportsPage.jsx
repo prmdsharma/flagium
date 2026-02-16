@@ -7,8 +7,10 @@ export default function ReportsPage() {
     const { user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
     const [stats, setStats] = useState(null);
+    const [sanity, setSanity] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [activeTab, setActiveTab] = useState('health'); // 'health' or 'sanity'
 
     useEffect(() => {
         if (!authLoading && user?.role !== 'admin') {
@@ -16,10 +18,14 @@ export default function ReportsPage() {
             return;
         }
 
-        const fetchStats = async () => {
+        const fetchData = async () => {
             try {
-                const data = await api.getIngestionStatus();
-                setStats(data);
+                const [statsData, sanityData] = await Promise.all([
+                    api.getIngestionStatus(),
+                    api.getSanityReport()
+                ]);
+                setStats(statsData);
+                setSanity(sanityData);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -28,7 +34,7 @@ export default function ReportsPage() {
         };
 
         if (user?.role === 'admin') {
-            fetchStats();
+            fetchData();
         }
     }, [user, authLoading, navigate]);
 
@@ -80,112 +86,244 @@ export default function ReportsPage() {
         );
     }
 
-    if (!stats) return null;
+    if (!stats || !sanity) return null;
 
     const { ingestion, flag_engine } = stats;
     const coveragePercent = Math.round(((ingestion.total_companies - ingestion.companies_with_data_gaps) / ingestion.total_companies) * 100) || 0;
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-24 px-8 pb-12">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-24 px-8 pb-12 transition-colors duration-300">
             <div className="max-w-7xl mx-auto space-y-8">
 
                 {/* Header */}
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">System Reports</h1>
-                    <p className="text-slate-500 dark:text-slate-400">System health, data ingestion status, and engine diagnostics.</p>
-                </div>
-
-                {/* KPI Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Ingestion Health */}
-                    <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
-                        <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Data Completeness</div>
-                        <div className="flex items-baseline gap-2">
-                            <span className={`text-3xl font-bold ${coveragePercent < 90 ? 'text-amber-500' : 'text-emerald-500'}`}>
-                                {coveragePercent}%
-                            </span>
-                            <span className="text-sm text-slate-400">of {ingestion.total_companies} companies</span>
-                        </div>
-                        <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full mt-4 overflow-hidden">
-                            <div
-                                className={`h-full rounded-full ${coveragePercent < 90 ? 'bg-amber-500' : 'bg-emerald-500'}`}
-                                style={{ width: `${coveragePercent}%` }}
-                            />
-                        </div>
-                        <p className="text-xs text-slate-400 mt-2">
-                            Target: {ingestion.coverage_target} quarters
-                        </p>
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Admin Console</h1>
+                        <p className="text-slate-500 dark:text-slate-400 mt-1">Monitor system health and verify data integrity.</p>
                     </div>
 
-                    {/* Missing Data Count */}
-                    <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
-                        <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Action Required</div>
-                        <div className="text-3xl font-bold text-slate-900 dark:text-white">
-                            {ingestion.companies_with_data_gaps}
-                        </div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                            Companies need backfill
-                        </div>
-                    </div>
-
-                    {/* Flag Engine */}
-                    <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Flag Engine Status</div>
-                            <div className="flex flex-col gap-1">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-slate-600 dark:text-slate-300">Active Flags</span>
-                                    <span className="font-bold text-slate-900 dark:text-white">{flag_engine.total_active_flags}</span>
-                                </div>
-                                <div className="flex justify-between items-center mt-2">
-                                    <span className="text-slate-600 dark:text-slate-300">Last Run</span>
-                                    <span className="text-sm text-slate-500 font-mono">
-                                        {flag_engine.last_run ? new Date(flag_engine.last_run).toLocaleString() : 'Never'}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                    {/* Tab Switcher */}
+                    <div className="flex p-1 bg-slate-200/50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 w-fit">
                         <button
-                            onClick={handleRunScan}
-                            disabled={scanLoading}
-                            className={`mt-4 w-full py-2 px-4 rounded-lg text-sm font-medium text-white transition-colors ${scanLoading ? 'bg-slate-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
+                            onClick={() => setActiveTab('health')}
+                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'health' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
                         >
-                            {scanLoading ? 'Scanning...' : 'Run Flag Engine'}
+                            System Health
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('sanity')}
+                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'sanity' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                        >
+                            Data Sanity
                         </button>
                     </div>
                 </div>
 
-                {/* Detailed List */}
-                {ingestion.at_risk_list.length > 0 && (
-                    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-                        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
-                            <h3 className="font-semibold text-slate-900 dark:text-white">Companies with Data Gaps</h3>
-                            <button className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-                                Export CSV
-                            </button>
-                        </div>
-                        <div className="divide-y divide-slate-100 dark:divide-slate-700 max-h-96 overflow-y-auto">
-                            {ingestion.at_risk_list.map((item) => (
-                                <div key={item.ticker} className="px-6 py-3 flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <div className="flex items-center gap-4">
-                                        <span className="font-medium text-slate-900 dark:text-white w-24">{item.ticker}</span>
-                                        <span className="text-sm text-red-500 font-medium bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">
-                                            Only {item.quarters} Qtrs
-                                        </span>
-                                    </div>
-                                    <button
-                                        onClick={() => handleRunIngest(item.ticker)}
-                                        disabled={ingestLoading === item.ticker}
-                                        className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        {ingestLoading === item.ticker ? 'Ingesting...' : 'Ingest Data'}
-                                    </button>
+                {activeTab === 'health' ? (
+                    <>
+                        {/* KPI Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {/* Ingestion Health */}
+                            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Data Completeness</div>
+                                <div className="flex items-baseline gap-2">
+                                    <span className={`text-4xl font-black ${coveragePercent < 90 ? 'text-amber-500' : 'text-emerald-500'}`}>
+                                        {coveragePercent}%
+                                    </span>
+                                    <span className="text-sm font-medium text-slate-400">of {ingestion.total_companies} companies</span>
                                 </div>
-                            ))}
+                                <div className="w-full bg-slate-50 dark:bg-slate-900 h-3 rounded-full mt-4 overflow-hidden border border-slate-100 dark:border-slate-700">
+                                    <div
+                                        className={`h-full rounded-full transition-all duration-1000 ${coveragePercent < 90 ? 'bg-gradient-to-r from-amber-400 to-amber-600' : 'bg-gradient-to-r from-emerald-400 to-emerald-600'}`}
+                                        style={{ width: `${coveragePercent}%` }}
+                                    />
+                                </div>
+                                <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-tight">
+                                    Target: {ingestion.coverage_target} quarters
+                                </p>
+                            </div>
+
+                            {/* Missing Data Count */}
+                            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Backfill Needed</div>
+                                <div className="text-4xl font-black text-slate-900 dark:text-white">
+                                    {ingestion.companies_with_data_gaps}
+                                </div>
+                                <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">
+                                    Companies with priority gaps
+                                </div>
+                            </div>
+
+                            {/* Flag Engine */}
+                            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                                <div>
+                                    <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Flag Engine Status</div>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Total Flags</span>
+                                            <span className="text-lg font-black text-slate-900 dark:text-white">{flag_engine.total_active_flags}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Last Execution</span>
+                                            <span className="text-xs font-bold text-slate-500 font-mono bg-slate-50 dark:bg-slate-900 px-2 py-1 rounded border border-slate-100 dark:border-slate-700">
+                                                {flag_engine.last_run ? new Date(flag_engine.last_run).toLocaleString() : 'Never'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={handleRunScan}
+                                    disabled={scanLoading}
+                                    className={`mt-4 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all transform active:scale-95 ${scanLoading ? 'bg-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/20'}`}
+                                >
+                                    {scanLoading ? (
+                                        <div className="flex items-center justify-center gap-2">
+                                            <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            Initializing scan...
+                                        </div>
+                                    ) : 'Trigger Engine Scan'}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Detailed List */}
+                        {ingestion.at_risk_list.length > 0 && (
+                            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+                                <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+                                    <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                        Priority Gaps
+                                        <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-black uppercase rounded-full">Manual Ingestion Recommended</span>
+                                    </h3>
+                                </div>
+                                <div className="divide-y divide-slate-50 dark:divide-slate-700/50 max-h-[500px] overflow-y-auto custom-scrollbar">
+                                    {ingestion.at_risk_list.map((item) => (
+                                        <div key={item.ticker} className="px-6 py-4 flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group">
+                                            <div className="flex items-center gap-6">
+                                                <span className="font-black text-slate-900 dark:text-white tracking-widest">{item.ticker}</span>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Availability</span>
+                                                    <span className="text-sm text-slate-600 dark:text-slate-300 font-bold">
+                                                        {item.quarters} of {ingestion.coverage_target} Quarters
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => handleRunIngest(item.ticker)}
+                                                disabled={ingestLoading === item.ticker}
+                                                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${ingestLoading === item.ticker ? 'bg-slate-100 dark:bg-slate-700 text-slate-400' : 'text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 border border-transparent hover:border-blue-100 dark:hover:border-blue-800'}`}
+                                            >
+                                                {ingestLoading === item.ticker ? 'Ingesting...' : 'Ingest Missing Data'}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        {/* Sanity Metrics Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <SanityCard
+                                title="Duplicate Records"
+                                value={sanity.summary.total_duplicates}
+                                status={sanity.summary.total_duplicates > 0 ? 'critical' : 'success'}
+                                subtitle="Financial records with identical periods"
+                            />
+                            <SanityCard
+                                title="Total Data Gaps"
+                                value={sanity.summary.companies_missing_data}
+                                status={sanity.summary.companies_missing_data > 0 ? 'amber' : 'success'}
+                                subtitle="Companies with 0 financial records"
+                            />
+                            <SanityCard
+                                title="Symmetry Issues"
+                                value={sanity.summary.symmetry_discrepancies}
+                                status={sanity.summary.symmetry_discrepancies > 0 ? 'amber' : 'success'}
+                                subtitle="Annual != SUM(Quarters) discrepancies"
+                            />
+                        </div>
+
+                        {/* Synthesis Discrepancies Table */}
+                        {sanity.discrepancies.length > 0 && (
+                            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+                                <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-red-50/30 dark:bg-red-900/10">
+                                    <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                        Symmetry Discrepancies
+                                        <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[10px] font-black uppercase rounded-full tracking-widest">High Priority</span>
+                                    </h3>
+                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 uppercase font-bold tracking-tight">Difference &gt; 100 units detected between Annual filing and combined Quarter filings</p>
+                                </div>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left">
+                                        <thead className="bg-slate-50 dark:bg-slate-900/50">
+                                            <tr>
+                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Ticker</th>
+                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Fiscal Year</th>
+                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Annual Revenue</th>
+                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Σ Quarters</th>
+                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Difference</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-50 dark:divide-slate-700/50">
+                                            {sanity.discrepancies.map((d, i) => {
+                                                const diff = Math.abs(d.annual_rev - d.sum_q_rev);
+                                                return (
+                                                    <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group">
+                                                        <td className="px-6 py-4 font-black text-slate-900 dark:text-white tracking-widest">{d.ticker}</td>
+                                                        <td className="px-6 py-4 text-sm font-bold text-slate-500 dark:text-slate-400">{d.year}</td>
+                                                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">{(d.annual_rev / 1e7).toFixed(2)} Cr</td>
+                                                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">{(d.sum_q_rev / 1e7).toFixed(2)} Cr</td>
+                                                        <td className="px-6 py-4 text-sm font-bold text-red-500 text-right">
+                                                            {((diff / d.annual_rev) * 100).toFixed(1)}% error
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Flag Stats */}
+                        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+                            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
+                                <h3 className="font-bold text-slate-900 dark:text-white uppercase tracking-widest text-xs">Flag Distribution Heatmap</h3>
+                            </div>
+                            <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                {sanity.flag_stats.map((f, i) => (
+                                    <div key={i} className="p-4 rounded-xl border border-slate-100 dark:border-slate-700 bg-slate-50/30 dark:bg-slate-900/30 flex justify-between items-center group hover:border-blue-500/30 transition-all">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">{f.flag_name}</span>
+                                            <span className="text-lg font-black text-slate-900 dark:text-white">{f.companies} <span className="text-xs text-slate-400 font-medium tracking-normal">cos</span></span>
+                                        </div>
+                                        <div className={`px-2 py-1 rounded text-[10px] font-black ${f.coverage > 50 ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'}`}>
+                                            {f.coverage.toFixed(1)}%
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )}
             </div>
+        </div>
+    );
+}
+
+function SanityCard({ title, value, status, subtitle }) {
+    const statusColors = {
+        success: 'text-emerald-500',
+        critical: 'text-red-500 bg-red-50 dark:bg-red-900/10',
+        amber: 'text-amber-500 bg-amber-50 dark:bg-amber-900/10'
+    };
+
+    return (
+        <div className={`p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm ${status === 'success' ? 'bg-white dark:bg-slate-800' : statusColors[status]} transition-all hover:scale-[1.02]`}>
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{title}</div>
+            <div className={`text-4xl font-black ${status === 'success' ? 'text-emerald-500' : ''}`}>{value}</div>
+            <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-2 uppercase tracking-tight">{subtitle}</p>
         </div>
     );
 }

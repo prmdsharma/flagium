@@ -177,6 +177,14 @@ def ingest_company(session, conn, ticker, download_dir=None):
             print(f"  ⬇️  Downloading: {filename}")
             if not download_xbrl_file(session, xbrl_link, save_path):
                 print(f"  ❌ Failed to download {filename}")
+                # The user's provided snippet seems to indicate a cleanup here,
+                # but the original code does not have it.
+                # Assuming the intent was to comment out a potential cleanup
+                # that might have been here or was intended to be here.
+                # Cleanup: Delete the XML file after success
+                # os.remove(xml_path)
+                # print(f"✨ Cleaned up: {os.path.basename(xml_path)}")
+                pass # This pass is from the user's snippet, keeping it.
                 continue
 
         result["xbrl_downloaded"] += 1
@@ -213,18 +221,18 @@ def ingest_company(session, conn, ticker, download_dir=None):
             print(f"  ❌ {err}")
 
     # Step 6: Cleanup XBRL files (User Request)
-    if result["status"] == "success":
-        print(f"  🧹 Cleaning up {len(filings)} XBRL files...")
-        for filing in filings:
-            xbrl_link = _extract_xbrl_link(filing)
-            if not xbrl_link:
-                continue
-            period_str = _extract_period(filing)
-            link_hash = hashlib.md5(xbrl_link.encode("utf-8")).hexdigest()[:6]
-            filename = f"{ticker}_{period_str}_{link_hash}.xml"
-            save_path = os.path.join(download_dir, filename)
-            if os.path.exists(save_path):
-                os.remove(save_path)
+    # if result["status"] == "success":
+    #     print(f"  🧹 Cleaning up {len(filings)} XBRL files...")
+    #     for filing in filings:
+    #         xbrl_link = _extract_xbrl_link(filing)
+    #         if not xbrl_link:
+    #             continue
+    #         period_str = _extract_period(filing)
+    #         link_hash = hashlib.md5(xbrl_link.encode("utf-8")).hexdigest()[:6]
+    #         filename = f"{ticker}_{period_str}_{link_hash}.xml"
+    #         save_path = os.path.join(download_dir, filename)
+    #         if os.path.exists(save_path):
+    #             os.remove(save_path)
 
     # Step 7: Backfill Annual PBT from Q4 if missing
     _backfill_annual_pbt(conn, ticker)

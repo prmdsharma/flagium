@@ -39,6 +39,13 @@ class UserProfile(BaseModel):
     full_name: Optional[str] = None
     role: str
 
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+
+class PasswordChange(BaseModel):
+    old_password: str
+    new_password: str
+
 # Helpers
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -148,3 +155,50 @@ def read_users_me(current_user: dict = Depends(get_current_user)):
     cursor.close()
     conn.close()
     return user
+
+@router.put("/me", response_model=UserProfile)
+def update_user_profile(update_data: UserUpdate, current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute(
+            "UPDATE users SET full_name = %s WHERE id = %s",
+            (update_data.full_name, current_user["id"])
+        )
+        conn.commit()
+        
+        cursor.execute("SELECT id, email, full_name, role FROM users WHERE id = %s", (current_user["id"],))
+        updated_user = cursor.fetchone()
+        return updated_user
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+@router.post("/change-password")
+def change_password(data: PasswordChange, current_user: dict = Depends(get_current_user)):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    # Verify old password
+    cursor.execute("SELECT password_hash FROM users WHERE id = %s", (current_user["id"],))
+    user = cursor.fetchone()
+    if not user or not verify_password(data.old_password, user["password_hash"]):
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=400, detail="Incorrect old password")
+    
+    # Hash new password
+    hashed_pw = get_password_hash(data.new_password)
+    try:
+        cursor.execute("UPDATE users SET password_hash = %s WHERE id = %s", (hashed_pw, current_user["id"]))
+        conn.commit()
+        return {"message": "Password updated successfully"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+        conn.close()

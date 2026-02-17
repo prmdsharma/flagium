@@ -40,6 +40,7 @@ export default function Dashboard() {
     const { risk_momentum, portfolio_health, flag_pressure, most_at_risk, new_deteriorations, risk_narrative } = data;
     const rm = risk_momentum;
     const ph = portfolio_health;
+    const coverageCount = rm.total_companies || 0;
 
     // Prepare health donut data
     const healthData = Object.entries(ph.tiers).map(([key, count]) => ({
@@ -47,6 +48,37 @@ export default function Dashboard() {
         value: count,
         color: TIER_CONFIG[key].color,
     }));
+
+    const topSectors = Array.from(
+        new Set((most_at_risk || []).map(c => c.sector).filter(Boolean))
+    ).slice(0, 2);
+
+    const formatSectors = (sectors) => {
+        if (!sectors.length) return null;
+        if (sectors.length === 1) return sectors[0];
+        return `${sectors[0]} and ${sectors[1]}`;
+    };
+
+    const contextHeader = `System-wide financial stress across ${coverageCount} covered companies.`;
+
+    const interpretation = (() => {
+        const breadth =
+            rm.delta_density > 0 || rm.delta_companies > 0
+                ? "expanding"
+                : rm.delta_density < 0 || rm.delta_companies < 0
+                    ? "stabilizing"
+                    : "steady";
+
+        const severity =
+            rm.delta_high > 0 ? "rising" : rm.delta_high < 0 ? "easing" : "stable";
+
+        const sectorText = formatSectors(topSectors);
+        if (sectorText) {
+            return `Risk breadth is ${breadth}, with high severity flags ${severity} across ${sectorText}.`;
+        }
+
+        return risk_narrative || `Risk breadth is ${breadth} across the coverage universe.`;
+    })();
 
     // Helper for deltas
     const renderDelta = (value, isInverse = false) => {
@@ -83,27 +115,23 @@ export default function Dashboard() {
     return (
         <>
             {/* ══════════════════════════════════════════
-                SECTION 0 — NARRATIVE INTELLIGENCE
-                ══════════════════════════════════════════ */}
-            <div className="risk-narrative-banner">
-                <span className="narrative-icon">⚡</span>
-                <span className="narrative-text">{risk_narrative}</span>
-            </div>
-
-            {/* ══════════════════════════════════════════
                 SECTION 1 — RISK MOMENTUM HERO
                 ══════════════════════════════════════════ */}
             <div className="risk-momentum-hero">
                 <div className="momentum-main">
                     <div className="momentum-left">
                         <div className="momentum-label">RISK MOMENTUM</div>
+                        <div className="momentum-context-header">{contextHeader}</div>
                         <div className="momentum-headline">
                             <span className="momentum-density">{rm.risk_density}</span>
                             <div className="momentum-density-context">
-                                <span className="momentum-density-label">Portfolio Risk Density</span>
-                                <div className="info-tooltip" title="Severity-weighted flags divided by total companies. Checks for concentration of high-severity risks.">
-                                    ℹ️
+                                <div className="momentum-density-title-row">
+                                    <span className="momentum-density-label">Market Risk Density</span>
+                                    <div className="info-tooltip" title="Average active risk signals per company.">
+                                        ℹ️
+                                    </div>
                                 </div>
+                                <span className="momentum-density-microcopy">Average active risk signals per company.</span>
                             </div>
                             {rm.rd_history && (
                                 <div className="density-sparkline" style={{ width: 120, height: 40, marginTop: 5 }}>
@@ -164,6 +192,11 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="interpretation-layer">
+                <span className="interpretation-label">Interpretation</span>
+                <span className="interpretation-text">{interpretation}</span>
             </div>
 
             {/* ══════════════════════════════════════════
@@ -386,7 +419,7 @@ export default function Dashboard() {
                             <span className="qs-value">{rm.severity_weighted}</span>
                         </div>
                         <div className="quick-stat-row">
-                            <span className="qs-label">Risk Density</span>
+                            <span className="qs-label">Market Risk Density</span>
                             <div className="qs-value-group">
                                 <span className="qs-value amber">{rm.risk_density}</span>
                                 {renderQsDelta(rm.delta_density)}

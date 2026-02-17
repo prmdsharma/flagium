@@ -7,8 +7,14 @@ from pydantic import BaseModel
 from passlib.context import CryptContext
 from db.connection import get_connection
 
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
 # Config
-SECRET_KEY = "flagium_super_secret_key_change_me_in_prod"
+SECRET_KEY = os.getenv("SECRET_KEY", "flagium_super_secret_key_change_me_in_prod")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 # 1 day
 

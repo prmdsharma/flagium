@@ -16,6 +16,9 @@ export default function PortfolioDashboard() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // Phase 2: Clarity States
+    const [isGlossaryOpen, setIsGlossaryOpen] = useState(false);
+
     // Refs
     const autocompleteRef = useRef(null);
     const moreMenuRef = useRef(null);
@@ -239,6 +242,15 @@ export default function PortfolioDashboard() {
         }
     };
 
+    // ── HELPERS ──
+    const Tooltip = ({ label, text, iconOnly = false }) => (
+        <span className="tooltip-trigger">
+            {!iconOnly && <span>{label}</span>}
+            <span className="tooltip-icon">ⓘ</span>
+            <div className="tooltip-box">{text}</div>
+        </span>
+    );
+
     // ── RENDER ──
 
     // 1. Loading
@@ -356,6 +368,15 @@ export default function PortfolioDashboard() {
                                 </svg>
                                 Rename Portfolio
                             </button>
+                            <button
+                                className="more-menu-item"
+                                onClick={() => { setShowMoreMenu(false); setIsGlossaryOpen(true); }}
+                            >
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="8" cy="8" r="7" /><path d="M8 8v4M8 4h.01" />
+                                </svg>
+                                Risk Glossary
+                            </button>
                             <div style={{ height: '1px', background: 'var(--border)', margin: '4px 8px' }}></div>
                             <button
                                 className="more-menu-item more-menu-danger"
@@ -380,10 +401,16 @@ export default function PortfolioDashboard() {
                             <span className="hero-score-val">{data.risk_score}</span>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                                 <span className="hero-score-label" style={{ color: data.risk_score < 30 ? '#10B981' : data.risk_score < 70 ? '#F59E0B' : '#EF4444', marginBottom: 0 }}>
-                                    {data.risk_score < 30 ? 'Low Risk' : data.risk_score < 70 ? 'Moderate Risk' : 'High Risk'}
+                                    <Tooltip
+                                        label={data.risk_score < 30 ? 'Low Risk' : data.risk_score < 70 ? 'Moderate Risk' : 'High Risk'}
+                                        text="A 0-100 index of financial, governance, and momentum stress. Under 30 is Stable; Over 70 is Critical."
+                                    />
                                 </span>
                                 <span className="hero-sub-metric" style={{ fontSize: '13px' }}>
-                                    Escalation Probability: <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>28%</span>
+                                    <Tooltip
+                                        label="Escalation Probability"
+                                        text="AI-estimated probability (0-100%) that this portfolio will drop to a worse risk tier in the next 90 days."
+                                    />: <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>28%</span>
                                 </span>
                             </div>
                         </div>
@@ -398,8 +425,16 @@ export default function PortfolioDashboard() {
                             </span>
                         </div>
                         <div className="stat-row">
-                            <span className="metric-label">Risk Momentum</span>
-                            <span className="stat-val" style={{ color: '#F59E0B' }}>Moderate Acceleration</span>
+                            <span className="metric-label">
+                                <Tooltip
+                                    label="Risk Momentum"
+                                    text="Indicates if the risk is accelerating (getting worse faster), decelerating (stabilizing), or plateauing."
+                                />
+                            </span>
+                            <span className="stat-val" style={{ color: '#F59E0B', textAlign: 'right' }}>
+                                Moderate Acceleration
+                                <span className="micro-insight">Driven by new signals</span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -535,8 +570,12 @@ export default function PortfolioDashboard() {
                                 <tr>
                                     <th>COMPANY</th>
                                     <th>SECTOR</th>
-                                    <th>STOCK SCORE</th>
-                                    <th>FLAGS</th>
+                                    <th>
+                                        <Tooltip label="SCORE" text="Individual company risk score derived from quarterly filings." />
+                                    </th>
+                                    <th>
+                                        <Tooltip label="FLAGS" text="Total number of unique 'red flags' detected (e.g., Debt Spike)." />
+                                    </th>
                                     <th>INVESTMENT</th>
                                     <th style={{ textAlign: 'right' }}>ACTION</th>
                                 </tr>
@@ -594,7 +633,9 @@ export default function PortfolioDashboard() {
             <div className="exec-section">
                 <div className="pf-grid-12">
                     <div className="col-12">
-                        <h3 className="section-title">Domain Exposure</h3>
+                        <h3 className="section-title">
+                            <Tooltip label="Domain Exposure" text="Concentration of capital risk mapped to specific drivers (Debt, Growth, etc.)." />
+                        </h3>
                         <div className="exec-card hover-lift" style={{ padding: '24px' }}>
                             {data.concentration.length === 0 ? <div className="text-muted">No data</div> :
                                 // Render as a grid of exposures for full width utilization
@@ -700,6 +741,72 @@ export default function PortfolioDashboard() {
                     </div>
                 )
             }
+            {/* Glossary Sidebar */}
+            <div className={`glossary-sidebar ${isGlossaryOpen ? 'open' : ''}`}>
+                <div className="glossary-header">
+                    <h2 className="glossary-title">Risk Glossary</h2>
+                    <button className="icon-btn" onClick={() => setIsGlossaryOpen(false)}>✕</button>
+                </div>
+
+                <div className="glossary-content">
+                    <div className="glossary-item">
+                        <span className="glossary-term">Risk Score</span>
+                        <p className="glossary-def">
+                            A proprietary 0-100 index calculating total capital risk. It synthesizes financial health (balance sheet stress),
+                            governance flags, and market momentum. Scores above 70 indicate a high probability of capital erosion.
+                        </p>
+                    </div>
+
+                    <div className="glossary-item">
+                        <span className="glossary-term">Escalation Probability</span>
+                        <p className="glossary-def">
+                            Our AI model's estimated likelihood that the current risk posture will deteriorate significantly (tier downgrade)
+                            within the next 90 days. High probability is a leading indicator of upcoming price volatility.
+                        </p>
+                    </div>
+
+                    <div className="glossary-item">
+                        <span className="glossary-term">Risk Momentum</span>
+                        <p className="glossary-def">
+                            Measures the rate of change in risk signals. Acceleration means new red flags are appearing faster than the
+                            historical average, signaling an urgent need for re-evaluation.
+                        </p>
+                    </div>
+
+                    <div className="glossary-item">
+                        <span className="glossary-term">Risk Density</span>
+                        <p className="glossary-def">
+                            The average number of active algorithmic flags per company in your portfolio. It measures how widespread
+                            deterioration is across your holdings.
+                        </p>
+                    </div>
+
+                    <div className="glossary-item">
+                        <span className="glossary-term">Domain Exposure</span>
+                        <p className="glossary-def">
+                            Categorizes your total capital risk by "Domain" (e.g., Debt, Cash Flow, Growth). This helps identify if your
+                            portfolio has a structural weakness in a specific area of finance.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/20">
+                    <h4 className="text-sm font-bold text-blue-600 dark:text-blue-400 mb-2">Model Methodology</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        Flagium uses a multi-layered detection engine that monitors 2,400+ data points across SEBI/NSE filings,
+                        auditor notes, and quarterly results. Our mission is to bridge the gap between complex filings and clear,
+                        actionable risk intelligence.
+                    </p>
+                </div>
+            </div>
+
+            {/* Glossary Backdrop */}
+            {isGlossaryOpen && (
+                <div
+                    className="fixed inset-0 z-[2500] bg-slate-900/20 backdrop-blur-[2px]"
+                    onClick={() => setIsGlossaryOpen(false)}
+                />
+            )}
         </div >
     );
 }

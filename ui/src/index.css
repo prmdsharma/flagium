@@ -3126,3 +3126,126 @@
   z-index: 10;
   box-shadow: 0 1px 0 var(--border-subtle);
 }
+
+/* ── Phase 2: Product Clarity (Tooltips & Glossary) ── */
+
+.tooltip-trigger {
+  position: relative;
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tooltip-icon {
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0.7;
+  transition: opacity var(--speed-fast);
+}
+
+.tooltip-trigger:hover .tooltip-icon {
+  opacity: 1;
+  color: var(--accent-blue);
+}
+
+.tooltip-box {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  width: 220px;
+  padding: 12px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: left;
+  z-index: 2000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--speed-normal) var(--ease-standard),
+    transform var(--speed-normal) var(--ease-standard);
+  backdrop-filter: blur(8px);
+}
+
+.tooltip-trigger:hover .tooltip-box {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Arrow for tooltip */
+.tooltip-box::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--border-strong) transparent transparent transparent;
+}
+
+/* Glossary Sidebar */
+.glossary-sidebar {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  z-index: 3000;
+  transition: right var(--speed-slow);
+  padding: 32px;
+  overflow-y: auto;
+}
+
+.glossary-sidebar.open {
+  right: 0;
+}
+
+.glossary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.glossary-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.glossary-item {
+  margin-bottom: 24px;
+}
+
+.glossary-term {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-blue);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.glossary-def {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.micro-insight {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+  display: block;
+  font-weight: 400;
+}

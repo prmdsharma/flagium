@@ -22,6 +22,7 @@ export default function PortfolioDashboard() {
     // Refs
     const autocompleteRef = useRef(null);
     const moreMenuRef = useRef(null);
+    const fileInputRef = useRef(null);
 
     // More Menu State
     const [showMoreMenu, setShowMoreMenu] = useState(false);
@@ -43,6 +44,7 @@ export default function PortfolioDashboard() {
     const [allCompanies, setAllCompanies] = useState([]);
     const [filteredCompanies, setFilteredCompanies] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [uploadResult, setUploadResult] = useState(null);
 
     // Confirmation State
     const [confirmModal, setConfirmModal] = useState({
@@ -110,6 +112,70 @@ export default function PortfolioDashboard() {
         }
     }, [id, navigate, isCreatingNew]);
 
+    // Check for Zerodha Redirect
+    useEffect(() => {
+        const requestToken = queryParams.get('request_token');
+        if (requestToken && id) {
+            handleZerodhaSync(requestToken);
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }, [id, location]);
+
+    // Check for Groww Redirect
+    useEffect(() => {
+        const code = queryParams.get('code');
+        if (code && id) {
+            handleGrowwSync(code);
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }, [id, location]);
+
+    const handleZerodhaSync = async (token) => {
+        setLoading(true);
+        try {
+            const res = await api.syncZerodhaPortfolio(id, token);
+            setUploadResult(res);
+            loadDetail(id); // Refresh
+        } catch (err) {
+            alert("Broker sync failed: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleConnectZerodha = async () => {
+        try {
+            const { url } = await api.getZerodhaLoginUrl();
+            window.location.href = url;
+        } catch (err) {
+            alert("Failed to initiate Zerodha login: " + err.message);
+        }
+    };
+
+    const handleGrowwSync = async (token) => {
+        setLoading(true);
+        try {
+            const res = await api.syncGrowwPortfolio(id, token);
+            setUploadResult(res);
+            loadDetail(id); // Refresh
+        } catch (err) {
+            alert("Groww sync failed: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleConnectGroww = async () => {
+        try {
+            const { url } = await api.getGrowwLoginUrl();
+            window.location.href = url;
+        } catch (err) {
+            alert("Failed to initiate Groww login: " + err.message);
+        }
+    };
+
     const loadDetail = async (portfolioId) => {
         setLoading(true);
         setError(null);
@@ -158,6 +224,23 @@ export default function PortfolioDashboard() {
             navigate(`/portfolio/${res.id}`);
         } catch (e) {
             alert("Failed to create portfolio: " + e.message);
+        }
+    };
+
+    const handleFileUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        setLoading(true);
+        try {
+            const res = await api.uploadPortfolioCsv(id, file);
+            setUploadResult(res);
+            loadDetail(id); // Refresh
+        } catch (err) {
+            alert("Upload failed: " + err.message);
+        } finally {
+            setLoading(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
         }
     };
 
@@ -554,7 +637,62 @@ export default function PortfolioDashboard() {
             <div className="exec-section" style={{ marginBottom: '48px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0' }}>
                     <h3 className="section-title" style={{ marginBottom: 0 }}>Risk Heatmap</h3>
-                    <button className="btn-sm-solid" onClick={() => setShowAddStock(true)}>+ Add Stock</button>
+                    <div className="flex items-center gap-3">
+                        {/* Broker Sync (Premium) */}
+                        <div className="group relative">
+                            <button
+                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed"
+                                onClick={() => alert("Direct Broker Sync is a Premium Feature coming in V2. For now, please use the CSV Upload below (it's free!).")}
+                            >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l2 2m-2-2l-2-2" />
+                                </svg>
+                                Zerodha
+                                <span className="px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded text-[9px]">PREMIUM</span>
+                            </button>
+                        </div>
+
+                        <div className="group relative">
+                            <button
+                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed"
+                                onClick={() => alert("Direct Broker Sync is a Premium Feature coming in V2. For now, please use the CSV Upload below (it's free!).")}
+                            >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="10" /><path d="M8 12h8m-4-4v8" />
+                                </svg>
+                                Groww
+                                <span className="px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded text-[9px]">PREMIUM</span>
+                            </button>
+                        </div>
+
+                        <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+
+                        {/* CSV Upload (Highlighted) */}
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileUpload}
+                            accept=".csv"
+                            className="hidden"
+                        />
+                        <button
+                            className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20 border border-blue-500"
+                            onClick={() => fileInputRef.current?.click()}
+                        >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                            Sync via CSV (Free)
+                        </button>
+
+                        {/* Manual Add */}
+                        <button
+                            className="flex items-center gap-2 px-3 py-1.5 bg-slate-900 dark:bg-slate-700 text-white rounded-lg text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-600 transition-all"
+                            onClick={() => setShowAddStock(true)}
+                        >
+                            <span className="text-sm">+</span> Add
+                        </button>
+                    </div>
                 </div>
                 {data.holdings.length === 0 ? (
                     <div className="zero-state-card">
@@ -671,6 +809,49 @@ export default function PortfolioDashboard() {
                 confirmText={confirmModal.confirmText}
                 isDanger={confirmModal.isDanger}
             />
+
+            {/* CSV Upload Success/Feedback Modal */}
+            {uploadResult && (
+                <div className="fixed inset-0 z-[1500] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-enter">
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100 dark:border-slate-700 p-6">
+                        <div className="text-center mb-6">
+                            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                                ✅
+                            </div>
+                            <h3 className="text-xl font-black text-slate-900 dark:text-white">Upload Complete</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                                Successfully synced <span className="font-bold text-green-600">{uploadResult.success_count}</span> holdings.
+                            </p>
+                        </div>
+
+                        {uploadResult.failed_tickers && uploadResult.failed_tickers.length > 0 && (
+                            <div className="mb-6">
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                    Skipped Stocks (Not in our 475 match-list)
+                                </div>
+                                <div className="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                                    {uploadResult.failed_tickers.map(t => (
+                                        <span key={t} className="px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-[10px] font-mono font-bold text-slate-500">
+                                            {t}
+                                        </span>
+                                    ))}
+                                </div>
+                                <p className="text-[11px] text-slate-400 mt-3 leading-relaxed">
+                                    Note: We currently only support the top ~475 liquid stocks. Unsupported tickers will be added automatically as we broaden our coverage.
+                                </p>
+                            </div>
+                        )}
+
+                        <button
+                            className="w-full py-3 bg-slate-900 dark:bg-slate-700 text-white font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-lg"
+                            onClick={() => setUploadResult(null)}
+                        >
+                            Got it
+                        </button>
+                    </div>
+                </div>
+            )}
 
 
             {/* Add Stock Modal - Refactored to match design system */}

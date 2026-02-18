@@ -13,3 +13,5 @@ passlib[bcrypt]
 python-multipart
 bcrypt==3.2.2
 python-dotenv
+kiteconnect
+growwapi

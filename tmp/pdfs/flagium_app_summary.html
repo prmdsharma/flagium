@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flagium - App Summary</title>
+  <style>
+    @page { size: A4; margin: 0.45in; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: #111827;
+      line-height: 1.28;
+      font-size: 10.2pt;
+      background: #ffffff;
+    }
+    .sheet {
+      width: 100%;
+      min-height: 100%;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-rows: auto auto auto auto 1fr;
+      gap: 8px;
+    }
+    h1 {
+      margin: 0 0 2px 0;
+      font-size: 16pt;
+      letter-spacing: 0.2px;
+    }
+    .sub {
+      margin: 0;
+      color: #4b5563;
+      font-size: 9.4pt;
+    }
+    h2 {
+      margin: 0 0 3px 0;
+      font-size: 11pt;
+      color: #0f766e;
+      border-bottom: 1px solid #d1fae5;
+      padding-bottom: 1px;
+    }
+    p { margin: 0; }
+    ul {
+      margin: 0;
+      padding-left: 14px;
+    }
+    li { margin: 1px 0; }
+    .block {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 7px 8px;
+    }
+    .arch {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3px;
+      font-size: 9.7pt;
+    }
+    .run code {
+      font-size: 8.8pt;
+      background: #111827;
+      color: #f9fafb;
+      padding: 0 4px;
+      border-radius: 3px;
+    }
+    .foot {
+      margin-top: 4px;
+      font-size: 8.6pt;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header>
+      <h1>Flagium - One-Page App Summary</h1>
+      <p class="sub">Evidence source: repository files (README.md, api/, ingestion/, engine/, db/, ui/).</p>
+    </header>
+
+    <section class="block">
+      <h2>What It Is</h2>
+      <p>Flagium is a rule-based financial risk intelligence application that flags early signs of deterioration in listed companies using ingested financial filings and deterministic checks. It combines a FastAPI backend, data ingestion pipeline, and React dashboard for analysis and monitoring.</p>
+    </section>
+
+    <section class="block">
+      <h2>Who It Is For</h2>
+      <p>Primary users are long-term investors, portfolio managers, and analysts monitoring company-level and portfolio-level financial risk.</p>
+    </section>
+
+    <section class="block">
+      <h2>What It Does</h2>
+      <ul>
+        <li>Ingests company filings (NSE first, BSE fallback), parses XBRL, and stores normalized financial records.</li>
+        <li>Runs modular red-flag checks (for example: profit collapse, low interest coverage, OCF vs PAT divergence).</li>
+        <li>Exposes REST APIs for dashboard, companies, flags, scans, and ingestion triggers.</li>
+        <li>Supports user registration/login, JWT auth, and profile/password management.</li>
+        <li>Provides portfolio CRUD, holdings-level risk scoring, deltas, and escalation feeds.</li>
+        <li>Includes admin endpoints for ingestion coverage checks and data sanity reporting.</li>
+        <li>Serves a React SPA with public pages plus protected views (dashboard, market monitor, companies, flags, portfolio, reports).</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <h2>How It Works (Compact Architecture)</h2>
+      <div class="arch">
+        <div><strong>UI:</strong> React + Vite app (`ui/src/App.jsx`) calls backend at <code>http://localhost:8000/api</code> (`ui/src/api.js`).</div>
+        <div><strong>API Layer:</strong> FastAPI app (`api/server.py`) mounts routers for core data routes, auth, portfolios, and admin.</div>
+        <div><strong>Ingestion:</strong> `ingestion/ingest.py` orchestrates ticker fetch, filing download, XBRL parse (`ingestion/xbrl_parser.py`), and DB writes (`ingestion/db_writer.py`).</div>
+        <div><strong>Flag Engine:</strong> `engine/runner.py` loads flag modules from `flags/`, executes checks per company/period, and inserts `flags` rows.</div>
+        <div><strong>Data Store:</strong> MySQL schema in `db/bootstrap.sql` with `companies`, `financials`, `flags`, `users`, `portfolios`, and `portfolio_items`.</div>
+        <div><strong>Data Flow:</strong> Exchange filings -> parser -> `financials` table -> flag runner -> `flags` table -> API queries -> dashboard/portfolio screens.</div>
+        <div><strong>Not found in repo:</strong> production orchestration manifests (for example Docker Compose/Kubernetes files).</div>
+      </div>
+    </section>
+
+    <section class="block run">
+      <h2>How To Run (Minimal Getting Started)</h2>
+      <ul>
+        <li>Provision MySQL locally and initialize schema: run <code>db/bootstrap.sql</code>.</li>
+        <li>Create backend venv and install deps: <code>python3 -m venv venv</code> and <code>pip install -r requirements.txt</code>.</li>
+        <li>Install frontend deps: <code>cd ui && npm install</code>.</li>
+        <li>Start both apps with bundled script: <code>./start.bash</code> (backend :8000, frontend :5173).</li>
+        <li>Alternative manual start: <code>uvicorn api.server:app --reload --port 8000</code> and <code>npm run dev -- --host</code> in `ui`.</li>
+      </ul>
+      <p class="foot">Note: DB credentials are hardcoded in `db/connection.py` for local setup (`localhost`, `flagium_user`, `flagium`).</p>
+    </section>
+  </main>
+</body>
+</html>

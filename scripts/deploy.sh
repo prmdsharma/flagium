@@ -28,7 +28,8 @@ cd ..
 
 # 3. Sync Backend Files
 echo "⬆️ Syncing Backend..."
-rsync -avz --exclude '.env' --exclude 'node_modules' --exclude '__pycache__' --exclude 'dist' \
+rsync -avz --exclude '.env' --exclude 'node_modules' --exclude '__pycache__' \
+      --exclude 'dist' --exclude 'venv' --exclude '.git' --exclude '.DS_Store' \
       -e "ssh -i $SSH_KEY" ./ $REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/
 
 # 4. Sync Frontend Assets

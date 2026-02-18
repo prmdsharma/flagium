@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { api } from "../api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import Tooltip from "../components/common/Tooltip";
 
 import ConfirmModal from "../components/common/ConfirmModal";
 
@@ -324,15 +325,6 @@ export default function PortfolioDashboard() {
             alert("Failed to rename portfolio: " + err.message);
         }
     };
-
-    // ── HELPERS ──
-    const Tooltip = ({ label, text, iconOnly = false }) => (
-        <span className="tooltip-trigger">
-            {!iconOnly && <span>{label}</span>}
-            <span className="tooltip-icon">ⓘ</span>
-            <div className="tooltip-box">{text}</div>
-        </span>
-    );
 
     // ── RENDER ──
 

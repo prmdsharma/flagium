@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api";
+import Tooltip from "../components/common/Tooltip";
 
 export default function Dashboard() {
     const [data, setData] = useState(null);
@@ -62,7 +63,9 @@ export default function Dashboard() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <span className="text-sm font-bold tracking-wider text-slate-400 uppercase">Overall Capital Risk</span>
+                            <span className="text-sm font-bold tracking-wider text-slate-400 uppercase">
+                                <Tooltip label="Overall Capital Risk" text="Aggregated risk score across your entire portfolio, weighted by capital deployed." />
+                            </span>
                             <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[10px] font-bold text-slate-500">AGGREGATED</span>
                         </div>
                         <div className="flex items-center gap-3">
@@ -70,28 +73,37 @@ export default function Dashboard() {
                                 {getStatusIcon(status)} {status}
                             </h1>
                         </div>
-                        <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                            Across {data.portfolio_count} portfolios • Capital-weighted exposure
+                        <div className="mt-2 text-sm text-slate-500 dark:text-slate-400 flex items-center gap-4">
+                            <span>Across {data.portfolio_count} portfolios • Capital-weighted exposure</span>
+                            <button className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full font-bold text-slate-400 hover:text-blue-500 transition-colors">
+                                💬 Give Feedback
+                            </button>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
                         <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">Risk Score</span>
+                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">
+                                <Tooltip label="Risk Score" text="Composite index (0-100) combining structural and algorithmic risk signals." />
+                            </span>
                             <span className="text-3xl font-black text-slate-900 dark:text-white">{risk_score}</span>
                             <span className={`text-[10px] font-bold ${risk_delta > 0 ? 'text-red-500' : 'text-green-500'}`}>
                                 {risk_delta > 0 ? '▲' : '▼'} {Math.abs(risk_delta)} QoQ
                             </span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">Escalation Prob</span>
+                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">
+                                <Tooltip label="Escalation Prob" text="Statistical likelihood of a risk-tier downgrade in the next 90 days." />
+                            </span>
                             <span className="text-3xl font-black text-slate-900 dark:text-white">{escalation_prob}%</span>
                             <div className="w-16 h-1 bg-slate-100 dark:bg-slate-800 rounded-full mt-2 overflow-hidden">
                                 <div className="h-full bg-blue-500" style={{ width: `${escalation_prob}%` }} />
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">Acceleration</span>
+                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">
+                                <Tooltip label="Acceleration" text="The rate at which new risk flags are being detected compared to historical norms." />
+                            </span>
                             <span className="text-lg font-bold text-slate-900 dark:text-white mt-1">{acceleration}</span>
                             <span className="text-[10px] font-medium text-slate-500 uppercase tracking-tighter">Status</span>
                         </div>

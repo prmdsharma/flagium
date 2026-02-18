@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 
 export default function LandingPage() {
+    const { onOpenAuthModal } = useOutletContext();
+
     return (
         <div className="bg-[#F9FAFB]">
             {/* 1. HERO SECTION */}
@@ -14,12 +16,12 @@ export default function LandingPage() {
                         Flagium monitors structural financial deterioration in listed companies using objective, rules-based risk signals — so investors can detect trouble before it becomes collapse.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link
-                            to="/register"
+                        <button
+                            onClick={() => onOpenAuthModal("register")}
                             className="h-12 px-8 bg-slate-900 text-white font-semibold rounded-lg flex items-center justify-center hover:bg-slate-800 transition-colors shadow-sm"
                         >
                             Create Free Account
-                        </Link>
+                        </button>
                         <Link
                             to="/methodology"
                             className="h-12 px-8 bg-white text-slate-700 font-semibold rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"

@@ -39,32 +39,41 @@ Transfer the `flagium_dev_dump.sql` to the production server and run:
 mysql -u flagium_user -p flagium < flagium_dev_dump.sql
 ```
 
-## 4. Backend Deployment
-1. Clone the repository and checkout the `main` or `release` branch.
-2. Create a virtual environment:
+## 4. Production Deployment (Automated)
+
+The project now includes a standardized deployment script that enforces safety rules (e.g., only deploying from the `main` branch).
+
+### Automated Deployment Steps
+1. Ensure you are on the `main` branch and all changes are pushed.
+2. Run the deployment script from the project root:
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
-3. Start the API server using `pm2` or `systemd`:
-   ```bash
-   pm2 start "uvicorn api.server:app --host 0.0.0.0 --port 8000" --name flagium-backend
+   ./scripts/deploy.sh
    ```
 
-## 5. Frontend Deployment
+The script will:
+- Verify you are on the `main` branch.
+- Build the frontend production bundle.
+- Sync backend and frontend files to the production server.
+- Restart the necessary services.
+
+---
+
+## 5. Manual Backup / Detailed Steps
+If the script cannot be used, follow these manual steps:
+
+### Backend Sync
+```bash
+rsync -avz --exclude '.env' --exclude 'node_modules' --exclude '__pycache__' --exclude 'dist' -e "ssh -i ~/ocip/ssh-key-2026-02-17.key" ./ ubuntu@80.225.201.34:~/flagium/
+```
+
+### Frontend Build & Sync
 1. Navigate to the `ui` directory:
    ```bash
-   cd ui
-   npm install
+   cd ui && npm run build
    ```
-2. Build the production bundle:
+2. Sync the `dist` folder:
    ```bash
-   npm run build
-   ```
-3. Serve the `dist` folder using Nginx or Caddy. Alternatively, use `pm2 serve`:
-   ```bash
-   pm2 serve dist 5173 --name flagium-frontend --spa
+   rsync -avz --delete -e "ssh -i ~/ocip/ssh-key-2026-02-17.key" dist/ ubuntu@80.225.201.34:~/flagium/ui/dist/
    ```
 
 ## 6. Post-Deployment & Incremental Updates

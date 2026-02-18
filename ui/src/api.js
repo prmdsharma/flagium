@@ -47,6 +47,7 @@ export const api = {
   register: (email, password, fullName) =>
     fetchJSON("/auth/register", { method: "POST", body: { email, password, full_name: fullName } }),
   getMe: () => fetchJSON("/auth/me"),
+  verifyEmail: (token) => fetchJSON(`/auth/verify-email?token=${token}`),
   updateProfile: (fullName) => fetchJSON("/auth/me", { method: "PUT", body: { full_name: fullName } }),
   changePassword: (oldPassword, newPassword) => fetchJSON("/auth/change-password", { method: "POST", body: { old_password: oldPassword, new_password: newPassword } }),
 

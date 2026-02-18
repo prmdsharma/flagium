@@ -10,6 +10,9 @@ from db.connection import get_connection
 import os
 from dotenv import load_dotenv
 
+import secrets
+from api.email_utils import send_verification_email
+
 # Load environment variables
 load_dotenv()
 
@@ -113,15 +116,21 @@ def register(user: UserRegister):
         conn.close()
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    # Create user
+    # Create user with verification token
     hashed_pw = get_password_hash(user.password)
+    verification_token = secrets.token_urlsafe(32)
+    
     try:
         cursor.execute(
-            "INSERT INTO users (email, password_hash, full_name, role) VALUES (%s, %s, %s, 'free')",
-            (user.email, hashed_pw, user.full_name)
+            "INSERT INTO users (email, password_hash, full_name, role, is_verified, verification_token) VALUES (%s, %s, %s, 'free', 0, %s)",
+            (user.email, hashed_pw, user.full_name, verification_token)
         )
         conn.commit()
         user_id = cursor.lastrowid
+        
+        # Send email
+        send_verification_email(user.email, verification_token)
+        
         return {"id": user_id, "email": user.email, "full_name": user.full_name, "role": "free"}
     except Exception as e:
         conn.rollback()
@@ -148,8 +157,38 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
             headers={"WWW-Authenticate": "Bearer"},
         )
     
+    if not user.get("is_verified"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Please verify your email address before logging in."
+        )
+    
     access_token = create_access_token(data={"sub": user["email"], "id": user["id"], "role": user["role"]})
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/verify-email")
+def verify_email(token: str):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute("SELECT id FROM users WHERE verification_token = %s", (token,))
+    user = cursor.fetchone()
+    
+    if not user:
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=400, detail="Invalid or expired verification token")
+    
+    try:
+        cursor.execute("UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = %s", (user["id"],))
+        conn.commit()
+        return {"message": "Email verified successfully! You can now log in."}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+        conn.close()
 
 @router.get("/me", response_model=UserProfile)
 def read_users_me(current_user: dict = Depends(get_current_user)):

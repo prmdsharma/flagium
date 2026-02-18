@@ -106,6 +106,8 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(100),
     role VARCHAR(20) DEFAULT 'free', -- 'free' or 'pro'
+    is_verified TINYINT(1) DEFAULT 0,
+    verification_token VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

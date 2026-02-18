@@ -10,12 +10,14 @@ export default function LoginModal({ isOpen, onClose, initialMode = "login" }) {
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
     const { login, register } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         setIsLogin(initialMode === "login");
         setError(null);
+        setSuccess(null);
     }, [initialMode, isOpen]);
 
     if (!isOpen) return null;
@@ -23,6 +25,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = "login" }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
+        setSuccess(null);
         try {
             if (isLogin) {
                 await login(email, password);
@@ -30,9 +33,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = "login" }) {
                 navigate("/dashboard");
             } else {
                 await register(email, password, name);
-                await login(email, password);
-                onClose();
-                navigate("/dashboard");
+                setSuccess("Registration successful! We've sent a verification link to your email. Please verify to continue.");
             }
         } catch (err) {
             setError(err.message || "Authentication failed");
@@ -70,58 +71,79 @@ export default function LoginModal({ isOpen, onClose, initialMode = "login" }) {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    {!isLogin && (
+                {success && (
+                    <div className="text-center space-y-6">
+                        <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-600 text-sm font-medium">
+                            {success}
+                        </div>
+                        <button
+                            onClick={() => {
+                                setSuccess(null);
+                                setIsLogin(true);
+                            }}
+                            className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg shadow-lg shadow-slate-900/10 transition-all font-sans"
+                        >
+                            Return to Login
+                        </button>
+                    </div>
+                )}
+
+                {!success && (
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        {!isLogin && (
+                            <div className="space-y-1.5">
+                                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Full Name</label>
+                                <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    required
+                                    className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-medium placeholder:text-slate-400"
+                                    placeholder="Enter your full name"
+                                />
+                            </div>
+                        )}
                         <div className="space-y-1.5">
-                            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Full Name</label>
+                            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Credential</label>
                             <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 required
                                 className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-medium placeholder:text-slate-400"
-                                placeholder="Enter your full name"
+                                placeholder="name@company.com"
                             />
                         </div>
-                    )}
-                    <div className="space-y-1.5">
-                        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Credential</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-medium placeholder:text-slate-400"
-                            placeholder="name@company.com"
-                        />
-                    </div>
-                    <div className="space-y-1.5">
-                        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Passcode</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-medium placeholder:text-slate-400"
-                            placeholder="••••••••"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg shadow-lg shadow-slate-900/10 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
-                    >
-                        {isLogin ? "Decrypt & Enter" : "Establish Identity"}
-                    </button>
-                </form>
+                        <div className="space-y-1.5">
+                            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Passcode</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-medium placeholder:text-slate-400"
+                                placeholder="••••••••"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg shadow-lg shadow-slate-900/10 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                        >
+                            {isLogin ? "Decrypt & Enter" : "Establish Identity"}
+                        </button>
+                    </form>
+                )}
 
-                <div className="mt-8 text-center">
-                    <button
-                        onClick={() => setIsLogin(!isLogin)}
-                        className="text-sm text-slate-500 hover:text-slate-900 font-medium transition-colors"
-                    >
-                        {isLogin ? "Request Access (Register)" : "Have Access? Login"}
-                    </button>
-                </div>
+                {!success && (
+                    <div className="mt-8 text-center">
+                        <button
+                            onClick={() => setIsLogin(!isLogin)}
+                            className="text-sm text-slate-500 hover:text-slate-900 font-medium transition-colors"
+                        >
+                            {isLogin ? "Request Access (Register)" : "Have Access? Login"}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

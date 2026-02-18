@@ -1,13 +1,162 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from pydantic import BaseModel
 from typing import List, Optional
 from db.connection import get_connection
 from api.auth import get_current_user
 import datetime
+import csv
+import io
 
 router = APIRouter()
 
-# --- Models ---
+from api.brokers.zerodha import ZerodhaBroker
+from api.brokers.groww import GrowwBroker
+
+@router.get("/brokers/zerodha/login")
+def get_zerodha_login():
+    """Get the Zerodha Kite login URL."""
+    broker = ZerodhaBroker()
+    return {"url": broker.get_login_url()}
+
+class SyncRequest(BaseModel):
+    request_token: str
+
+@router.post("/{portfolio_id}/sync/zerodha")
+async def sync_zerodha_portfolio(
+    portfolio_id: int,
+    req: SyncRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Sync holdings from Zerodha Kite for a specific portfolio."""
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    # 1. Verify Ownership
+    cursor.execute("SELECT id FROM portfolios WHERE id = %s AND user_id = %s", (portfolio_id, current_user["id"]))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+
+    try:
+        broker = ZerodhaBroker()
+        broker.authenticate(req.request_token)
+        holdings = broker.get_holdings()
+        
+        success_count = 0
+        failed_tickers = []
+        
+        for item in holdings:
+            ticker = item["ticker"].strip().upper()
+            investment = (item["quantity"]) * (item["average_price"] or 100) # Fallback to 100 if price missing
+            
+            # Find Company
+            cursor.execute("SELECT id FROM companies WHERE ticker = %s", (ticker,))
+            company = cursor.fetchone()
+            
+            if not company:
+                failed_tickers.append(ticker)
+                continue
+                
+            # Add/Update in portfolio
+            try:
+                cursor.execute(
+                    "INSERT INTO portfolio_items (portfolio_id, company_id, investment) VALUES (%s, %s, %s)",
+                    (portfolio_id, company["id"], investment)
+                )
+                success_count += 1
+            except:
+                cursor.execute(
+                    "UPDATE portfolio_items SET investment = %s WHERE portfolio_id = %s AND company_id = %s",
+                    (investment, portfolio_id, company["id"])
+                )
+                success_count += 1
+        
+        conn.commit()
+        return {
+            "success_count": success_count,
+            "failed_tickers": list(set(failed_tickers)),
+            "total_processed": len(holdings)
+        }
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=400, detail=f"Broker sync error: {str(e)}")
+    finally:
+        cursor.close()
+        conn.close()
+
+@router.get("/brokers/groww/login")
+def get_groww_login():
+    """Get the Groww login URL."""
+    broker = GrowwBroker()
+    return {"url": broker.get_login_url()}
+
+@router.post("/{portfolio_id}/sync/groww")
+async def sync_groww_portfolio(
+    portfolio_id: int,
+    req: SyncRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Sync holdings from Groww for a specific portfolio."""
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    # 1. Verify Ownership
+    cursor.execute("SELECT id FROM portfolios WHERE id = %s AND user_id = %s", (portfolio_id, current_user["id"]))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+
+    try:
+        broker = GrowwBroker()
+        broker.authenticate(req.request_token)
+        holdings = broker.get_holdings()
+        
+        success_count = 0
+        failed_tickers = []
+        
+        for item in holdings:
+            ticker = item["ticker"].strip().upper() if item["ticker"] else None
+            if not ticker: continue
+            
+            investment = (item["quantity"]) * (item["average_price"] or 100)
+            
+            # Find Company
+            cursor.execute("SELECT id FROM companies WHERE ticker = %s", (ticker,))
+            company = cursor.fetchone()
+            
+            if not company:
+                failed_tickers.append(ticker)
+                continue
+                
+            # Add/Update in portfolio
+            try:
+                cursor.execute(
+                    "INSERT INTO portfolio_items (portfolio_id, company_id, investment) VALUES (%s, %s, %s)",
+                    (portfolio_id, company["id"], investment)
+                )
+                success_count += 1
+            except:
+                cursor.execute(
+                    "UPDATE portfolio_items SET investment = %s WHERE portfolio_id = %s AND company_id = %s",
+                    (investment, portfolio_id, company["id"])
+                )
+                success_count += 1
+        
+        conn.commit()
+        return {
+            "success_count": success_count,
+            "failed_tickers": list(set(failed_tickers)),
+            "total_processed": len(holdings)
+        }
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=400, detail=f"Groww sync error: {str(e)}")
+    finally:
+        cursor.close()
+        conn.close()
+
 class PortfolioCreate(BaseModel):
     name: str
     description: Optional[str] = None
@@ -89,6 +238,79 @@ def create_portfolio(item: PortfolioCreate, current_user: dict = Depends(get_cur
             "description": item.description,
             "created_at": str(datetime.datetime.now())
         }
+    finally:
+        cursor.close()
+        conn.close()
+
+@router.post("/{portfolio_id}/upload")
+async def upload_portfolio_csv(
+    portfolio_id: int, 
+    file: UploadFile = File(...), 
+    current_user: dict = Depends(get_current_user)
+):
+    """Upload a CSV to add multiple stocks to a portfolio."""
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    # 1. Verify Ownership
+    cursor.execute("SELECT id FROM portfolios WHERE id = %s AND user_id = %s", (portfolio_id, current_user["id"]))
+    if not cursor.fetchone():
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+
+    try:
+        content = await file.read()
+        stream = io.StringIO(content.decode("utf-8"))
+        reader = csv.DictReader(stream)
+        
+        # Normalize columns: Handle lowercase or different naming
+        success_count = 0
+        failed_tickers = []
+        
+        for row in reader:
+            # Map columns (flexible mapping)
+            ticker = row.get("ticker") or row.get("Ticker") or row.get("symbol") or row.get("Symbol")
+            investment = row.get("investment") or row.get("Investment") or row.get("amount") or row.get("Amount") or 100000
+            
+            if not ticker:
+                continue
+                
+            ticker = ticker.strip().upper()
+            
+            # Find Company
+            cursor.execute("SELECT id FROM companies WHERE ticker = %s", (ticker,))
+            company = cursor.fetchone()
+            
+            if not company:
+                failed_tickers.append(ticker)
+                continue
+                
+            # Add to portfolio (ignore if already exists)
+            try:
+                cursor.execute(
+                    "INSERT INTO portfolio_items (portfolio_id, company_id, investment) VALUES (%s, %s, %s)",
+                    (portfolio_id, company["id"], investment)
+                )
+                success_count += 1
+            except:
+                # Update existing instead? User said "add", but usually sync is better.
+                # For now, let's just update if duplicate to reflect the new CSV investment value
+                cursor.execute(
+                    "UPDATE portfolio_items SET investment = %s WHERE portfolio_id = %s AND company_id = %s",
+                    (investment, portfolio_id, company["id"])
+                )
+                success_count += 1
+        
+        conn.commit()
+        return {
+            "success_count": success_count,
+            "failed_tickers": list(set(failed_tickers)), # Deduplicate
+            "total_processed": success_count + len(set(failed_tickers))
+        }
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=400, detail=f"CSV processing error: {str(e)}")
     finally:
         cursor.close()
         conn.close()

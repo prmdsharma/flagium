@@ -33,14 +33,20 @@ export const api = {
 
   // Auth
   login: (email, password) => {
-    const formData = new FormData();
-    formData.append("username", email);
-    formData.append("password", password);
+    const params = new URLSearchParams();
+    params.append("username", email);
+    params.append("password", password);
     return fetch(`${API_BASE}/auth/login`, {
       method: "POST",
-      body: formData
-    }).then(r => {
-      if (!r.ok) throw new Error("Login failed");
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: params
+    }).then(async r => {
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || "Login failed");
+      }
       return r.json();
     });
   },
@@ -68,6 +74,25 @@ export const api = {
   addPortfolioItem: (id, ticker, investment = 100000) => fetchJSON(`/portfolios/${id}/items`, { method: "POST", body: { ticker, investment } }),
   updatePortfolioItem: (id, ticker, investment) => fetchJSON(`/portfolios/${id}/items/${ticker}`, { method: "PUT", body: { investment } }),
   removePortfolioItem: (id, ticker) => fetchJSON(`/portfolios/${id}/items/${ticker}`, { method: "DELETE" }),
+  uploadPortfolioCsv: (id, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return fetch(`${API_BASE}/portfolios/${id}/upload`, {
+      method: "POST",
+      headers: authToken ? { "Authorization": `Bearer ${authToken}` } : {},
+      body: formData
+    }).then(async r => {
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.detail || "Upload failed");
+      }
+      return r.json();
+    });
+  },
+  getZerodhaLoginUrl: () => fetchJSON("/portfolios/brokers/zerodha/login"),
+  syncZerodhaPortfolio: (portfolioId, requestToken) => fetchJSON(`/portfolios/${portfolioId}/sync/zerodha`, { method: "POST", body: { request_token: requestToken } }),
+  getGrowwLoginUrl: () => fetchJSON("/portfolios/brokers/groww/login"),
+  syncGrowwPortfolio: (portfolioId, requestToken) => fetchJSON(`/portfolios/${portfolioId}/sync/groww`, { method: "POST", body: { request_token: requestToken } }),
 
   // Admin
   getIngestionStatus: () => fetchJSON("/admin/ingestion-status"),

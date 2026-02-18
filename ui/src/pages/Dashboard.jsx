@@ -58,7 +58,7 @@ export default function Dashboard() {
     return (
         <div className="space-y-8 animate-enter">
             {/* 1️⃣ Top: Overall Capital Risk (Aggregated) */}
-            <div className="glass-card p-8 relative overflow-hidden">
+            <div className="glass-card p-8 relative">
                 <div className="absolute top-0 right-0 p-4 text-[100px] opacity-5 pointer-events-none">🛡️</div>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
@@ -75,9 +75,6 @@ export default function Dashboard() {
                         </div>
                         <div className="mt-2 text-sm text-slate-500 dark:text-slate-400 flex items-center gap-4">
                             <span>Across {data.portfolio_count} portfolios • Capital-weighted exposure</span>
-                            <button className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full font-bold text-slate-400 hover:text-blue-500 transition-colors">
-                                💬 Give Feedback
-                            </button>
                         </div>
                     </div>
 

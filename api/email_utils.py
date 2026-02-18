@@ -41,16 +41,17 @@ def send_verification_email(to_email, token):
         print("="*50 + "\n")
         return True
 
+    msg = MIMEMultipart()
+    # Explicitly cast to str to satisfy static analysis
+    msg['From'] = str(smtp_user)
+    msg['To'] = str(to_email)
+    msg['Subject'] = str(subject)
+    msg.attach(MIMEText(body, 'plain'))
+    
     try:
-        msg = MIMEMultipart()
-        msg['From'] = smtp_user
-        msg['To'] = to_email
-        msg['Subject'] = subject
-        msg.attach(MIMEText(body, 'plain'))
-        
         server = smtplib.SMTP(smtp_host, smtp_port)
         server.starttls()
-        server.login(smtp_user, smtp_pass)
+        server.login(str(smtp_user), str(smtp_pass))
         server.send_message(msg)
         server.quit()
         return True
@@ -94,16 +95,17 @@ def send_reset_password_email(to_email, token):
         print("="*50 + "\n")
         return True
 
+    msg = MIMEMultipart()
+    # Explicitly cast to str to satisfy static analysis
+    msg['From'] = str(smtp_user)
+    msg['To'] = str(to_email)
+    msg['Subject'] = str(subject)
+    msg.attach(MIMEText(body, 'plain'))
+    
     try:
-        msg = MIMEMultipart()
-        msg['From'] = smtp_user
-        msg['To'] = to_email
-        msg['Subject'] = subject
-        msg.attach(MIMEText(body, 'plain'))
-        
         server = smtplib.SMTP(smtp_host, smtp_port)
         server.starttls()
-        server.login(smtp_user, smtp_pass)
+        server.login(str(smtp_user), str(smtp_pass))
         server.send_message(msg)
         server.quit()
         return True

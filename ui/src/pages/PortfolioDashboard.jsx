@@ -660,22 +660,28 @@ export default function PortfolioDashboard() {
                         <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
 
                         {/* CSV Upload (Highlighted) */}
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleFileUpload}
-                            accept=".csv"
-                            className="hidden"
-                        />
-                        <button
-                            className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20 border border-blue-500"
-                            onClick={() => fileInputRef.current?.click()}
-                        >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
-                            </svg>
-                            Sync via CSV (Free)
-                        </button>
+                        <div className="flex flex-col items-center">
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleFileUpload}
+                                accept=".csv"
+                                className="hidden"
+                            />
+                            <button
+                                className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20 border border-blue-500"
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                Sync via CSV (Free)
+                            </button>
+                            <div className="flex flex-col items-center mt-1">
+                                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter">Ticker, Investment</span>
+                                <span className="text-[8px] text-slate-400">e.g. RELIANCE, TCS</span>
+                            </div>
+                        </div>
 
                         {/* Manual Add */}
                         <button

@@ -3150,10 +3150,7 @@
 }
 
 .tooltip-box {
-  position: absolute;
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%) translateY(10px);
+  position: fixed;
   width: 220px;
   padding: 12px;
   background: var(--bg-surface-elevated);
@@ -3165,17 +3162,9 @@
   font-weight: 500;
   line-height: 1.5;
   text-align: left;
-  z-index: 2000;
+  z-index: 9999;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--speed-normal) var(--ease-standard),
-    transform var(--speed-normal) var(--ease-standard);
   backdrop-filter: blur(8px);
-}
-
-.tooltip-trigger:hover .tooltip-box {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 
 /* Arrow for tooltip */

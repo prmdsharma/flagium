@@ -38,6 +38,6 @@ rsync -avz --delete -e "ssh -i $SSH_KEY" $FE_DIST_DIR/ $REMOTE_USER@$REMOTE_HOST
 
 # 5. Restart Services on Remote
 echo "🔄 Restarting Remote Services..."
-ssh -i $SSH_KEY $REMOTE_USER@$REMOTE_HOST "pm2 restart flagium-api"
+ssh -i $SSH_KEY $REMOTE_USER@$REMOTE_HOST "pm2 restart flagium-backend"
 
 echo "✅ Deployment Successful!"

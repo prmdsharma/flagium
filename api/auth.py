@@ -11,7 +11,7 @@ import os
 from dotenv import load_dotenv
 
 import secrets
-from api.email_utils import send_verification_email
+from api.email_utils import send_verification_email, send_reset_password_email
 
 # Load environment variables
 load_dotenv()
@@ -53,6 +53,13 @@ class UserUpdate(BaseModel):
 
 class PasswordChange(BaseModel):
     old_password: str
+    new_password: str
+
+class ForgotPasswordRequest(BaseModel):
+    email: str
+
+class ResetPasswordRequest(BaseModel):
+    token: str
     new_password: str
 
 # Helpers
@@ -183,6 +190,70 @@ def verify_email(token: str):
         cursor.execute("UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = %s", (user["id"],))
         conn.commit()
         return {"message": "Email verified successfully! You can now log in."}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+@router.post("/forgot-password")
+def forgot_password(request: ForgotPasswordRequest):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute("SELECT id, email FROM users WHERE email = %s", (request.email,))
+    user = cursor.fetchone()
+    
+    if not user:
+        # Don't reveal if email exists or not for security, but we'll return 200 anyway
+        cursor.close()
+        conn.close()
+        return {"message": "If your email is registered, you will receive a reset link shortly."}
+    
+    token = secrets.token_urlsafe(32)
+    expires = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+    
+    try:
+        cursor.execute(
+            "UPDATE users SET reset_token = %s, reset_token_expires = %s WHERE id = %s",
+            (token, expires, user["id"])
+        )
+        conn.commit()
+        
+        send_reset_password_email(user["email"], token)
+        return {"message": "If your email is registered, you will receive a reset link shortly."}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+@router.post("/reset-password")
+def reset_password(request: ResetPasswordRequest):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute(
+        "SELECT id FROM users WHERE reset_token = %s AND reset_token_expires > %s",
+        (request.token, datetime.datetime.utcnow())
+    )
+    user = cursor.fetchone()
+    
+    if not user:
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+    
+    hashed_pw = get_password_hash(request.new_password)
+    try:
+        cursor.execute(
+            "UPDATE users SET password_hash = %s, reset_token = NULL, reset_token_expires = NULL WHERE id = %s",
+            (hashed_pw, user["id"])
+        )
+        conn.commit()
+        return {"message": "Password reset successfully! You can now log in."}
     except Exception as e:
         conn.rollback()
         raise HTTPException(status_code=500, detail=str(e))

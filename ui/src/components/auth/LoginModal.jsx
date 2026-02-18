@@ -135,13 +135,24 @@ export default function LoginModal({ isOpen, onClose, initialMode = "login" }) {
                 )}
 
                 {!success && (
-                    <div className="mt-8 text-center">
+                    <div className="mt-8 text-center flex flex-col items-center gap-2">
                         <button
                             onClick={() => setIsLogin(!isLogin)}
                             className="text-sm text-slate-500 hover:text-slate-900 font-medium transition-colors"
                         >
                             {isLogin ? "Request Access (Register)" : "Have Access? Login"}
                         </button>
+                        {isLogin && (
+                            <button
+                                onClick={() => {
+                                    onClose();
+                                    navigate("/forgot-password");
+                                }}
+                                className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                            >
+                                Forgot Password?
+                            </button>
+                        )}
                     </div>
                 )}
             </div>

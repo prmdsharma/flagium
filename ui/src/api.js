@@ -56,6 +56,8 @@ export const api = {
   verifyEmail: (token) => fetchJSON(`/auth/verify-email?token=${token}`),
   updateProfile: (fullName) => fetchJSON("/auth/me", { method: "PUT", body: { full_name: fullName } }),
   changePassword: (oldPassword, newPassword) => fetchJSON("/auth/change-password", { method: "POST", body: { old_password: oldPassword, new_password: newPassword } }),
+  forgotPassword: (email) => fetchJSON("/auth/forgot-password", { method: "POST", body: { email } }),
+  resetPassword: (token, newPassword) => fetchJSON("/auth/reset-password", { method: "POST", body: { token, new_password: newPassword } }),
 
   // Data
   getDashboard: () => fetchJSON("/dashboard"),

@@ -107,6 +107,11 @@ export default function LoginPage() {
                         <span onClick={() => setIsLogin(!isLogin)}>
                             {isLogin ? "Request Access (Register)" : "Have Access? Login"}
                         </span>
+                        {isLogin && (
+                            <span onClick={() => navigate("/forgot-password")} style={{ marginLeft: '1rem', cursor: 'pointer', opacity: 0.8 }}>
+                                Forgot Password?
+                            </span>
+                        )}
                     </div>
                 )}
             </div>

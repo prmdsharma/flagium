@@ -1652,10 +1652,25 @@
   display: flex;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
-  height: 140px;
-  /* Fixed height for consistency */
+  min-height: 140px;
+  /* Allow expansion on mobile */
   margin-bottom: 24px;
   box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 1024px) {
+  .bloomberg-header {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .bb-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    width: 100% !important;
+    min-height: auto;
+    padding: 20px;
+  }
 }
 
 .bb-panel {
@@ -2966,6 +2981,10 @@
   height: 100%;
   background: linear-gradient(90deg, #3B82F6 0%, #2563EB 100%);
   /* Gradient Polish */
+  --border: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --slate-200-fallback: #e2e8f0;
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 4px;
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }

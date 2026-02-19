@@ -6,13 +6,13 @@ export default function LandingPage() {
     return (
         <div className="bg-[#F9FAFB]">
             {/* 1. HERO SECTION */}
-            <section className="pt-20 pb-32 px-8">
+            <section className="pt-12 md:pt-20 pb-20 md:pb-32 px-6">
                 <div className="max-w-[1280px] mx-auto text-center">
-                    <h1 className="text-5xl md:text-6xl font-bold text-slate-900 tracking-tight leading-tight mb-6">
+                    <h1 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tight leading-tight mb-6">
                         Built for Capital Preservation, <br className="hidden md:block" />
                         <span className="text-slate-500">Not Speculation.</span>
                     </h1>
-                    <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed px-2">
                         Flagium AI monitors structural financial deterioration in listed companies using objective, rules-based risk signals — so investors can detect trouble before it becomes collapse.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -33,8 +33,8 @@ export default function LandingPage() {
             </section>
 
             {/* 2. THE PROBLEM */}
-            <section className="py-20 px-8 bg-white border-t border-b border-gray-100">
-                <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <section className="py-16 md:py-20 px-6 bg-white border-t border-b border-gray-100">
+                <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
                     <div>
                         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
                             Most Collapses Signal Early. <br />
@@ -73,7 +73,7 @@ export default function LandingPage() {
             </section>
 
             {/* 3. WHAT FLAGIUM DOES */}
-            <section className="py-20 px-8">
+            <section className="py-16 md:py-20 px-6">
                 <div className="max-w-[1280px] mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl font-bold text-slate-900 mb-4">Systematic Downside Risk Monitoring</h2>
@@ -120,41 +120,41 @@ export default function LandingPage() {
             </section>
 
             {/* 4. HOW IT WORKS */}
-            <section className="py-20 px-8 bg-white border-t border-gray-100">
+            <section className="py-16 md:py-20 px-6 bg-white border-t border-gray-100">
                 <div className="max-w-[1280px] mx-auto">
-                    <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Simple Workflow. Institutional Depth.</h2>
+                    <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-12 text-center">Simple Workflow. Institutional Depth.</h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 relative">
                         {/* Connector Line (Desktop) */}
                         <div className="hidden md:block absolute top-8 left-1/6 right-1/6 h-0.5 bg-gray-100 -z-10"></div>
 
                         {/* Step 1 */}
                         <div className="text-center">
-                            <div className="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-sm">1</div>
+                            <div className="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-sm ring-1 ring-gray-100">1</div>
                             <h3 className="text-lg font-bold text-slate-900 mb-2">Add your portfolio</h3>
-                            <p className="text-slate-600">Enter your holdings or watchlist tickers securely.</p>
+                            <p className="text-slate-600 px-4">Enter your holdings or watchlist tickers securely.</p>
                         </div>
 
                         {/* Step 2 */}
                         <div className="text-center">
-                            <div className="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-sm">2</div>
+                            <div className="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-sm ring-1 ring-gray-100">2</div>
                             <h3 className="text-lg font-bold text-slate-900 mb-2">Engine scans financials</h3>
-                            <p className="text-slate-600">Flagium AI analyzes multi-quarter financial data automatically.</p>
+                            <p className="text-slate-600 px-4">Flagium AI analyzes multi-quarter financial data automatically.</p>
                         </div>
 
                         {/* Step 3 */}
                         <div className="text-center">
-                            <div className="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-sm">3</div>
+                            <div className="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-sm ring-1 ring-gray-100">3</div>
                             <h3 className="text-lg font-bold text-slate-900 mb-2">Receive risk signals</h3>
-                            <p className="text-slate-600">Risk scores and deterioration trends are generated instantly.</p>
+                            <p className="text-slate-600 px-4">Risk scores and deterioration trends are generated instantly.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* 5. WHO IT'S FOR */}
-            <section className="py-20 px-8">
-                <div className="max-w-4xl mx-auto bg-slate-900 rounded-2xl p-12 text-center md:text-left md:flex items-center justify-between shadow-xl">
+            <section className="py-16 md:py-20 px-6">
+                <div className="max-w-4xl mx-auto bg-slate-900 rounded-2xl p-8 md:p-12 text-center md:text-left md:flex items-center justify-between shadow-xl">
                     <div className="mb-8 md:mb-0">
                         <h2 className="text-3xl font-bold text-white mb-6">Designed for Serious Investors</h2>
                         <ul className="space-y-3 text-slate-300">
@@ -185,11 +185,11 @@ export default function LandingPage() {
             </section>
 
             {/* 6. WHY FLAGIUM */}
-            <section className="py-20 px-8 bg-white text-center">
+            <section className="py-16 md:py-20 px-6 bg-white text-center">
                 <div className="max-w-2xl mx-auto">
-                    <h2 className="text-3xl font-bold text-slate-900 mb-6">Clarity Over Noise</h2>
-                    <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-                        Markets react to price. Flagium AI monitors financial structure. <br />
+                    <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-6">Clarity Over Noise</h2>
+                    <p className="text-lg md:text-xl text-slate-600 mb-8 leading-relaxed px-2">
+                        Markets react to price. Flagium AI monitors financial structure. <br className="hidden md:block" />
                         Instead of asking <span className="text-slate-900 font-semibold">"Will it go up?"</span> <br />
                         We ask <span className="text-slate-900 font-semibold">"Is structural risk increasing?"</span>
                     </p>
@@ -198,14 +198,14 @@ export default function LandingPage() {
             </section>
 
             {/* 7. ABOUT FLAGIUM */}
-            <section className="py-20 px-8 bg-[#F9FAFB] border-t border-gray-100">
+            <section className="py-16 md:py-20 px-6 bg-[#F9FAFB] border-t border-gray-100">
                 <div className="max-w-2xl mx-auto text-center">
-                    <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">About</h4>
-                    <p className="text-lg text-slate-700 leading-relaxed mb-6">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">About</h4>
+                    <p className="text-base md:text-lg text-slate-700 leading-relaxed mb-6">
                         Flagium AI is built by investors and engineers focused on systematic financial risk assessment and long-term capital protection.
                     </p>
-                    <p className="text-slate-600">
-                        The platform is grounded in rule-based analysis of publicly reported financial data. <br />
+                    <p className="text-sm md:text-base text-slate-500 leading-relaxed">
+                        The platform is grounded in rule-based analysis of publicly reported financial data. <br className="hidden md:block" />
                         No predictions. No speculation. Only structured risk visibility.
                     </p>
                 </div>

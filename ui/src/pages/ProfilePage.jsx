@@ -91,36 +91,34 @@ export default function ProfilePage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-12 animate-in fade-in duration-500">
-            <div className="mb-8 flex items-baseline justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
-                <div>
-                    <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">User Profile</h1>
-                    <p className="mt-1 text-slate-500 dark:text-slate-400">Manage your account settings and preferences.</p>
-                </div>
+        <div className="max-w-4xl mx-auto px-6 py-12 lg:py-20 animate-in fade-in duration-700">
+            <div className="mb-12 border-b border-slate-200 dark:border-slate-800 pb-8">
+                <h1 className="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tight mb-2">My Profile</h1>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Security & Identity Management</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left: Info Card */}
-                <div className="md:col-span-1">
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden relative group">
+                <div className="lg:col-span-1">
+                    <div className="glass-card p-8 relative overflow-hidden group">
                         {/* Background Decoration */}
                         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-700"></div>
 
                         <div className="relative z-10 flex flex-col items-center">
-                            <div className="w-24 h-24 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white text-4xl font-black shadow-2xl mb-4 ring-4 ring-white dark:ring-slate-700 transform transition-transform group-hover:rotate-12">
+                            <div className="w-24 h-24 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white text-4xl font-black shadow-2xl mb-6 ring-4 ring-white dark:ring-slate-700 transform transition-transform group-hover:rotate-12">
                                 {user.full_name ? user.full_name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
                             </div>
-                            <h2 className="text-xl font-black text-slate-900 dark:text-white">{user.full_name || "New User"}</h2>
-                            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-6">{user.email}</p>
+                            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-1 uppercase tracking-tight">{user.full_name || "New User"}</h2>
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">{user.email}</p>
 
-                            <div className="w-full pt-6 border-t border-slate-100 dark:border-slate-700 space-y-3">
+                            <div className="w-full pt-8 border-t border-slate-100 dark:border-slate-800 space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</span>
-                                    <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-widest">Active</span>
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</span>
+                                    <span className="px-2 py-0.5 bg-emerald-500 text-white rounded text-[9px] font-black uppercase tracking-widest">Active</span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Role</span>
-                                    <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest">{user.role}</span>
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Role</span>
+                                    <span className="px-2 py-0.5 bg-blue-500 text-white rounded text-[9px] font-black uppercase tracking-widest">{user.role}</span>
                                 </div>
                             </div>
                         </div>
@@ -128,16 +126,17 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Right: Detailed Settings */}
-                <div className="md:col-span-2 space-y-8">
+                <div className="lg:col-span-2 space-y-8">
                     {/* Account Info */}
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-                        <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/20 flex justify-between items-center">
-                            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-xs">Account Information</h3>
+                    <div className="glass-card overflow-hidden">
+                        <div className="px-8 py-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex justify-between items-center">
+                            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-[10px]">Account Information</h3>
                             {!isEditing && (
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="text-[10px] font-black text-blue-600 dark:text-blue-400 hover:underline uppercase tracking-widest"
+                                    className="text-[10px] font-black text-blue-600 dark:text-blue-400 hover:text-blue-500 uppercase tracking-widest flex items-center gap-2"
                                 >
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                     Edit Profile
                                 </button>
                             )}
@@ -190,9 +189,9 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Security & Access */}
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-                        <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
-                            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-xs">Security & Access</h3>
+                    <div className="glass-card overflow-hidden">
+                        <div className="px-8 py-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex items-center justify-between">
+                            <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-[10px]">Security & Access</h3>
                         </div>
                         <div className="p-8 space-y-6">
                             <div

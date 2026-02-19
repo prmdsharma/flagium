@@ -18,7 +18,7 @@ export default function PublicLayout() {
     return (
         <div className="min-h-screen bg-white flex flex-col font-sans text-slate-900 relative">
             <PublicNavbar onOpenAuthModal={openAuthModal} />
-            <main className="flex-grow pt-16">
+            <main className="flex-grow pt-16 md:pt-16">
                 <Outlet context={{ onOpenAuthModal: openAuthModal }} />
             </main>
             <Footer />

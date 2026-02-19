@@ -96,23 +96,23 @@ export default function ReportsPage() {
             <div className="max-w-7xl mx-auto space-y-8">
 
                 {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                     <div>
-                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Admin Console</h1>
-                        <p className="text-slate-500 dark:text-slate-400 mt-1">Monitor system health and verify data integrity.</p>
+                        <h1 className="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Admin Console</h1>
+                        <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">System Health & Data Integrity</p>
                     </div>
 
                     {/* Tab Switcher */}
-                    <div className="flex p-1 bg-slate-200/50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 w-fit">
+                    <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 w-full lg:w-fit">
                         <button
                             onClick={() => setActiveTab('health')}
-                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'health' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                            className={`flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'health' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
                         >
                             System Health
                         </button>
                         <button
                             onClick={() => setActiveTab('sanity')}
-                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'sanity' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                            className={`flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'sanity' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
                         >
                             Data Sanity
                         </button>
@@ -246,23 +246,23 @@ export default function ReportsPage() {
 
                         {/* Synthesis Discrepancies Table */}
                         {sanity.discrepancies.length > 0 && (
-                            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-                                <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-red-50/30 dark:bg-red-900/10">
-                                    <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <div className="glass-card overflow-hidden">
+                                <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-red-500 text-white">
+                                    <h3 className="font-black flex items-center gap-2 uppercase tracking-widest text-xs">
                                         Symmetry Discrepancies
-                                        <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[10px] font-black uppercase rounded-full tracking-widest">High Priority</span>
+                                        <span className="px-2 py-0.5 bg-white text-red-600 text-[9px] font-black uppercase rounded animate-pulse">Critical</span>
                                     </h3>
-                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 uppercase font-bold tracking-tight">Difference &gt; 100 units detected between Annual filing and combined Quarter filings</p>
+                                    <p className="text-[10px] opacity-80 mt-1 font-bold tracking-tight uppercase">Manual Data Correction Required</p>
                                 </div>
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-left">
+                                <div className="overflow-x-auto scrollbar-hide">
+                                    <table className="w-full text-left border-collapse min-w-[700px]">
                                         <thead className="bg-slate-50 dark:bg-slate-900/50">
-                                            <tr>
-                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Ticker</th>
-                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Fiscal Year</th>
-                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Annual Revenue</th>
-                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Σ Quarters</th>
-                                                <th className="px-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Difference</th>
+                                            <tr className="border-b border-slate-100 dark:border-slate-800">
+                                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Ticker</th>
+                                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Fiscal Year</th>
+                                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Annual Revenue</th>
+                                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Σ Quarters</th>
+                                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Difference</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-slate-50 dark:divide-slate-700/50">
@@ -271,10 +271,10 @@ export default function ReportsPage() {
                                                 return (
                                                     <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group">
                                                         <td className="px-6 py-4 font-black text-slate-900 dark:text-white tracking-widest">{d.ticker}</td>
-                                                        <td className="px-6 py-4 text-sm font-bold text-slate-500 dark:text-slate-400">{d.year}</td>
-                                                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">{(d.annual_rev / 1e7).toFixed(2)} Cr</td>
-                                                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">{(d.sum_q_rev / 1e7).toFixed(2)} Cr</td>
-                                                        <td className="px-6 py-4 text-sm font-bold text-red-500 text-right">
+                                                        <td className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400">{d.year}</td>
+                                                        <td className="px-6 py-4 text-xs font-bold text-slate-900 dark:text-white">{(d.annual_rev / 1e7).toFixed(2)} Cr</td>
+                                                        <td className="px-6 py-4 text-xs font-bold text-slate-900 dark:text-white">{(d.sum_q_rev / 1e7).toFixed(2)} Cr</td>
+                                                        <td className="px-6 py-4 text-xs font-black text-red-500 text-right uppercase">
                                                             {((diff / d.annual_rev) * 100).toFixed(1)}% error
                                                         </td>
                                                     </tr>

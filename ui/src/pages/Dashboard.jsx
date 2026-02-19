@@ -58,56 +58,58 @@ export default function Dashboard() {
     return (
         <div className="space-y-8 animate-enter">
             {/* 1️⃣ Top: Overall Capital Risk (Aggregated) */}
-            <div className="glass-card p-8 relative">
-                <div className="absolute top-0 right-0 p-4 text-[100px] opacity-5 pointer-events-none">🛡️</div>
+            <div className="glass-card p-6 md:p-8 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 text-[100px] opacity-5 pointer-events-none hidden md:block">🛡️</div>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <span className="text-sm font-bold tracking-wider text-slate-400 uppercase">
+                            <span className="text-xs font-bold tracking-wider text-slate-400 uppercase">
                                 <Tooltip label="Overall Capital Risk" text="Aggregated risk score across your entire portfolio, weighted by capital deployed." />
                             </span>
-                            <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[10px] font-bold text-slate-500">AGGREGATED</span>
+                            <span className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[9px] font-bold text-slate-500">AGGREGATED</span>
                         </div>
                         <div className="flex items-center gap-3">
-                            <h1 className={`text-4xl font-black ${getStatusColor(status)}`}>
+                            <h1 className={`text-2xl md:text-4xl font-black ${getStatusColor(status)}`}>
                                 {getStatusIcon(status)} {status}
                             </h1>
                         </div>
-                        <div className="mt-2 text-sm text-slate-500 dark:text-slate-400 flex items-center gap-4">
-                            <span>Across {data.portfolio_count} portfolios • Capital-weighted exposure</span>
+                        <div className="mt-2 text-xs md:text-sm text-slate-500 dark:text-slate-400 flex flex-wrap items-center gap-2 md:gap-4">
+                            <span>Across {data.portfolio_count} portfolios</span>
+                            <span className="hidden md:inline">•</span>
+                            <span>Capital-weighted exposure</span>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 w-full md:w-auto">
                         <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">
+                            <span className="text-[10px] md:text-xs font-semibold text-slate-400 mb-1 uppercase">
                                 <Tooltip label="Risk Score" text="Composite index (0-100) combining structural and algorithmic risk signals." />
                             </span>
-                            <span className="text-3xl font-black text-slate-900 dark:text-white">{risk_score}</span>
-                            <span className={`text-[10px] font-bold ${risk_delta > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                            <span className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">{risk_score}</span>
+                            <span className={`text-[9px] md:text-[10px] font-bold ${risk_delta > 0 ? 'text-red-500' : 'text-green-500'}`}>
                                 {risk_delta > 0 ? '▲' : '▼'} {Math.abs(risk_delta)} QoQ
                             </span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">
+                            <span className="text-[10px] md:text-xs font-semibold text-slate-400 mb-1 uppercase">
                                 <Tooltip label="Escalation Prob" text="Statistical likelihood of a risk-tier downgrade in the next 90 days." />
                             </span>
-                            <span className="text-3xl font-black text-slate-900 dark:text-white">{escalation_prob}%</span>
-                            <div className="w-16 h-1 bg-slate-100 dark:bg-slate-800 rounded-full mt-2 overflow-hidden">
+                            <span className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">{escalation_prob}%</span>
+                            <div className="w-12 md:w-16 h-1 bg-slate-100 dark:bg-slate-800 rounded-full mt-2 overflow-hidden">
                                 <div className="h-full bg-blue-500" style={{ width: `${escalation_prob}%` }} />
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">
+                            <span className="text-[10px] md:text-xs font-semibold text-slate-400 mb-1 uppercase">
                                 <Tooltip label="Acceleration" text="The rate at which new risk flags are being detected compared to historical norms." />
                             </span>
-                            <span className="text-lg font-bold text-slate-900 dark:text-white mt-1">{acceleration}</span>
-                            <span className="text-[10px] font-medium text-slate-500 uppercase tracking-tighter">Status</span>
+                            <span className="text-base md:text-lg font-bold text-slate-900 dark:text-white mt-0.5 md:mt-1">{acceleration}</span>
+                            <span className="text-[9px] md:text-[10px] font-medium text-slate-500 uppercase tracking-tighter">Status</span>
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-slate-400 mb-1 uppercase">Total Capital</span>
-                            <span className="text-lg font-bold text-slate-900 dark:text-white mt-1">₹{(total_capital / 1e7).toFixed(1)} Cr</span>
-                            <span className="text-[10px] font-medium text-slate-500 uppercase tracking-tighter">Deployed</span>
+                            <span className="text-[10px] md:text-xs font-semibold text-slate-400 mb-1 uppercase">Total Capital</span>
+                            <span className="text-base md:text-lg font-bold text-slate-900 dark:text-white mt-0.5 md:mt-1">₹{(total_capital / 1e7).toFixed(1)} Cr</span>
+                            <span className="text-[9px] md:text-[10px] font-medium text-slate-500 uppercase tracking-tighter">Deployed</span>
                         </div>
                     </div>
                 </div>
@@ -145,19 +147,19 @@ export default function Dashboard() {
                 <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                     <div
                         onClick={() => navigate(`/portfolio/${activePf.id}`)}
-                        className={`glass-card flex items-center justify-between hover:border-blue-500 cursor-pointer transition-all group ${activePf.tier !== 'stable' ? 'bg-amber-50/5' : ''} ${data.portfolio_count > 1 ? 'p-5' : 'p-6'}`}
+                        className={`glass-card flex items-center justify-between hover:border-blue-500 cursor-pointer transition-all group ${activePf.tier !== 'stable' ? 'bg-amber-50/5' : ''} ${data.portfolio_count > 1 ? 'p-4 md:p-5' : 'p-5 md:p-6'}`}
                     >
-                        <div className="flex items-center gap-6">
-                            <div className={`w-3 rounded-full ${data.portfolio_count > 1 ? 'h-12' : 'h-16'} ${activePf.tier === 'high_risk' ? 'bg-red-500' : (activePf.tier === 'elevated' ? 'bg-amber-500' : 'bg-green-500')}`} />
+                        <div className="flex items-center gap-3 md:gap-6">
+                            <div className={`w-2 md:w-3 rounded-full ${data.portfolio_count > 1 ? 'h-10 md:h-12' : 'h-12 md:h-16'} ${activePf.tier === 'high_risk' ? 'bg-red-500' : (activePf.tier === 'elevated' ? 'bg-amber-500' : 'bg-green-500')}`} />
                             <div>
-                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{activePf.tier.replace('_', ' ')}</div>
-                                <div className={`${data.portfolio_count > 1 ? 'text-xl' : 'text-2xl'} font-black text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors`}>{activePf.name}</div>
-                                <div className="text-sm text-slate-500 mt-1">₹{(activePf.capital / 1e7).toFixed(2)} Cr Capital Deployed</div>
+                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{activePf.tier.replace('_', ' ')}</div>
+                                <div className={`${data.portfolio_count > 1 ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'} font-black text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors truncate max-w-[150px] md:max-w-none`}>{activePf.name}</div>
+                                <div className="text-[10px] md:text-sm text-slate-500 mt-1">₹{(activePf.capital / 1e7).toFixed(2)} Cr Capital</div>
                             </div>
                         </div>
                         <div className="text-right flex flex-col items-end">
-                            <div className={`${data.portfolio_count > 1 ? 'text-4xl' : 'text-5xl'} font-black text-slate-900 dark:text-white leading-none`}>{activePf.score}</div>
-                            <div className="text-[10px] font-bold text-slate-400 mt-2 tracking-widest uppercase">Risk Score</div>
+                            <div className={`${data.portfolio_count > 1 ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl'} font-black text-slate-900 dark:text-white leading-none`}>{activePf.score}</div>
+                            <div className="text-[9px] md:text-[10px] font-bold text-slate-400 mt-1.5 md:mt-2 tracking-widest uppercase">Risk Score</div>
                         </div>
                     </div>
                 </div>

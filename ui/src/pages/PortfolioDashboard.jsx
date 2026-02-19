@@ -358,12 +358,12 @@ export default function PortfolioDashboard() {
     return (
         <div className="portfolio-dashboard animate-enter">
             {/* [A] PAGE HEADER (Identity & Portfolio-Level Actions) */}
-            <div className="page-header-container" style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 8px' }}>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-2 md:px-4 mb-6 md:mb-8">
                 <div className="header-left">
                     {isRenaming ? (
                         <input
                             ref={renameInputRef}
-                            className="rename-input"
+                            className="rename-input w-full md:w-auto text-xl md:text-2xl font-black bg-transparent border-b-2 border-blue-500 outline-none"
                             value={renameValue}
                             onChange={(e) => setRenameValue(e.target.value)}
                             onBlur={handleRenamePortfolio}
@@ -373,9 +373,9 @@ export default function PortfolioDashboard() {
                             }}
                         />
                     ) : (
-                        <h1 className="page-title" style={{ fontSize: '28px', marginBottom: '4px' }}>{data.name}</h1>
+                        <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white leading-tight">{data.name}</h1>
                     )}
-                    <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                    <div className="text-xs md:text-sm text-slate-500 mt-1">
                         {data.holdings.length} Holdings • Q3 FY25 Strategy
                     </div>
                 </div>
@@ -427,47 +427,47 @@ export default function PortfolioDashboard() {
             </div>
 
             {/* [B] RISK INTELLIGENCE CARD (Pure Data) */}
-            <div className="exec-section" style={{ marginBottom: '48px' }}>
-                <div className="exec-card exec-hero" style={{ padding: '32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div className="mb-10 md:mb-12">
+                <div className="glass-card p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 relative overflow-hidden bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800/50">
                     {/* LEFT: Risk Score Anchor */}
-                    <div className="hero-left" style={{ flex: 1 }}>
-                        <div className="hero-score-wrapper">
-                            <span className="hero-score-val">{data.risk_score}</span>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                <span className="hero-score-label" style={{ color: data.risk_score < 30 ? '#10B981' : data.risk_score < 70 ? '#F59E0B' : '#EF4444', marginBottom: 0 }}>
+                    <div className="flex-1">
+                        <div className="flex items-center gap-4 md:gap-6">
+                            <span className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white leading-none tracking-tighter">{data.risk_score}</span>
+                            <div className="flex flex-col gap-1">
+                                <span className={`text-sm md:text-base font-black uppercase tracking-wider ${data.risk_score < 30 ? 'text-green-500' : data.risk_score < 70 ? 'text-amber-500' : 'text-red-500'}`}>
                                     <Tooltip
                                         label={data.risk_score < 30 ? 'Low Risk' : data.risk_score < 70 ? 'Moderate Risk' : 'High Risk'}
                                         text="A 0-100 index of financial, governance, and momentum stress. Under 30 is Stable; Over 70 is Critical."
                                     />
                                 </span>
-                                <span className="hero-sub-metric" style={{ fontSize: '13px' }}>
+                                <span className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium">
                                     <Tooltip
                                         label="Escalation Probability"
                                         text="AI-estimated probability (0-100%) that this portfolio will drop to a worse risk tier in the next 90 days."
-                                    />: <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>28%</span>
+                                    />: <span className="font-bold text-slate-900 dark:text-white">28%</span>
                                 </span>
                             </div>
                         </div>
                     </div>
 
                     {/* RIGHT: Metrics (No Actions) */}
-                    <div className="hero-right" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', gap: '48px' }}>
-                        <div className="stat-row">
-                            <span className="metric-label">QoQ Change</span>
-                            <span className={`stat-val ${data.risk_delta > 0 ? 'red' : 'green'}`}>
+                    <div className="flex flex-row md:items-center gap-8 md:gap-12 md:justify-end border-t md:border-t-0 border-slate-100 dark:border-slate-800 pt-6 md:pt-0">
+                        <div className="flex flex-col">
+                            <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">QoQ Change</span>
+                            <span className={`text-xl md:text-2xl font-black ${data.risk_delta > 0 ? 'text-red-500' : 'text-green-500'}`}>
                                 {data.risk_delta > 0 ? "+" : ""}{data.risk_delta}
                             </span>
                         </div>
-                        <div className="stat-row">
-                            <span className="metric-label">
+                        <div className="flex flex-col">
+                            <span className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">
                                 <Tooltip
                                     label="Risk Momentum"
                                     text="Indicates if the risk is accelerating (getting worse faster), decelerating (stabilizing), or plateauing."
                                 />
                             </span>
-                            <span className="stat-val" style={{ color: '#F59E0B', textAlign: 'right' }}>
+                            <span className="text-sm md:text-base font-bold text-amber-500 leading-tight">
                                 Moderate Acceleration
-                                <span className="micro-insight">Driven by new signals</span>
+                                <span className="block text-[10px] text-slate-500 font-medium mt-0.5">Driven by new signals</span>
                             </span>
                         </div>
                     </div>
@@ -475,30 +475,26 @@ export default function PortfolioDashboard() {
             </div>
 
             {/* [C.1] Risk Trajectory (Separate Section - Fixed) */}
-            <div className="exec-section" style={{ marginBottom: '48px' }}>
-                <div className="pf-grid-12">
-                    <div className="col-12">
-                        <h3 className="section-title">Risk Trajectory</h3>
-                        <div className="exec-card hover-lift" style={{ padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Acceleration Detected</div>
-                                <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                                    Portfolio risk has increased for 2 consecutive quarters.
-                                </div>
-                            </div>
-                            {/* FIX: Added display layout to container for spark-bars */}
-                            <div className="hero-chart-container" style={{ width: '60%', height: '64px', marginBottom: 0, display: 'flex', alignItems: 'flex-end', gap: '6px' }}>
-                                <div className="spark-bar" style={{ height: '30%' }}></div>
-                                <div className="spark-bar" style={{ height: '40%' }}></div>
-                                <div className="spark-bar" style={{ height: '35%' }}></div>
-                                <div className="spark-bar" style={{ height: '50%' }}></div>
-                                <div className="spark-bar" style={{ height: '60%' }}></div>
-                                <div className="spark-bar" style={{ height: '45%' }}></div>
-                                <div className="spark-bar" style={{ height: '55%' }}></div>
-                                <div className="spark-bar" style={{ height: '70%' }}></div>
-                                <div className="spark-bar active" style={{ height: '85%', width: '16px' }}></div>
-                            </div>
+            <div className="mb-12">
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 ml-1">Risk Trajectory</h3>
+                <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-12 hover:border-blue-500/50 transition-all group">
+                    <div className="flex-1">
+                        <div className="text-sm md:text-base font-bold text-slate-900 dark:text-white mb-1">Acceleration Detected</div>
+                        <div className="text-xs md:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Portfolio risk has increased for 2 consecutive quarters.
                         </div>
+                    </div>
+                    {/* FIX: Added display layout to container for spark-bars */}
+                    <div className="flex items-end gap-1.5 h-12 md:h-16 w-full md:w-[40%]">
+                        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-t-sm transition-all group-hover:bg-slate-200 dark:group-hover:bg-slate-700" style={{ height: '30%' }}></div>
+                        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-t-sm transition-all group-hover:bg-slate-200 dark:group-hover:bg-slate-700" style={{ height: '40%' }}></div>
+                        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-t-sm transition-all group-hover:bg-slate-200 dark:group-hover:bg-slate-700" style={{ height: '35%' }}></div>
+                        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-t-sm transition-all group-hover:bg-slate-200 dark:group-hover:bg-slate-700" style={{ height: '50%' }}></div>
+                        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-t-sm transition-all group-hover:bg-slate-200 dark:group-hover:bg-slate-700" style={{ height: '60%' }}></div>
+                        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-t-sm transition-all group-hover:bg-slate-200 dark:group-hover:bg-slate-700" style={{ height: '45%' }}></div>
+                        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-t-sm transition-all group-hover:bg-slate-200 dark:group-hover:bg-slate-700" style={{ height: '55%' }}></div>
+                        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-t-sm transition-all group-hover:bg-slate-200 dark:group-hover:bg-slate-700" style={{ height: '70%' }}></div>
+                        <div className="flex-1 bg-red-500 rounded-t-sm shadow-[0_-4px_12px_-2px_rgba(239,68,68,0.4)]" style={{ height: '85%' }}></div>
                     </div>
                 </div>
             </div>
@@ -585,38 +581,33 @@ export default function PortfolioDashboard() {
 
 
             {/* [C] Risk Heatmap (Full Width) */}
-            <div className="exec-section" style={{ marginBottom: '48px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0' }}>
-                    <h3 className="section-title" style={{ marginBottom: 0 }}>Risk Heatmap</h3>
-                    <div className="flex items-center gap-3">
+            <div className="mb-12">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-6">
+                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1">Risk Heatmap</h3>
+                    <div className="flex flex-wrap items-center gap-3">
                         {/* Broker Sync (Premium) */}
-                        <div className="group relative">
+                        <div className="hidden sm:flex items-center gap-3">
                             <button
-                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed transition-all"
+                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 rounded-lg text-[10px] md:text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed transition-all opacity-60"
                                 onClick={() => alert("Direct Broker Sync is a Premium Feature coming in V2. For now, please use the CSV Upload below (it's free!).")}
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l2 2m-2-2l-2-2" />
                                 </svg>
                                 Zerodha
-                                <span className="px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded text-[9px]">PREMIUM</span>
                             </button>
-                        </div>
-
-                        <div className="group relative">
                             <button
-                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed transition-all"
+                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 rounded-lg text-[10px] md:text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed transition-all opacity-60"
                                 onClick={() => alert("Direct Broker Sync is a Premium Feature coming in V2. For now, please use the CSV Upload below (it's free!).")}
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="12" cy="12" r="10" /><path d="M8 12h8m-4-4v8" />
                                 </svg>
                                 Groww
-                                <span className="px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded text-[9px]">PREMIUM</span>
                             </button>
                         </div>
 
-                        <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+                        <div className="hidden sm:block w-[1px] h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
 
                         {/* CSV Upload (Highlighted) */}
                         <div className="flex flex-col items-center">
@@ -628,23 +619,19 @@ export default function PortfolioDashboard() {
                                 className="hidden"
                             />
                             <button
-                                className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20 border border-blue-500"
+                                className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] md:text-xs font-bold hover:bg-blue-700 transition-all shadow-md shadow-blue-500/10 border border-blue-500"
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
                                 </svg>
-                                Sync via CSV (Free)
+                                Sync CSV
                             </button>
-                            <div className="flex flex-col items-center mt-1">
-                                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter">Ticker, Investment</span>
-                                <span className="text-[8px] text-slate-400">e.g. RELIANCE, TCS</span>
-                            </div>
                         </div>
 
                         {/* Manual Add */}
                         <button
-                            className="flex items-center gap-2 px-3 py-1.5 bg-slate-900 dark:bg-slate-700 text-white rounded-lg text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-600 transition-all"
+                            className="flex items-center gap-2 px-3 py-1.5 bg-slate-900 dark:bg-slate-700 text-white rounded-lg text-[10px] md:text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-600 transition-all"
                             onClick={() => setShowAddStock(true)}
                         >
                             <span className="text-sm">+</span> Add Stock
@@ -659,47 +646,47 @@ export default function PortfolioDashboard() {
                         <button className="zero-btn-lg" onClick={() => setShowAddStock(true)}>+ Add First Stock</button>
                     </div>
                 ) : (
-                    <div className="exec-card hover-lift heatmap-scroll-container">
-                        <table className="exec-table">
+                    <div className="glass-card overflow-x-auto scrollbar-hide">
+                        <table className="w-full text-left border-collapse min-w-[600px] md:min-w-0">
                             <thead>
-                                <tr>
-                                    <th>COMPANY</th>
-                                    <th>SECTOR</th>
-                                    <th>
+                                <tr className="border-b border-slate-100 dark:border-slate-800">
+                                    <th className="px-4 py-4 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">COMPANY</th>
+                                    <th className="px-4 py-4 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest hidden md:table-cell">SECTOR</th>
+                                    <th className="px-4 py-4 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
                                         <Tooltip label="SCORE" text="Individual company risk score derived from quarterly filings." />
                                     </th>
-                                    <th>
+                                    <th className="px-4 py-4 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest hidden sm:table-cell">
                                         <Tooltip label="FLAGS" text="Total number of unique 'red flags' detected (e.g., Debt Spike)." />
                                     </th>
-                                    <th>INVESTMENT</th>
-                                    <th style={{ textAlign: 'right' }}>ACTION</th>
+                                    <th className="px-4 py-4 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">INVESTMENT</th>
+                                    <th className="px-4 py-4 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest text-right">ACTION</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {[...data.holdings].sort((a, b) => (b.risk_score || 0) - (a.risk_score || 0)).map(h => (
-                                    <tr key={h.ticker} className="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer" onClick={() => navigate(`/company/${h.ticker}`)}>
-                                        <td className="row-company">
-                                            <span className="row-ticker font-bold text-slate-900 dark:text-white">{h.ticker}</span>
-                                            <span className="row-name text-xs text-slate-500 block">{h.name}</span>
-                                        </td>
-                                        <td className="row-sector">
-                                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{h.sector || "N/A"}</span>
-                                        </td>
-                                        <td className="row-score">
-                                            <div className="flex items-center gap-2">
-                                                <span className={`px-2 py-0.5 rounded text-xs font-bold ${h.risk_score > 60 ? 'bg-red-100 text-red-600' : (h.risk_score > 30 ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600')}`}>
-                                                    {h.risk_score}
-                                                </span>
+                                    <tr key={h.ticker} className="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer border-b border-slate-50 dark:border-slate-800/50 last:border-0" onClick={() => navigate(`/company/${h.ticker}`)}>
+                                        <td className="px-4 py-4">
+                                            <div className="flex flex-col">
+                                                <span className="font-bold text-slate-900 dark:text-white text-sm">{h.ticker}</span>
+                                                <span className="text-[10px] text-slate-500 truncate max-w-[100px] md:max-w-none">{h.name}</span>
                                             </div>
                                         </td>
-                                        <td className="row-meta">
-                                            <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs font-bold text-slate-600 dark:text-slate-400">
+                                        <td className="px-4 py-4 hidden md:table-cell">
+                                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{h.sector || "N/A"}</span>
+                                        </td>
+                                        <td className="px-4 py-4">
+                                            <span className={`px-2 py-0.5 rounded text-[10px] md:text-xs font-bold ${h.risk_score > 60 ? 'bg-red-100 text-red-600' : (h.risk_score > 30 ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600')}`}>
+                                                {h.risk_score}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-4 hidden sm:table-cell">
+                                            <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[10px] md:text-xs font-bold text-slate-600 dark:text-slate-400 whitespace-nowrap">
                                                 🚩 {h.active_flags}
                                             </span>
                                         </td>
-                                        <td className="row-investment">
-                                            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                                                <span className="text-xs font-mono text-slate-500">₹</span>
+                                        <td className="px-4 py-4">
+                                            <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                                                <span className="text-[10px] font-mono text-slate-500">₹</span>
                                                 <input
                                                     id={`inv-${h.ticker}`}
                                                     type="number"
@@ -708,36 +695,33 @@ export default function PortfolioDashboard() {
                                                     onKeyDown={(e) => {
                                                         if (e.key === 'Enter') e.target.blur();
                                                     }}
-                                                    className="w-24 bg-transparent border-b border-dashed border-slate-300 focus:border-blue-500 focus:outline-none text-xs font-mono text-slate-900 dark:text-white"
+                                                    className="w-16 md:w-24 bg-transparent border-b border-dashed border-slate-300 focus:border-blue-500 focus:outline-none text-xs font-mono text-slate-900 dark:text-white"
                                                 />
                                             </div>
                                         </td>
-                                        <td style={{ textAlign: 'right', verticalAlign: 'middle' }}>
-                                            <div className="btn-action-group" onClick={(e) => e.stopPropagation()}>
+                                        <td className="px-4 py-4 text-right">
+                                            <div className="flex items-center justify-end gap-1 md:gap-2" onClick={(e) => e.stopPropagation()}>
                                                 <button
-                                                    className="btn-action btn-action-edit"
+                                                    className="p-1.5 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                                                     onClick={() => document.getElementById(`inv-${h.ticker}`)?.focus()}
                                                     title="Update Investment"
                                                 >
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                                                     </svg>
                                                 </button>
                                                 <button
-                                                    className="btn-action btn-action-delete"
+                                                    className="p-1.5 text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                                                     onClick={() => handleRemoveStock(h.ticker)}
                                                     title="Remove from Portfolio"
                                                 >
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                                         <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                                        <line x1="10" y1="11" x2="10" y2="17" />
-                                                        <line x1="14" y1="11" x2="14" y2="17" />
                                                     </svg>
                                                 </button>
                                             </div>
                                         </td>
-
                                     </tr>
                                 ))}
                             </tbody>
@@ -747,31 +731,26 @@ export default function PortfolioDashboard() {
             </div>
 
             {/* [D] Domain Exposure (Full Width - Phase 3.13) */}
-            <div className="exec-section">
-                <div className="pf-grid-12">
-                    <div className="col-12">
-                        <h3 className="section-title">
-                            <Tooltip label="Domain Exposure" text="Concentration of capital risk mapped to specific drivers (Debt, Growth, etc.)." />
-                        </h3>
-                        <div className="exec-card hover-lift" style={{ padding: '24px' }}>
-                            {data.concentration.length === 0 ? <div className="text-muted">No data</div> :
-                                // Render as a grid of exposures for full width utilization
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px 48px' }}>
-                                    {data.concentration.map(c => (
-                                        <div key={c.driver} className="exec-exposure-row" style={{ marginBottom: 0 }}>
-                                            <div className="exec-exposure-label">
-                                                <span>{c.driver}</span>
-                                                <span>{c.percent}%</span>
-                                            </div>
-                                            <div className="exec-bar-bg">
-                                                <div className="exec-bar-fill" style={{ width: `${c.percent}%` }}></div>
-                                            </div>
-                                        </div>
-                                    ))}
+            <div className="mb-12">
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 ml-1">
+                    <Tooltip label="Domain Exposure" text="Concentration of capital risk mapped to specific drivers (Debt, Growth, etc.)." />
+                </h3>
+                <div className="glass-card p-6">
+                    {data.concentration.length === 0 ? <div className="text-slate-500 italic">No concentration data available</div> :
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-x-12 md:gap-y-6">
+                            {data.concentration.map(c => (
+                                <div key={c.driver}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-xs md:text-sm font-semibold text-slate-700 dark:text-slate-300">{c.driver}</span>
+                                        <span className="text-xs md:text-sm font-black text-slate-900 dark:text-white">{c.percent}%</span>
+                                    </div>
+                                    <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div className="h-full bg-blue-600 rounded-full transition-all duration-500" style={{ width: `${c.percent}%` }}></div>
+                                    </div>
                                 </div>
-                            }
+                            ))}
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
 

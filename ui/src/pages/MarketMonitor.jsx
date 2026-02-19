@@ -117,75 +117,79 @@ export default function Dashboard() {
             {/* ══════════════════════════════════════════
                 SECTION 1 — RISK MOMENTUM HERO
                 ══════════════════════════════════════════ */}
-            <div className="risk-momentum-hero">
-                <div className="momentum-main">
-                    <div className="momentum-left">
-                        <div className="momentum-label">RISK MOMENTUM</div>
-                        <div className="momentum-context-header">{contextHeader}</div>
-                        <div className="momentum-headline">
-                            <span className="momentum-density">{rm.risk_density}</span>
-                            <div className="momentum-density-context">
-                                <div className="momentum-density-title-row">
-                                    <span className="momentum-density-label">Market Risk Density</span>
-                                    <div className="info-tooltip" title="Average active risk signals per company.">
-                                        ℹ️
+            {/* ══════════════════════════════════════════
+                SECTION 1 — RISK MOMENTUM HERO
+                ══════════════════════════════════════════ */}
+            <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div className="flex flex-col lg:flex-row">
+                    <div className="p-6 lg:p-8 flex-1 border-b lg:border-b-0 lg:border-r border-slate-100 dark:border-slate-800">
+                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">RISK MOMENTUM</div>
+                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-6">{contextHeader}</div>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-6 lg:gap-8 mb-6">
+                            <span className="text-5xl lg:text-7xl font-black text-slate-900 dark:text-white leading-none font-mono tracking-tighter">{rm.risk_density}</span>
+                            <div className="flex flex-col justify-center">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Market Risk Density</span>
+                                    <div className="w-4 h-4 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-[8px] cursor-help" title="Average active risk signals per company.">ℹ️</div>
+                                </div>
+                                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-3">Avg signals per company</span>
+                                {rm.rd_history && (
+                                    <div className="w-24 h-8">
+                                        <ResponsiveContainer>
+                                            <LineChart data={rm.rd_history.map((v, i) => ({ i, v }))}>
+                                                <Line type="monotone" dataKey="v" stroke="#ef4444" strokeWidth={2} dot={false} isAnimationActive={false} />
+                                            </LineChart>
+                                        </ResponsiveContainer>
                                     </div>
-                                </div>
-                                <span className="momentum-density-microcopy">Average active risk signals per company.</span>
+                                )}
                             </div>
-                            {rm.rd_history && (
-                                <div className="density-sparkline" style={{ width: 120, height: 40, marginTop: 5 }}>
-                                    <ResponsiveContainer>
-                                        <LineChart data={rm.rd_history.map((v, i) => ({ i, v }))}>
-                                            <Line type="monotone" dataKey="v" stroke="#ef4444" strokeWidth={2} dot={false} isAnimationActive={false} />
-                                        </LineChart>
-                                    </ResponsiveContainer>
-                                </div>
-                            )}
                         </div>
-                        <div className="momentum-sub">
+                        <div>
                             {rm.is_baseline ? (
-                                <span className="momentum-baseline">📍 Baseline Scan — QoQ trends begin next quarter</span>
+                                <span className="text-[10px] font-black bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-full uppercase tracking-widest border border-blue-100 dark:border-blue-800/50">📍 Baseline Scan — QoQ trends begin next quarter</span>
                             ) : (
-                                <span className="momentum-delta up">▲ +18% vs Last Quarter</span>
+                                <span className="text-[10px] font-black bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-full uppercase tracking-widest border border-red-100 dark:border-red-800/50 flex items-center gap-2 w-fit">
+                                    <span className="animate-pulse w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                    ▲ +18% vs Last Quarter
+                                </span>
                             )}
                         </div>
                     </div>
-                    <div className="momentum-right">
-                        <div className="momentum-stats">
-                            <div className="m-stat">
-                                <div className="m-stat-value red">{rm.high_flags}</div>
-                                <div className="m-stat-label">High Severity</div>
+                    <div className="p-6 lg:p-8 lg:w-[45%] bg-slate-50/30 dark:bg-slate-800/20">
+                        <div className="grid grid-cols-2 gap-6 lg:gap-8">
+                            <div className="flex flex-col">
+                                <div className="text-2xl lg:text-3xl font-black text-red-500 mb-1">{rm.high_flags}</div>
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">High Severity</div>
                                 {!rm.is_baseline && (
-                                    <div className={`m-stat-delta ${rm.delta_high > 0 ? 'up-bad' : 'down-good'}`}>
-                                        {rm.delta_high > 0 ? '+' : ''}{rm.delta_high}
+                                    <div className={`text-[10px] font-bold ${rm.delta_high > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                                        {rm.delta_high > 0 ? '▲' : '▼'} {Math.abs(rm.delta_high)}
                                     </div>
                                 )}
                             </div>
-                            <div className="m-stat">
-                                <div className="m-stat-value amber">{rm.medium_flags}</div>
-                                <div className="m-stat-label">Medium Severity</div>
+                            <div className="flex flex-col">
+                                <div className="text-2xl lg:text-3xl font-black text-amber-500 mb-1">{rm.medium_flags}</div>
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Medium Severity</div>
                                 {!rm.is_baseline && (
-                                    <div className={`m-stat-delta ${rm.delta_medium > 0 ? 'up-bad' : 'down-good'}`}>
-                                        {rm.delta_medium > 0 ? '+' : ''}{rm.delta_medium}
+                                    <div className={`text-[10px] font-bold ${rm.delta_medium > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                                        {rm.delta_medium > 0 ? '▲' : '▼'} {Math.abs(rm.delta_medium)}
                                     </div>
                                 )}
                             </div>
-                            <div className="m-stat">
-                                <div className="m-stat-value blue">{rm.total_flags}</div>
-                                <div className="m-stat-label">Total Signals</div>
+                            <div className="flex flex-col">
+                                <div className="text-2xl lg:text-3xl font-black text-blue-500 mb-1">{rm.total_flags}</div>
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Signals</div>
                                 {!rm.is_baseline && (
-                                    <div className={`m-stat-delta ${rm.delta_total > 0 ? 'up-bad' : 'down-good'}`}>
-                                        {rm.delta_total > 0 ? '+' : ''}{rm.delta_total}
+                                    <div className={`text-[10px] font-bold ${rm.delta_total > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                                        {rm.delta_total > 0 ? '▲' : '▼'} {Math.abs(rm.delta_total)}
                                     </div>
                                 )}
                             </div>
-                            <div className="m-stat">
-                                <div className="m-stat-value red">{rm.flagged_companies}</div>
-                                <div className="m-stat-label">Companies Flagged</div>
+                            <div className="flex flex-col">
+                                <div className="text-2xl lg:text-3xl font-black text-red-500 mb-1">{rm.flagged_companies}</div>
+                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Companies Hit</div>
                                 {!rm.is_baseline && (
-                                    <div className={`m-stat-delta ${rm.delta_companies > 0 ? 'up-bad' : 'down-good'}`}>
-                                        {rm.delta_companies > 0 ? '+' : ''}{rm.delta_companies}
+                                    <div className={`text-[10px] font-bold ${rm.delta_companies > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                                        {rm.delta_companies > 0 ? '▲' : '▼'} {Math.abs(rm.delta_companies)}
                                     </div>
                                 )}
                             </div>
@@ -194,27 +198,33 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <div className="interpretation-layer">
-                <span className="interpretation-label">Interpretation</span>
-                <span className="interpretation-text">{interpretation}</span>
+            <div className="bg-slate-900 border-y border-slate-800 px-6 lg:px-8 py-3 flex flex-wrap items-center gap-3 lg:gap-6">
+                <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">Interpretation</span>
+                <span className="text-xs lg:text-sm font-medium text-slate-300 leading-relaxed">{interpretation}</span>
             </div>
 
             {/* ══════════════════════════════════════════
                 SECTION 2 — PORTFOLIO HEALTH INTELLIGENCE
                 ══════════════════════════════════════════ */}
-            <div className="glass-card section-health">
-                <h2>🏥 Portfolio Health Distribution</h2>
-                <div className="health-layout">
+            {/* ══════════════════════════════════════════
+                SECTION 2 — PORTFOLIO HEALTH INTELLIGENCE
+                ══════════════════════════════════════════ */}
+            <div className="glass-card p-6 lg:p-8 mt-6 lg:mt-8 mx-4 lg:mx-0">
+                <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-8 flex items-center gap-3">
+                    <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
+                    Portfolio Health Distribution
+                </h2>
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
                     {/* Stacked bar */}
-                    <div className="health-bar-container">
-                        <div className="health-bar">
+                    <div className="flex-1">
+                        <div className="h-10 lg:h-12 w-full flex rounded-xl overflow-hidden shadow-sm mb-8">
                             {Object.entries(ph.tiers).map(([tier, count]) => {
                                 if (count === 0) return null;
                                 const pct = ((count / ph.total) * 100).toFixed(1);
                                 return (
                                     <div
                                         key={tier}
-                                        className="health-bar-segment"
+                                        className="h-full flex items-center justify-center text-[10px] font-black text-white/90"
                                         style={{ width: `${pct}%`, background: TIER_CONFIG[tier].color }}
                                         title={`${TIER_CONFIG[tier].label}: ${count} (${pct}%)`}
                                     >
@@ -223,31 +233,35 @@ export default function Dashboard() {
                                 );
                             })}
                         </div>
-                        <div className="health-legend">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {Object.entries(ph.tiers).map(([tier, count]) => (
-                                <div key={tier} className="health-legend-item">
-                                    <span className="legend-dot" style={{ background: TIER_CONFIG[tier].color }} />
-                                    <span className="legend-label">{TIER_CONFIG[tier].label}</span>
-                                    <span className="legend-count">{count}</span>
-                                    {ph.deltas && renderDelta(ph.deltas[tier], tier === 'stable')}
+                                <div key={tier} className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <span className="w-2 h-2 rounded-full" style={{ background: TIER_CONFIG[tier].color }} />
+                                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{TIER_CONFIG[tier].label}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm font-black text-slate-900 dark:text-white">{count}</span>
+                                        {ph.deltas && renderDelta(ph.deltas[tier], tier === 'stable')}
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
                     {/* Mini donut */}
-                    <div className="health-donut">
-                        <ResponsiveContainer width="100%" height={200}>
+                    <div className="relative w-full lg:w-48 h-48 flex items-center justify-center shrink-0">
+                        <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
                                     data={healthData}
                                     cx="50%"
                                     cy="50%"
-                                    innerRadius={55}
+                                    innerRadius={60}
                                     outerRadius={80}
                                     dataKey="value"
-                                    strokeWidth={2}
-                                    stroke="var(--bg-primary)"
+                                    strokeWidth={3}
+                                    stroke="var(--bg-surface)"
                                 >
                                     {healthData.map((entry, i) => (
                                         <Cell key={i} fill={entry.color} />
@@ -257,17 +271,17 @@ export default function Dashboard() {
                                     contentStyle={{
                                         background: "var(--bg-card)",
                                         border: "1px solid var(--border)",
-                                        borderRadius: "8px",
-                                        color: "var(--text-primary)",
-                                        fontSize: 13,
+                                        borderRadius: "12px",
+                                        fontSize: 12,
+                                        fontWeight: 'bold',
+                                        boxShadow: 'var(--shadow-md)'
                                     }}
-                                    formatter={(value, name) => [`${value} companies`, name]}
                                 />
                             </PieChart>
                         </ResponsiveContainer>
-                        <div className="donut-center-label">
-                            <span className="donut-center-num">{ph.total}</span>
-                            <span className="donut-center-text">Total</span>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                            <span className="text-3xl font-black text-slate-900 dark:text-white leading-none">{ph.total}</span>
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Found</span>
                         </div>
                     </div>
                 </div>
@@ -276,167 +290,192 @@ export default function Dashboard() {
             {/* ══════════════════════════════════════════
                 LOWER GRID — 70/30 LAYOUT
                 ══════════════════════════════════════════ */}
-            <div className="dashboard-lower-grid">
+            {/* ══════════════════════════════════════════
+                LOWER GRID — 70/30 LAYOUT
+                ══════════════════════════════════════════ */}
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 p-4 lg:p-0 mt-6 lg:mt-8">
                 {/* LEFT 70% */}
-                <div className="dashboard-lower-left">
+                <div className="flex-[7] flex flex-col gap-6 lg:gap-8">
                     {/* SECTION 3 — TOP ACTIVE RISK SIGNALS */}
-                    <div className="glass-card">
-                        <h2>📡 Top Active Risk Signals</h2>
-                        <table className="intelligence-table">
-                            <thead>
-                                <tr>
-                                    <th style={{ width: '35%' }}>SIGNAL</th>
-                                    <th style={{ width: '15%' }}>COMPANIES HIT</th>
-                                    <th style={{ width: '25%' }}>IMPACT</th>
-                                    <th style={{ width: '15%' }}>SEVERITY</th>
-                                    <th style={{ width: '10%' }}>WEIGHT</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {flag_pressure.slice(0, 5).map(fp => (
-                                    <tr key={fp.code}>
-                                        <td>
-                                            <div className="signal-name">
-                                                <span className="flag-code-sm">{fp.code}</span>
-                                                {fp.name}
-                                            </div>
-                                        </td>
-                                        <td><div className="companies-hit">{fp.companies_impacted}</div></td>
-                                        <td>
-                                            <div className="impact-bar-bg">
-                                                <div className="impact-bar-fill" style={{ width: `${fp.impact_pct}%`, backgroundColor: fp.max_severity === 'HIGH' ? '#ef4444' : '#f59e0b' }}></div>
-                                            </div>
-                                            <span className="impact-pct">{fp.impact_pct}%</span>
-                                        </td>
-                                        <td>
-                                            <span className={`severity-badge ${fp.max_severity.toLowerCase()}`}>
-                                                {fp.max_severity}
-                                            </span>
-                                        </td>
-                                        <td><div className="weight-cell">{fp.severity_weight}</div></td>
+                    <div className="glass-card p-6 lg:p-8">
+                        <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-8 flex items-center gap-3">
+                            <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
+                            Top Active Risk Signals
+                        </h2>
+                        <div className="overflow-x-auto scrollbar-hide">
+                            <table className="w-full text-left border-collapse min-w-[600px]">
+                                <thead>
+                                    <tr className="border-b border-slate-100 dark:border-slate-800">
+                                        <th className="py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">SIGNAL</th>
+                                        <th className="py-4 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">COMPANIES HIT</th>
+                                        <th className="py-4 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">IMPACT</th>
+                                        <th className="py-4 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">SEVERITY</th>
+                                        <th className="py-4 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">WEIGHT</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {flag_pressure.slice(0, 5).map(fp => (
+                                        <tr key={fp.code} className="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors border-b border-slate-50 dark:border-slate-800/50">
+                                            <td className="py-4">
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="text-[9px] font-black font-mono text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-1.5 py-0.5 rounded w-fit">{fp.code}</span>
+                                                    <span className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{fp.name}</span>
+                                                </div>
+                                            </td>
+                                            <td className="py-4 px-4 text-center">
+                                                <span className="text-sm font-black text-slate-900 dark:text-white">{fp.companies_impacted}</span>
+                                            </td>
+                                            <td className="py-4 px-4">
+                                                <div className="flex flex-col gap-1.5 min-w-[120px]">
+                                                    <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${fp.impact_pct}%`, backgroundColor: fp.max_severity === 'HIGH' ? '#ef4444' : '#f59e0b' }}></div>
+                                                    </div>
+                                                    <span className="text-[10px] font-bold text-slate-400">{fp.impact_pct}% Impact</span>
+                                                </div>
+                                            </td>
+                                            <td className="py-4 px-4 text-center">
+                                                <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${fp.max_severity === 'HIGH' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'}`}>
+                                                    {fp.max_severity}
+                                                </span>
+                                            </td>
+                                            <td className="py-4 px-4 text-right">
+                                                <span className="text-sm font-black font-mono text-slate-600 dark:text-slate-400">{fp.severity_weight}</span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     {/* SECTION 4 — MOST AT-RISK COMPANIES */}
-                    <div className="glass-card">
-                        <h2>🎯 Most At-Risk Companies</h2>
-                        <table className="intelligence-table">
-                            <thead>
-                                <tr>
-                                    <th style={{ width: '30%' }}>TICKER</th>
-                                    <th style={{ width: '20%' }}>RISK SCORE <span className="header-context">(0-15)</span></th>
-                                    <th style={{ width: '10%' }}>FLAGS</th>
-                                    <th style={{ width: '15%' }}>SEVERITY</th>
-                                    <th style={{ width: '25%' }}>LAST TRIGGERED</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {most_at_risk.map(c => (
-                                    <tr key={c.ticker} className={`risk-row tier-${c.tier || 'stable'}`} onClick={() => window.location.href = `/company/${c.ticker}`}>
-                                        <td>
-                                            <div className="company-cell">
-                                                <div className="ticker clickable bold-ticker">{c.ticker}</div>
-                                                <div className="company-name-sm">{c.name}</div>
+                    <div className="glass-card p-6 lg:p-8">
+                        <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-8 flex items-center gap-3">
+                            <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
+                            Most At-Risk Companies
+                        </h2>
+                        <div className="flex flex-col gap-4">
+                            {most_at_risk.map(c => (
+                                <div key={c.ticker} className="group relative flex flex-col sm:flex-row overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 transition-all hover:shadow-lg hover:shadow-blue-500/5 hover:border-blue-500/30 cursor-pointer" onClick={() => navigate(`/company/${c.ticker}`)}>
+                                    <div className={`w-full sm:w-1.5 h-1 sm:h-auto ${c.tier === 'high_risk' ? 'bg-red-500' : (c.tier === 'elevated' ? 'bg-orange-500' : 'bg-amber-500')}`}></div>
+                                    <div className="p-5 flex-1 bg-white dark:bg-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                                        <div className="flex items-center gap-5">
+                                            <div className="flex flex-col">
+                                                <span className="text-lg font-black text-slate-900 dark:text-white leading-none mb-1">{c.ticker}</span>
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{c.name}</span>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <div className="risk-score-cell">
-                                                <span className={`risk-score-num tier-${c.tier}`}>{c.risk_score}</span>
-                                                <div className="risk-score-bar-bg">
-                                                    <div className="risk-score-bar-fill" style={{
-                                                        width: `${Math.min(100, (c.risk_score / 15) * 100)}%`,
-                                                        backgroundColor: c.tier === 'high_risk' ? '#ef4444' : (c.tier === 'elevated' ? '#f97316' : '#f59e0b')
-                                                    }}></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><span className="flag-count-badge">{c.flag_count}</span></td>
-                                        <td>
-                                            <span className={`severity-badge ${c.highest_severity.toLowerCase()}`}>
+                                            <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${c.highest_severity === 'HIGH' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'}`}>
                                                 {c.highest_severity}
                                             </span>
-                                        </td>
-                                        <td><div className="date-cell">{c.last_triggered}</div></td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                        </div>
+                                        <div className="flex items-center gap-8 lg:gap-12">
+                                            <div className="flex flex-col items-center">
+                                                <div className="flex items-baseline gap-1">
+                                                    <span className={`text-2xl font-black font-mono leading-none ${c.tier === 'high_risk' ? 'text-red-500' : (c.tier === 'elevated' ? 'text-orange-500' : 'text-amber-500')}`}>{c.risk_score}</span>
+                                                    <span className="text-[10px] text-slate-400 font-bold">/15</span>
+                                                </div>
+                                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1">Risk Score</span>
+                                            </div>
+                                            <div className="flex flex-col items-center">
+                                                <span className="text-lg font-black text-slate-900 dark:text-white leading-none">{c.flag_count}</span>
+                                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1">Flags</span>
+                                            </div>
+                                            <div className="hidden md:flex flex-col items-end">
+                                                <span className="text-xs font-bold text-slate-600 dark:text-slate-400 leading-none">{c.last_triggered}</span>
+                                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1">Updated</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
                 {/* RIGHT 30% */}
-                <div className="dashboard-lower-right">
+                <div className="flex-[3] flex flex-col gap-6 lg:gap-8">
                     {/* SECTION 5 — NEW DETERIORATIONS */}
-                    <div className="glass-card deterioration-card">
-                        <div className="det-header-row">
-                            <h2 className="det-title">⚠️ New Deteriorations</h2>
-                            <div className="live-status">LIVE</div>
+                    <div className="glass-card p-6 lg:p-7 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-3">
+                            <span className="flex items-center gap-1.5 text-[9px] font-black bg-red-500 text-white px-2 py-0.5 rounded-full animate-pulse tracking-widest">
+                                <span className="w-1 h-1 rounded-full bg-white"></span>
+                                LIVE
+                            </span>
                         </div>
-                        <div className="section-subtitle">Since last quarter results</div>
+                        <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-3">
+                            <span className="w-1 h-5 bg-red-600 rounded-full"></span>
+                            New Deteriorations
+                        </h2>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">Since last results</p>
 
-                        <div className="deterioration-list">
+                        <div className="flex flex-col gap-3">
                             {new_deteriorations && new_deteriorations.length > 0 ? (
                                 new_deteriorations.slice(0, 6).map(d => (
-                                    <div key={d.ticker} className="deterioration-item-v2" onClick={() => window.location.href = `/company/${d.ticker}`}>
-                                        <div className="det-stripe" style={{ backgroundColor: d.high_count > 0 ? '#ef4444' : '#f59e0b' }}></div>
-                                        <div className="det-content">
-                                            <div className="det-top-row">
-                                                <span className="det-ticker">{d.ticker}</span>
-                                                <span className="det-badge-sm">{d.high_count > 0 ? 'High Risk' : 'Medium'}</span>
+                                    <div key={d.ticker} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-800 transition-all hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer active:scale-[0.98]" onClick={() => navigate(`/company/${d.ticker}`)}>
+                                        <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs ${d.high_count > 0 ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-600'}`}>
+                                            {d.ticker.slice(0, 2)}
+                                        </div>
+                                        <div className="flex-1 flex flex-col min-w-0">
+                                            <div className="flex items-center justify-between gap-2 mb-0.5">
+                                                <span className="text-sm font-black text-slate-900 dark:text-white truncate">{d.ticker}</span>
+                                                <span className={`text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${d.high_count > 0 ? 'bg-red-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
+                                                    {d.high_count > 0 ? 'High' : 'Med'}
+                                                </span>
                                             </div>
-                                            <div className="det-trigger-row">
-                                                <span className="det-trigger-icon">⚡</span>
-                                                <span className="det-trigger-text">{d.trigger_name || "New Signal Detect"}</span>
+                                            <div className="flex items-center gap-1.5 overflow-hidden">
+                                                <span className="text-[9px] text-slate-400 whitespace-nowrap">⚡ {d.trigger_name || "New Signal Detect"}</span>
                                             </div>
                                         </div>
                                     </div>
                                 ))
                             ) : (
-                                <div className="empty-state-sm">No new deteriorations detected.</div>
+                                <div className="text-center py-8 text-xs font-bold text-slate-400 italic">No new deteriorations detected.</div>
                             )}
                         </div>
                     </div>
 
                     {/* QUICK STATS */}
-                    <div className="glass-card quick-stats-card">
-                        <h2>📊 Quick Stats</h2>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Total Companies</span>
-                            <span className="qs-value">{rm.total_companies}</span>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Companies Flagged</span>
-                            <div className="qs-value-group">
-                                <span className="qs-value red">{rm.flagged_companies}</span>
-                                {renderQsDelta(rm.delta_companies)}
+                    <div className="glass-card p-6 lg:p-7">
+                        <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-8 flex items-center gap-3">
+                            <span className="w-1 h-5 bg-blue-600 rounded-full"></span>
+                            Quick Stats
+                        </h2>
+                        <div className="flex flex-col gap-5">
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight">Total Companies</span>
+                                <span className="text-sm font-black text-slate-900 dark:text-white font-mono">{rm.total_companies}</span>
                             </div>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Severity-Weighted Score</span>
-                            <span className="qs-value">{rm.severity_weighted}</span>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Market Risk Density</span>
-                            <div className="qs-value-group">
-                                <span className="qs-value amber">{rm.risk_density}</span>
-                                {renderQsDelta(rm.delta_density)}
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight">Companies Flagged</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-black text-red-500 font-mono">{rm.flagged_companies}</span>
+                                    {renderQsDelta(rm.delta_companies)}
+                                </div>
                             </div>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">High Severity Flags</span>
-                            <div className="qs-value-group">
-                                <span className="qs-value red">{rm.high_flags}</span>
-                                {renderQsDelta(rm.delta_high)}
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight">Weighted Score</span>
+                                <span className="text-sm font-black text-slate-900 dark:text-white font-mono">{rm.severity_weighted}</span>
                             </div>
-                        </div>
-                        <div className="quick-stat-row">
-                            <span className="qs-label">Medium Severity Flags</span>
-                            <div className="qs-value-group">
-                                <span className="qs-value amber">{rm.medium_flags}</span>
-                                {renderQsDelta(rm.delta_medium)}
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight">Risk Density</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-black text-amber-500 font-mono">{rm.risk_density}</span>
+                                    {renderQsDelta(rm.delta_density)}
+                                </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight">High Sev Flags</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-black text-red-500 font-mono">{rm.high_flags}</span>
+                                    {renderQsDelta(rm.delta_high)}
+                                </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tight">Medium Sev Flags</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm font-black text-amber-500 font-mono">{rm.medium_flags}</span>
+                                    {renderQsDelta(rm.delta_medium)}
+                                </div>
                             </div>
                         </div>
                     </div>

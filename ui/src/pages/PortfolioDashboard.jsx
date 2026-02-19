@@ -647,7 +647,7 @@ export default function PortfolioDashboard() {
                             className="flex items-center gap-2 px-3 py-1.5 bg-slate-900 dark:bg-slate-700 text-white rounded-lg text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-600 transition-all"
                             onClick={() => setShowAddStock(true)}
                         >
-                            <span className="text-sm">+</span> Add
+                            <span className="text-sm">+</span> Add Stock
                         </button>
                     </div>
                 </div>

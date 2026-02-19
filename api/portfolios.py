@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from db.connection import get_connection
 from api.auth import get_current_user
+from api.brokers.factory import BrokerFactory
 import datetime
 import csv
 import io
@@ -211,22 +212,83 @@ async def upload_portfolio_csv(
 
     try:
         content = await file.read()
-        stream = io.StringIO(content.decode("utf-8"))
-        reader = csv.DictReader(stream)
+        # Decode and handle possible BOM
+        decoded_content = content.decode("utf-8-sig")
+        stream = io.StringIO(decoded_content)
         
-        # Normalize columns: Handle lowercase or different naming
+        # Robust Header Detection: Skip empty lines or metadata lines
+        lines = [line.strip() for line in stream.readlines() if line.strip()]
+        if not lines:
+            raise ValueError("Empty CSV file")
+            
+        # Find the header line (first line that contains "ticker" or "instrument" or common fields)
+        header_index = 0
+        common_fields = {"ticker", "instrument", "symbol", "stock", "qty", "quantity", "invested", "amount"}
+        for i, line in enumerate(lines):
+            # Simple check: does this line look like a header?
+            line_lower = line.lower()
+            if any(field in line_lower for field in common_fields):
+                header_index = i
+                break
+        
+        # Re-read from header line
+        header_line = lines[header_index]
+        data_lines = lines[header_index+1:]
+        
+        reader = csv.DictReader(io.StringIO("\n".join([header_line] + data_lines)))
+        
+        # Mapping dictionaries
+        TICKER_KEYS = ["ticker", "instrument", "symbol", "stock", "company", "name"]
+        INVESTMENT_KEYS = ["investment", "invested", "amount", "total", "value", "cur. val"]
+        QTY_KEYS = ["qty.", "qty", "quantity", "shares"]
+        PRICE_KEYS = ["avg. cost", "avg cost", "average price", "cost price", "buy price", "ltp"]
+
+        def get_val(row, keys, default=None):
+            for k in row.keys():
+                if not k: continue
+                k_clean = k.strip().lower().replace("\"", "").replace("'", "")
+                if k_clean in keys:
+                    return row[k]
+            return default
+
         success_count = 0
         failed_tickers = []
         
         for row in reader:
-            # Map columns (flexible mapping)
-            ticker = row.get("ticker") or row.get("Ticker") or row.get("symbol") or row.get("Symbol")
-            investment = row.get("investment") or row.get("Investment") or row.get("amount") or row.get("Amount") or 100000
-            
-            if not ticker:
+            # 1. Extract Ticker
+            ticker_raw = get_val(row, TICKER_KEYS)
+            if not ticker_raw:
                 continue
+            
+            # 2. Extract Investment or Calculate
+            investment_raw = get_val(row, INVESTMENT_KEYS)
+            investment = None
+            
+            if investment_raw:
+                try:
+                    # Clean currency symbols and commas
+                    investment = float(str(investment_raw).replace("₹", "").replace(",", "").replace("$", "").strip())
+                except:
+                    pass
+            
+            # Fallback to Qty * Price
+            if investment is None or investment <= 0:
+                qty_raw = get_val(row, QTY_KEYS)
+                price_raw = get_val(row, PRICE_KEYS)
+                if qty_raw and price_raw:
+                    try:
+                        qty = float(str(qty_raw).replace(",", "").strip())
+                        price = float(str(price_raw).replace(",", "").strip())
+                        investment = qty * price
+                    except:
+                        pass
+            
+            # Final fallback
+            if investment is None:
+                investment = 100000
                 
-            ticker = ticker.strip().upper()
+            # Clean Ticker (Remove .NS, .BO synonyms)
+            ticker = str(ticker_raw).strip().upper().split(".")[0]
             
             # Find Company
             cursor.execute("SELECT id FROM companies WHERE ticker = %s", (ticker,))
@@ -236,26 +298,19 @@ async def upload_portfolio_csv(
                 failed_tickers.append(ticker)
                 continue
                 
-            # Add to portfolio (ignore if already exists)
-            try:
-                cursor.execute(
-                    "INSERT INTO portfolio_items (portfolio_id, company_id, investment) VALUES (%s, %s, %s)",
-                    (portfolio_id, company["id"], investment)
-                )
-                success_count += 1
-            except:
-                # Update existing instead? User said "add", but usually sync is better.
-                # For now, let's just update if duplicate to reflect the new CSV investment value
-                cursor.execute(
-                    "UPDATE portfolio_items SET investment = %s WHERE portfolio_id = %s AND company_id = %s",
-                    (investment, portfolio_id, company["id"])
-                )
-                success_count += 1
+            # Add or Update
+            cursor.execute(
+                "INSERT INTO portfolio_items (portfolio_id, company_id, investment) "
+                "VALUES (%s, %s, %s) "
+                "ON DUPLICATE KEY UPDATE investment = VALUES(investment)",
+                (portfolio_id, company["id"], investment)
+            )
+            success_count += 1
         
         conn.commit()
         return {
             "success_count": success_count,
-            "failed_tickers": list(set(failed_tickers)), # Deduplicate
+            "failed_tickers": list(set(failed_tickers)),
             "total_processed": success_count + len(set(failed_tickers))
         }
     except Exception as e:
@@ -264,6 +319,7 @@ async def upload_portfolio_csv(
     finally:
         cursor.close()
         conn.close()
+
 
 @router.get("/{portfolio_id}", response_model=PortfolioIntelligence)
 def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_current_user)):

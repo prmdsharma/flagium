@@ -11,16 +11,16 @@ router = APIRouter()
 
 from api.brokers.factory import BrokerFactory
 
-@router.get("/brokers/zerodha/login")
-def get_zerodha_login():
-    """Get the Zerodha Kite login URL."""
-    broker = BrokerFactory.get_broker("zerodha")
+@router.get("/brokers/{broker_type}/login")
+def get_broker_login(broker_type: str):
+    """Generic endpoint to get broker login URL."""
+    broker = BrokerFactory.get_broker(broker_type)
     return {"url": broker.get_login_url()}
 
 class SyncRequest(BaseModel):
-    request_token: str
+    auth_code: str
 
-async def sync_portfolio_holdings(portfolio_id: int, broker_type: str, request_token: str, user_id: int):
+async def sync_portfolio_holdings(portfolio_id: int, broker_type: str, auth_code: str, user_id: int):
     """Generic helper to sync holdings from any broker."""
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
@@ -34,7 +34,7 @@ async def sync_portfolio_holdings(portfolio_id: int, broker_type: str, request_t
 
     try:
         broker = BrokerFactory.get_broker(broker_type)
-        broker.authenticate(request_token)
+        broker.authenticate(auth_code)
         holdings = broker.get_holdings()
         
         success_count = 0
@@ -47,7 +47,9 @@ async def sync_portfolio_holdings(portfolio_id: int, broker_type: str, request_t
             
             if not ticker: continue
             
-            investment = (item["quantity"]) * (item["average_price"] or 100)
+            # Use average_price if available, fallback to 100 for simulation if null
+            avg_price = item.get("average_price") or 100
+            investment = (item["quantity"]) * avg_price
             
             # Find Company
             cursor.execute("SELECT id FROM companies WHERE ticker = %s", (ticker,))
@@ -83,29 +85,15 @@ async def sync_portfolio_holdings(portfolio_id: int, broker_type: str, request_t
         cursor.close()
         conn.close()
 
-@router.post("/{portfolio_id}/sync/zerodha")
-async def sync_zerodha_portfolio(
+@router.post("/{portfolio_id}/sync/{broker_type}")
+async def sync_broker_portfolio(
     portfolio_id: int,
+    broker_type: str,
     req: SyncRequest,
     current_user: dict = Depends(get_current_user)
 ):
-    """Sync holdings from Zerodha Kite."""
-    return await sync_portfolio_holdings(portfolio_id, "zerodha", req.request_token, current_user["id"])
-
-@router.get("/brokers/groww/login")
-def get_groww_login():
-    """Get the Groww login URL."""
-    broker = BrokerFactory.get_broker("groww")
-    return {"url": broker.get_login_url()}
-
-@router.post("/{portfolio_id}/sync/groww")
-async def sync_groww_portfolio(
-    portfolio_id: int,
-    req: SyncRequest,
-    current_user: dict = Depends(get_current_user)
-):
-    """Sync holdings from Groww."""
-    return await sync_portfolio_holdings(portfolio_id, "groww", req.request_token, current_user["id"])
+    """Unified sync endpoint for any broker."""
+    return await sync_portfolio_holdings(portfolio_id, broker_type, req.auth_code, current_user["id"])
 
 class PortfolioCreate(BaseModel):
     name: str

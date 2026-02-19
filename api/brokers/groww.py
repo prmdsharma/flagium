@@ -21,7 +21,7 @@ class GrowwBroker(BaseBroker):
         # Official libraries often use a redirect link like this
         return f"https://groww.in/oauth/login?client_id={self.api_key}&redirect_uri=http://localhost:5173/portfolio"
 
-    def authenticate(self, code: str) -> str:
+    def authenticate(self, auth_code: str) -> str:
         """
         Exchange authorize code for access token using App-Level credentials.
         """
@@ -29,7 +29,7 @@ class GrowwBroker(BaseBroker):
             raise Exception("GROWW_API_SECRET is not set in environment variables.")
             
         try:
-            data = self.client.get_access_token(code)
+            data = self.client.get_access_token(auth_code)
             self.session_token = data.get("access_token")
             return self.session_token
         except Exception as e:

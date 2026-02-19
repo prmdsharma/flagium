@@ -113,67 +113,39 @@ export default function PortfolioDashboard() {
         }
     }, [id, navigate, isCreatingNew]);
 
-    // Check for Zerodha Redirect
+    // Check for Broker Redirects (Zerodha Kite or Groww)
     useEffect(() => {
         const requestToken = queryParams.get('request_token');
+        const growwCode = queryParams.get('code');
+
         if (requestToken && id) {
-            handleZerodhaSync(requestToken);
-            // Clean up URL
+            handleBrokerSync('zerodha', requestToken);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else if (growwCode && id) {
+            handleBrokerSync('groww', growwCode);
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     }, [id, location]);
 
-    // Check for Groww Redirect
-    useEffect(() => {
-        const code = queryParams.get('code');
-        if (code && id) {
-            handleGrowwSync(code);
-            // Clean up URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    }, [id, location]);
-
-    const handleZerodhaSync = async (token) => {
+    const handleBrokerSync = async (brokerType, token) => {
         setLoading(true);
         try {
-            const res = await api.syncZerodhaPortfolio(id, token);
+            const res = await api.syncBrokerPortfolio(id, brokerType, token);
             setUploadResult(res);
             loadDetail(id); // Refresh
         } catch (err) {
-            alert("Broker sync failed: " + err.message);
+            alert(`${brokerType.charAt(0).toUpperCase() + brokerType.slice(1)} sync failed: ` + err.message);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleConnectZerodha = async () => {
+    const handleConnectBroker = async (brokerType) => {
         try {
-            const { url } = await api.getZerodhaLoginUrl();
+            const { url } = await api.getBrokerLoginUrl(brokerType);
             window.location.href = url;
         } catch (err) {
-            alert("Failed to initiate Zerodha login: " + err.message);
-        }
-    };
-
-    const handleGrowwSync = async (token) => {
-        setLoading(true);
-        try {
-            const res = await api.syncGrowwPortfolio(id, token);
-            setUploadResult(res);
-            loadDetail(id); // Refresh
-        } catch (err) {
-            alert("Groww sync failed: " + err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleConnectGroww = async () => {
-        try {
-            const { url } = await api.getGrowwLoginUrl();
-            window.location.href = url;
-        } catch (err) {
-            alert("Failed to initiate Groww login: " + err.message);
+            alert(`Failed to initiate ${brokerType} login: ` + err.message);
         }
     };
 
@@ -633,27 +605,25 @@ export default function PortfolioDashboard() {
                         {/* Broker Sync (Premium) */}
                         <div className="group relative">
                             <button
-                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed"
-                                onClick={() => alert("Direct Broker Sync is a Premium Feature coming in V2. For now, please use the CSV Upload below (it's free!).")}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-bold border border-blue-200 dark:border-blue-900/30 hover:bg-blue-100 transition-all"
+                                onClick={() => handleConnectBroker('zerodha')}
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l2 2m-2-2l-2-2" />
                                 </svg>
-                                Zerodha
-                                <span className="px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded text-[9px]">PREMIUM</span>
+                                Zerodha Sync
                             </button>
                         </div>
 
                         <div className="group relative">
                             <button
-                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed"
-                                onClick={() => alert("Direct Broker Sync is a Premium Feature coming in V2. For now, please use the CSV Upload below (it's free!).")}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg text-xs font-bold border border-emerald-200 dark:border-emerald-900/30 hover:bg-emerald-100 transition-all"
+                                onClick={() => handleConnectBroker('groww')}
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="12" cy="12" r="10" /><path d="M8 12h8m-4-4v8" />
                                 </svg>
-                                Groww
-                                <span className="px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded text-[9px]">PREMIUM</span>
+                                Groww Sync
                             </button>
                         </div>
 

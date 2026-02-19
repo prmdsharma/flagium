@@ -354,8 +354,9 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
     weights = {"Critical": 15, "High": 10, "Medium": 5, "Low": 2}
     
     holdings = []
-    total_current_risk = 0
-    total_previous_risk = 0 # To calc delta
+    total_weighted_current = 0
+    total_weighted_previous = 0
+    total_investment = 0
     total_flags_active = 0
     escalating = []
     concentration_map = {}
@@ -482,16 +483,19 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
             "latest_flag_date": str(latest_flag_date) if latest_flag_date else None
         })
         
-        total_current_risk += c_current_score
-        total_previous_risk += c_previous_score
+        # Capital-Weighted Aggregates
+        investment = c["investment"] or 0
+        total_weighted_current += (c_current_score * investment)
+        total_weighted_previous += (c_previous_score * investment)
+        total_investment += investment
         total_flags_active += c_active_flags_count
         
     # --- Portfolio Aggregates ---
     
-    # 1. Avg Risk Score
-    if companies:
-        pf_current_score = round(total_current_risk / len(companies))
-        pf_previous_score = round(total_previous_risk / len(companies))
+    # 1. Avg Risk Score (Capital-Weighted)
+    if total_investment > 0:
+        pf_current_score = round(total_weighted_current / total_investment)
+        pf_previous_score = round(total_weighted_previous / total_investment)
     else:
         pf_current_score = 0
         pf_previous_score = 0

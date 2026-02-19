@@ -184,28 +184,47 @@ def _extract_contexts(tree):
     ns = COMMON_NAMESPACES
     contexts = {}
 
-    for ctx in tree.xpath("//xbrli:context", namespaces=ns):
+    for ctx in tree.xpath("//*[local-name()='context']"):
         ctx_id = ctx.attrib.get("id", "")
-        period = ctx.find(".//xbrli:period", namespaces=ns)
-        if period is None:
+        # Find period using local-name
+        period_nodes = ctx.xpath("./*[local-name()='period']")
+        if not period_nodes:
             continue
+        period = period_nodes[0]
 
-        instant = period.find("xbrli:instant", namespaces=ns)
-        start = period.find("xbrli:startDate", namespaces=ns)
-        end = period.find("xbrli:endDate", namespaces=ns)
+        # Use local-name() to be more robust against namespace variations
+        instant = period.xpath("./*[local-name()='instant']")
+        start = period.xpath("./*[local-name()='startDate']")
+        end = period.xpath("./*[local-name()='endDate']")
 
-        if instant is not None:
+        if instant:
             contexts[ctx_id] = {
                 "type": "instant",
-                "date": instant.text,
+                "date": instant[0].text.strip() if instant[0].text else None,
             }
-        elif start is not None and end is not None:
+        elif start and end:
             contexts[ctx_id] = {
                 "type": "duration",
-                "start": start.text,
-                "end": end.text,
-                "date": end.text,  # Use end date as reference
+                "start": start[0].text.strip() if start[0].text else None,
+                "end": end[0].text.strip() if end[0].text else None,
+                "date": end[0].text.strip() if end[0].text else None,
             }
+
+    # Fallback for BSE-style filings where contexts might be referenced but not explicitly defined as xbrli:context
+    # We look for metadata tags that define the period for a given contextRef
+    for tag_name, start_or_end in [("DateOfStartOfReportingPeriod", "start"), ("DateOfEndOfReportingPeriod", "end"), ("DateOfEndOfFinancialYear", "end"), ("DateOfStartOfFinancialYear", "start")]:
+        for node in tree.xpath(f"//*[local-name()='{tag_name}']"):
+            ctx_id = node.attrib.get("contextRef")
+            if not ctx_id: continue
+            val = node.text.strip() if node.text else None
+            if not val: continue
+            
+            if ctx_id not in contexts:
+                contexts[ctx_id] = {"type": "duration", "start": None, "end": None, "date": None}
+            
+            contexts[ctx_id][start_or_end] = val
+            if start_or_end == "end":
+                contexts[ctx_id]["date"] = val
 
     return contexts
 

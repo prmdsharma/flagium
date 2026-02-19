@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flagium Analysis Engine - Documentation</title>
+    <!-- Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@400;600&display=swap"
+        rel="stylesheet">
+    <!-- ZeroMD - Zero dependency Markdown renderer -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/zero-md@3?register"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --sidebar-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --accent-color: #38bdf8;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        nav {
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-color);
+        }
+
+        /* Main Content area */
+        main {
+            flex: 1;
+            padding: 2rem 4rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .content-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Zero-MD customization via CSS variables */
+        zero-md {
+            --zero-md-font-family: 'Inter', sans-serif;
+        }
+
+        /* Loading Skeleton */
+        .loading {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+            </svg>
+            Flagium
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-label">Core Architecture</div>
+            <a href="#architecture" class="nav-link active" onclick="loadDoc('ARCHITECTURE.md', this)">System
+                Overview</a>
+            <a href="#ingestion" class="nav-link" onclick="loadDoc('ingestion_architecture.md', this)">Ingestion
+                Flow</a>
+            <a href="#engine" class="nav-link" onclick="loadDoc('engine_architecture.md', this)">Flag Engine</a>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-label">External</div>
+            <a href="/api-docs" class="nav-link">API Swagger UI</a>
+            <a href="https://flagiumai.com" class="nav-link">Production Site</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="content-card">
+            <zero-md id="viewer" src="ARCHITECTURE.md">
+                <template>
+                    <style>
+                        /* Dark theme for Github Markdown */
+                        :host {
+                            display: block;
+                            position: relative;
+                            contain: content;
+                            color: #e2e8f0;
+                        }
+
+                        h1,
+                        h2,
+                        h3 {
+                            color: #38bdf8;
+                            border-bottom: 1px solid #334155;
+                            padding-bottom: 0.5rem;
+                        }
+
+                        code {
+                            background: #1e293b;
+                            padding: 0.2rem 0.4rem;
+                            border-radius: 4px;
+                            color: #7dd3fc;
+                        }
+
+                        pre {
+                            background: #0f172a;
+                            padding: 1rem;
+                            border-radius: 8px;
+                            border: 1px solid #334155;
+                            overflow-x: auto;
+                        }
+
+                        a {
+                            color: #38bdf8;
+                        }
+
+                        blockquote {
+                            border-left: 4px solid #38bdf8;
+                            padding-left: 1rem;
+                            color: #94a3b8;
+                        }
+
+                        table {
+                            border-collapse: collapse;
+                            width: 100%;
+                            margin: 1rem 0;
+                        }
+
+                        th,
+                        td {
+                            border: 1px solid #334155;
+                            padding: 0.75rem;
+                            text-align: left;
+                        }
+
+                        th {
+                            background: #1e293b;
+                        }
+                    </style>
+                </template>
+            </zero-md>
+        </div>
+    </main>
+
+    <script>
+        function loadDoc(src, el) {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('viewer').src = src;
+        }
+
+        // Handle direct hash navigation
+        window.addEventListener('load', () => {
+            const hash = window.location.hash;
+            if (hash === '#ingestion') {
+                const link = document.querySelector('a[href="#ingestion"]');
+                loadDoc('ingestion_architecture.md', link);
+            }
+        });
+    </script>
+</body>
+
+</html>

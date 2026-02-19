@@ -220,9 +220,8 @@ def ingest_company(session, conn, ticker, download_dir=None):
         for err in db_result["errors"]:
             print(f"  ❌ {err}")
 
-    # Step 6: Cleanup XBRL files (User Request)
+    # Step 6: Cleanup XBRL files (Debugging Done)
     if result["status"] == "success":
-        print(f"  🧹 Cleaning up {len(filings)} XBRL files...")
         for filing in filings:
             xbrl_link = _extract_xbrl_link(filing)
             if not xbrl_link:

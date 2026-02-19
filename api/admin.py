@@ -71,6 +71,11 @@ def get_ingestion_status(current_user: dict = Depends(get_current_user)):
         cursor.execute("SELECT COUNT(*) as total_flags FROM flags")
         total_flags_row = cursor.fetchone()
         total_flags = total_flags_row["total_flags"] if total_flags_row else 0
+        
+        # 3. System Job Statuses
+        cursor.execute("SELECT job_name, status, last_run_start, last_run_end, message FROM system_jobs")
+        jobs_rows = cursor.fetchall()
+        jobs_status = {r["job_name"]: r for r in jobs_rows}
 
         return {
             "ingestion": {
@@ -82,7 +87,8 @@ def get_ingestion_status(current_user: dict = Depends(get_current_user)):
             "flag_engine": {
                 "last_run": last_run,
                 "total_active_flags": total_flags
-            }
+            },
+            "system_jobs": jobs_status
         }
 
     finally:

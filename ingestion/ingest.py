@@ -29,6 +29,7 @@ from ingestion.bse_fetcher import (
 from ingestion.xbrl_parser import parse_xbrl_file, parse_xbrl_content
 from ingestion.db_writer import save_financials, ensure_company
 from db.connection import get_connection
+from db.utils import update_job_status
 
 
 # Directory to store downloaded XBRL files
@@ -308,6 +309,8 @@ def ingest_all(tickers=None, limit=None):
     print(f"  Companies: {len(tickers)}")
     print(f"{'═' * 60}")
 
+    update_job_status("Ingestion Job", "running", f"Starting ingestion for {len(tickers)} companies")
+
     session = NSESession()
     conn = get_connection()
     results = []
@@ -326,6 +329,12 @@ def ingest_all(tickers=None, limit=None):
                     "error": str(e),
                 })
 
+        success_count = sum(1 for r in results if r.get("status") == "success")
+        update_job_status("Ingestion Job", "completed", f"Processed {len(tickers)} companies. Success: {success_count}")
+
+    except Exception as e:
+        update_job_status("Ingestion Job", "failed", str(e))
+        raise e
     finally:
         session.close()
         conn.close()

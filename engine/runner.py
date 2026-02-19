@@ -3,6 +3,7 @@ import json
 import sys
 from datetime import datetime
 from db.connection import get_connection
+from db.utils import update_job_status
 from flags import get_all_flags
 from ingestion.db_writer import get_all_companies
 
@@ -91,76 +92,85 @@ def run_flags(ticker=None, backfill_quarters=1):
     print(f"🚀 Running {len(active_flags)} flags on {len(companies)} companies for {len(target_quarters)} quarters...")
     print(f"📅 Periods: {target_quarters}")
 
+    update_job_status("Flag Engine Job", "running", f"Running {len(active_flags)} flags on {len(companies)} companies")
+
     cursor = conn.cursor()
     
     total_flags_found = 0
 
-    for company in companies:
-        cid = company["id"]
-        cticker = company["ticker"]
-        print(f"  🔍 Analyzing {cticker}...")
+    try:
+        for company in companies:
+            cid = company["id"]
+            cticker = company["ticker"]
+            print(f"  🔍 Analyzing {cticker}...")
 
-        # For backfill, we iterate through periods
-        for year, quarter in target_quarters:
-            
-            # Clear existing flags for this SPECIFIC Company + Year + Quarter
-            query_del = """
-                DELETE FROM flags 
-                WHERE company_id = %s 
-                  AND fiscal_year = %s 
-                  AND fiscal_quarter = %s
-            """
-            cursor.execute(query_del, (cid, year, quarter))
-
-            company_flags = 0
-            
-            # Run each flag
-            for flag_module in active_flags:
-                # We check both annual and quarterly, but we pass the explicit period
+            # For backfill, we iterate through periods
+            for year, quarter in target_quarters:
                 
-                # 1. Quarterly Check
-                if getattr(flag_module, "SUPPORTS_QUARTERLY", False):
-                    try:
-                        result = flag_module.check(conn, cid, cticker, period_type="quarterly", year=year, quarter=quarter)
-                        if result:
-                            # Enforce metadata
-                            result["fiscal_year"] = year
-                            result["fiscal_quarter"] = quarter
-                            
-                            save_flag(cursor, cid, result)
-                            print(f"    📊 {result['flag_code']} [FY{year} Q{quarter}]: {result['message']}")
-                            company_flags += 1
-                            total_flags_found += 1
-                    except Exception as e:
-                        # Silently ignore data missing errors normally, but print for debug
-                        # print(f"    ❌ Error running {flag_module.FLAG_CODE} (Q): {e}")
-                        pass
+                # Clear existing flags for this SPECIFIC Company + Year + Quarter
+                query_del = """
+                    DELETE FROM flags 
+                    WHERE company_id = %s 
+                      AND fiscal_year = %s 
+                      AND fiscal_quarter = %s
+                """
+                cursor.execute(query_del, (cid, year, quarter))
 
-                # 2. Annual Check
-                # Usually annual flags are calculated at end of year (Q4).
-                # But we can check them every time if we want, or only if quarter == 4.
-                # For now, let's run them if quarter == 4 to avoid duplicates, or just run them.
-                # Simplest: Run annual check using the 'year'.
-                if quarter == 4: 
-                    try:
-                        result = flag_module.check(conn, cid, cticker, period_type="annual", year=year)
-                        if result:
-                            result["fiscal_year"] = year
-                            result["fiscal_quarter"] = 0 # Annual
-                            
-                            save_flag(cursor, cid, result)
-                            print(f"    📅 {result['flag_code']} [FY{year} Annual]: {result['message']}")
-                            company_flags += 1
-                            total_flags_found += 1
-                    except Exception as e:
-                        pass
+                company_flags = 0
+                
+                # Run each flag
+                for flag_module in active_flags:
+                    # We check both annual and quarterly, but we pass the explicit period
+                    
+                    # 1. Quarterly Check
+                    if getattr(flag_module, "SUPPORTS_QUARTERLY", False):
+                        try:
+                            result = flag_module.check(conn, cid, cticker, period_type="quarterly", year=year, quarter=quarter)
+                            if result:
+                                # Enforce metadata
+                                result["fiscal_year"] = year
+                                result["fiscal_quarter"] = quarter
+                                
+                                save_flag(cursor, cid, result)
+                                print(f"    📊 {result['flag_code']} [FY{year} Q{quarter}]: {result['message']}")
+                                company_flags += 1
+                                total_flags_found += 1
+                        except Exception as e:
+                            # Silently ignore data missing errors normally, but print for debug
+                            # print(f"    ❌ Error running {flag_module.FLAG_CODE} (Q): {e}")
+                            pass
 
-        if total_flags_found == 0 and backfill_quarters == 1:
-             print(f"    ✅ Clean (No flags detected)")
+                    # 2. Annual Check
+                    # Usually annual flags are calculated at end of year (Q4).
+                    # But we can check them every time if we want, or only if quarter == 4.
+                    # For now, let's run them if quarter == 4 to avoid duplicates, or just run them.
+                    # Simplest: Run annual check using the 'year'.
+                    if quarter == 4: 
+                        try:
+                            result = flag_module.check(conn, cid, cticker, period_type="annual", year=year)
+                            if result:
+                                result["fiscal_year"] = year
+                                result["fiscal_quarter"] = 0 # Annual
+                                
+                                save_flag(cursor, cid, result)
+                                print(f"    📅 {result['flag_code']} [FY{year} Annual]: {result['message']}")
+                                company_flags += 1
+                                total_flags_found += 1
+                        except Exception as e:
+                            pass
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+            if total_flags_found == 0 and backfill_quarters == 1:
+                 print(f"    ✅ Clean (No flags detected)")
+
+        conn.commit()
+        update_job_status("Flag Engine Job", "completed", f"Analyzed {len(companies)} companies. Flags detected: {total_flags_found}")
+
+    except Exception as e:
+        update_job_status("Flag Engine Job", "failed", str(e))
+        raise e
+    finally:
+        cursor.close()
+        conn.close()
     
     print("\n════════════════════════════════════════════════════════════")
     print(f"🏁 Finished. Total flags detected: {total_flags_found}")

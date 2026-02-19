@@ -81,14 +81,26 @@ def save_financials(conn, ticker, records, company_info=None):
                 # Check if record already exists
                 cursor.execute(
                     """
-                    SELECT id FROM financials
+                    SELECT id, is_consolidated FROM financials
                     WHERE company_id = %s AND year = %s AND quarter = %s
                     """,
                     (company_id, record["year"], record.get("quarter", 0))
                 )
-                existing = cursor.fetchone()
+                existing_row = cursor.fetchone()
+                
+                is_cons = record.get("is_consolidated", False)
 
-                if existing:
+                if existing_row:
+                    existing_id, existing_is_cons = existing_row
+                    
+                    # PRIORITY LOGIC: 
+                    # 1. If currently consolidated and DB is standalone -> Update
+                    # 2. If both same status -> Update (keep newest)
+                    # 3. If currently standalone and DB is consolidated -> Skip
+                    if existing_is_cons and not is_cons:
+                        result["skipped"] += 1
+                        continue
+                    
                     # Update existing record
                     cursor.execute(
                         """
@@ -99,8 +111,9 @@ def save_financials(conn, ticker, records, company_info=None):
                             operating_cash_flow = %s,
                             free_cash_flow = %s,
                             total_debt = %s,
-                            interest_expense = %s
-                        WHERE company_id = %s AND year = %s AND quarter = %s
+                            interest_expense = %s,
+                            is_consolidated = %s
+                        WHERE id = %s
                         """,
                         (
                             record.get("revenue"),
@@ -110,9 +123,8 @@ def save_financials(conn, ticker, records, company_info=None):
                             record.get("free_cash_flow"),
                             record.get("total_debt"),
                             record.get("interest_expense"),
-                            company_id,
-                            record["year"],
-                            record.get("quarter", 0),
+                            is_cons,
+                            existing_id,
                         )
                     )
                     result["updated"] += 1
@@ -123,8 +135,8 @@ def save_financials(conn, ticker, records, company_info=None):
                         INSERT INTO financials
                             (company_id, year, quarter, revenue, net_profit, profit_before_tax,
                              operating_cash_flow, free_cash_flow,
-                             total_debt, interest_expense)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                             total_debt, interest_expense, is_consolidated)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         """,
                         (
                             company_id,
@@ -137,6 +149,7 @@ def save_financials(conn, ticker, records, company_info=None):
                             record.get("free_cash_flow"),
                             record.get("total_debt"),
                             record.get("interest_expense"),
+                            is_cons,
                         )
                     )
                     result["inserted"] += 1

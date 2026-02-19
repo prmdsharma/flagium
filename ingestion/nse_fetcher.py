@@ -25,7 +25,7 @@ NIFTY50_TICKERS = [
     "HINDUNILVR", "SBIN", "BHARTIARTL", "ITC", "KOTAKBANK",
     "LT", "AXISBANK", "BAJFINANCE", "ASIANPAINT", "MARUTI",
     "HCLTECH", "TITAN", "SUNPHARMA", "ULTRACEMCO", "NESTLEIND",
-    "WIPRO", "NTPC", "TMPV", "M&M", "POWERGRID",
+    "WIPRO", "NTPC", "TMPV", "TMCV", "M&M", "POWERGRID",
     "TATASTEEL", "TECHM", "ADANIPORTS", "BAJAJFINSV", "ONGC",
     "JSWSTEEL", "COALINDIA", "LTIM", "HDFCLIFE", "INDUSINDBK",
     "HINDALCO", "SBILIFE", "GRASIM", "DIVISLAB", "DRREDDY",
@@ -213,9 +213,16 @@ def fetch_nifty500_tickers(session=None):
             # Column name is usually "Symbol"
             symbol = row.get("Symbol")
             if symbol:
-                tickers.append(symbol.strip())
+                symbol = symbol.strip()
+                # Remove TATAMOTORS (demerged)
+                if symbol == "TATAMOTORS": continue
+                tickers.append(symbol)
         
-        print(f"  ✅ Fetched {len(tickers)} tickers from Nifty 500")
+        # Ensure TMPV and TMCV are included if not present (as replacements)
+        if "TMPV" not in tickers: tickers.append("TMPV")
+        if "TMCV" not in tickers: tickers.append("TMCV")
+        
+        print(f"  ✅ Fetched {len(tickers)} tickers from Nifty 500 (with Tata demerger logic)")
         return tickers
 
     except Exception as e:

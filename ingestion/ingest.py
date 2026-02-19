@@ -86,8 +86,13 @@ def ingest_company(session, conn, ticker, download_dir=None):
         for period in ["Annual", "Quarterly"]:
             new_filings = get_financial_results(session, ticker, period=period)
             if new_filings:
-                print(f"  📄 Found {len(new_filings)} {period.lower()} filing(s) from NSE")
-                filings.extend(new_filings)
+                # Filter for consolidated only
+                cons_filings = [f for f in new_filings if _is_consolidated(f)]
+                if cons_filings:
+                    print(f"  📄 Found {len(cons_filings)} consolidated {period.lower()} filing(s) from NSE")
+                    filings.extend(cons_filings)
+                else:
+                    print(f"  ⏭️  Skipping {len(new_filings)} standalone {period.lower()} filing(s) from NSE")
 
     # BSE fallback (or primary when NSE is blocked)
     if not filings:
@@ -102,10 +107,15 @@ def ingest_company(session, conn, ticker, download_dir=None):
                     company_info = {"name": ticker, "ticker": ticker}
 
                 # Check BSE for financial results
-                bse_filings = get_financial_results_bse(bse_session, bse_code)
-                if bse_filings:
-                    filings = bse_filings
-                    print(f"  📄 Found {len(filings)} filing(s) from BSE")
+                bse_filings_raw = get_financial_results_bse(bse_session, bse_code)
+                if bse_filings_raw:
+                    # Filter for consolidated only
+                    bse_filings = [f for f in bse_filings_raw if _is_consolidated(f)]
+                    if bse_filings:
+                        filings = bse_filings
+                        print(f"  📄 Found {len(filings)} consolidated filing(s) from BSE")
+                    else:
+                        print(f"  ⏭️  Skipping {len(bse_filings_raw)} standalone filing(s) from BSE")
                 else:
                     # Try direct XBRL download from BSE
                     xbrl_path = os.path.join(download_dir, f"{ticker}_bse_latest.xml")
@@ -192,8 +202,17 @@ def ingest_company(session, conn, ticker, download_dir=None):
         # Step 4: Parse XBRL
         records = parse_xbrl_file(save_path)
         if records:
+            # Detect consolidation status from filing metadata
+            is_cons = False
+            cons_field = str(filing.get("consolidated", "")).lower()
+            if "consolidated" in cons_field and "non" not in cons_field:
+                is_cons = True
+            
+            for r in records:
+                r["is_consolidated"] = is_cons
+                
             all_records.extend(records)
-            print(f"  📊 Parsed {len(records)} record(s) from {filename}")
+            print(f"  📊 Parsed {len(records)} record(s) from {filename} (Consolidated: {is_cons})")
 
     result["records_parsed"] = len(all_records)
 
@@ -221,22 +240,46 @@ def ingest_company(session, conn, ticker, download_dir=None):
             print(f"  ❌ {err}")
 
     # Step 6: Cleanup XBRL files (Debugging Done)
-    if result["status"] == "success":
-        for filing in filings:
-            xbrl_link = _extract_xbrl_link(filing)
-            if not xbrl_link:
-                continue
-            period_str = _extract_period(filing)
-            link_hash = hashlib.md5(xbrl_link.encode("utf-8")).hexdigest()[:6]
-            filename = f"{ticker}_{period_str}_{link_hash}.xml"
-            save_path = os.path.join(download_dir, filename)
-            if os.path.exists(save_path):
-                os.remove(save_path)
+    # if result["status"] == "success":
+    #     for filing in filings:
+    #         xbrl_link = _extract_xbrl_link(filing)
+    #         if not xbrl_link:
+    #             continue
+    #         period_str = _extract_period(filing)
+    #         link_hash = hashlib.md5(xbrl_link.encode("utf-8")).hexdigest()[:6]
+    #         filename = f"{ticker}_{period_str}_{link_hash}.xml"
+    #         save_path = os.path.join(download_dir, filename)
+    #         if os.path.exists(save_path):
+    #             os.remove(save_path)
 
     # Step 7: Backfill Annual PBT from Q4 if missing
     _backfill_annual_pbt(conn, ticker)
 
     return result
+
+
+def _is_consolidated(filing):
+    """Determine if a filing is consolidated based on metadata.
+    
+    Checks NSE's 'consolidated' field and BSE's 'NEWSSUB' field.
+    Excludes anything containing 'standalone' or 'not consolidated'.
+    """
+    # NSE Logic
+    cons_field = str(filing.get("consolidated", "")).lower()
+    if cons_field:
+        if "consolidated" in cons_field and "non" not in cons_field and "not" not in cons_field:
+            return True
+        return False
+        
+    # BSE Logic (NEWSSUB usually contains 'Consolidated' or 'Standalone')
+    news_sub = str(filing.get("NEWSSUB", "")).lower()
+    if news_sub:
+        if "consolidated" in news_sub and "standalone" not in news_sub:
+            return True
+        return False
+        
+    # Fallback: if we can't tell, assume False to be safe (we only want consolidated)
+    return False
 
 
 def ingest_all(tickers=None, limit=None):

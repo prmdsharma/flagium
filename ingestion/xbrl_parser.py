@@ -24,6 +24,7 @@ import os
 XBRL_TAG_MAP = {
     "revenue": [
         "RevenueFromOperations",
+        "InterestEarned", # Banking
         "TotalRevenue",
         "Revenue",
         "RevenueFromOperationsNet",
@@ -31,21 +32,20 @@ XBRL_TAG_MAP = {
         "TotalIncomeFromOperations",
         "GrossIncomeFromOperations",
         # Banking taxonomy
-        "InterestEarned",
         "Income",
     ],
     "net_profit": [
-        "ProfitLossForPeriod",   # Prioritize this for "Total Profit"
+        "ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates", # Banking headliner
+        "ProfitOrLossAttributableToOwnersOfParent", # Standard headliner (Consolidated)
+        "ProfitLossAttributableToOwnersOfParent", # Standard variant
+        "ProfitLossForPeriod",   # Standard headliner (Standalone)
         "ProfitLossAfterTax",
-        "ProfitLossAttributableToOwnersOfParent",
         "NetProfitLossAfterTax",
         "ProfitAfterTax",
         "NetProfitAfterTaxes",
         "ProfitLoss",
-        # Banking taxonomy
         "ProfitLossForThePeriod",
         "ProfitLossFromOrdinaryActivitiesAfterTax",
-        "ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates",
     ],
     "profit_before_tax": [
         "ProfitLossBeforeTax",

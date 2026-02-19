@@ -60,7 +60,7 @@ export default function LoginModal({ isOpen, onClose, initialMode = "login" }) {
                 </button>
 
                 <div className="login-header mb-8 text-center">
-                    <img src={logo} alt="Flagium" className="h-12 w-12 mx-auto mb-4" />
+                    <img src={logo} alt="Flagium AI" className="h-12 w-12 mx-auto mb-4" />
                     <h1 className="text-2xl font-bold text-slate-900 mb-2">Risk Terminal Access</h1>
                     <p className="text-sm text-slate-500 font-medium">{isLogin ? "Authenticate to Continue" : "Initialize Identity"}</p>
                 </div>

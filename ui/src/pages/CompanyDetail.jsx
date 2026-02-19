@@ -59,7 +59,7 @@ export default function CompanyDetail() {
                 {/* Center: Risk Engine + Density Layer */}
                 <div className="bb-panel bb-center">
                     <div className="risk-engine-module">
-                        <div className="rem-label">Flagium Risk Score</div>
+                        <div className="rem-label">Flagium AI Risk Score</div>
                         <div className="rem-score-row">
                             <div className="rem-score">{risk_score} <span className="rem-max">/ 100</span></div>
                             <div className="rem-delta" style={{ color: deltaColor }}>
@@ -116,7 +116,7 @@ export default function CompanyDetail() {
                         </div>
                     </section>
 
-                    {/* 2. Flagium Active Risk Objects (V6 Density) */}
+                    {/* 2. Flagium AI Active Risk Objects (V6 Density) */}
                     <section className="risk-objects-section">
                         <div className="section-header-row">
                             <h3 className="section-title-inst">Active Risk Objects ({flags?.length || 0})</h3>

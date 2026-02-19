@@ -4,7 +4,7 @@ export default function MethodologyPage() {
             <div className="max-w-[800px] mx-auto">
                 <h1 className="text-4xl font-bold text-slate-900 mb-6">Methodology</h1>
                 <p className="text-xl text-slate-600 mb-12 leading-relaxed">
-                    Flagium applies structured, rule-based analysis to multi-quarter financial data to detect early signs of corporate deterioration.
+                    Flagium AI applies structured, rule-based analysis to multi-quarter financial data to detect early signs of corporate deterioration.
                 </p>
 
                 <div className="space-y-16">
@@ -12,7 +12,7 @@ export default function MethodologyPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-slate-900 mb-4 border-b border-gray-200 pb-2">Core Risk Signals</h2>
                         <p className="text-slate-600 mb-6">
-                            Flagium evaluates companies across key financial stress dimensions. Each signal is evaluated across multiple reporting periods to assess structural consistency.
+                            Flagium AI evaluates companies across key financial stress dimensions. Each signal is evaluated across multiple reporting periods to assess structural consistency.
                         </p>
                         <ul className="space-y-3 text-slate-700 font-medium list-disc pl-5">
                             <li>Interest Coverage Stability</li>
@@ -27,7 +27,7 @@ export default function MethodologyPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-slate-900 mb-4 border-b border-gray-200 pb-2">Risk Score Construction</h2>
                         <p className="text-slate-600 mb-4">
-                            The Flagium Risk Score aggregates signal intensity and persistence across recent quarters.
+                            The Flagium AI Risk Score aggregates signal intensity and persistence across recent quarters.
                         </p>
                         <div className="bg-slate-50 p-6 rounded-lg border border-gray-100">
                             <p className="font-semibold text-slate-900 mb-2">Key Principles:</p>
@@ -42,7 +42,7 @@ export default function MethodologyPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-slate-900 mb-4 border-b border-gray-200 pb-2">Deterioration Acceleration Index</h2>
                         <p className="text-slate-600 mb-6">
-                            Beyond static risk, Flagium evaluates the rate of change in financial stress. Acceleration often precedes material deterioration.
+                            Beyond static risk, Flagium AI evaluates the rate of change in financial stress. Acceleration often precedes material deterioration.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="p-4 bg-green-50 border border-green-100 rounded-lg text-center">
@@ -64,7 +64,7 @@ export default function MethodologyPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-slate-900 mb-4 border-b border-gray-200 pb-2">Escalation Probability Model</h2>
                         <p className="text-slate-600 leading-relaxed">
-                            Flagium estimates the probability that risk conditions worsen in subsequent quarters based on historical deterioration patterns and signal clustering.
+                            Flagium AI estimates the probability that risk conditions worsen in subsequent quarters based on historical deterioration patterns and signal clustering.
                         </p>
                         <p className="text-slate-600 mt-4 font-medium italic">
                             This is not a prediction model. It is a stress-progression assessment.
@@ -73,7 +73,7 @@ export default function MethodologyPage() {
 
                     {/* Section 5 */}
                     <section>
-                        <h2 className="text-2xl font-bold text-slate-900 mb-4 border-b border-gray-200 pb-2">What Flagium Is Not</h2>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-4 border-b border-gray-200 pb-2">What Flagium AI Is Not</h2>
                         <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <li className="flex items-center gap-2 text-slate-700">
                                 <span className="text-red-500 font-bold">✕</span> Not a trading system
@@ -89,7 +89,7 @@ export default function MethodologyPage() {
                             </li>
                         </ul>
                         <div className="mt-8 p-6 bg-blue-50 border border-blue-100 rounded-lg text-center">
-                            <p className="text-blue-900 font-semibold text-lg">Flagium is a structural financial risk monitoring system.</p>
+                            <p className="text-blue-900 font-semibold text-lg">Flagium AI is a structural financial risk monitoring system.</p>
                         </div>
                     </section>
                 </div>

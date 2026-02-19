@@ -29,7 +29,7 @@ export default function VerifyEmail() {
         <div className="auth-container">
             <div className="auth-card">
                 <div className="auth-header">
-                    <img src="/assets/logo.png" alt="Flagium" className="auth-logo" />
+                    <img src="/assets/logo.png" alt="Flagium AI" className="auth-logo" />
                     <h2>Email Verification</h2>
                 </div>
 

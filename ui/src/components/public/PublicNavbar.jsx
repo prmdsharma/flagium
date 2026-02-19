@@ -14,7 +14,7 @@ export default function PublicNavbar({ onOpenAuthModal }) {
                     <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold text-xl group-hover:bg-blue-600 transition-colors">
                         F
                     </div>
-                    <span className="font-bold text-xl tracking-tight text-slate-900">Flagium</span>
+                    <span className="font-bold text-xl tracking-tight text-slate-900">Flagium AI</span>
                 </Link>
 
                 {/* Navigation */}

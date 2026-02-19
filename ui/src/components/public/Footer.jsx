@@ -11,7 +11,7 @@ export default function Footer() {
                             <div className="w-6 h-6 bg-slate-900 dark:bg-blue-600 rounded-md flex items-center justify-center text-white font-bold text-sm transition-colors">
                                 F
                             </div>
-                            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">Flagium</span>
+                            <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">Flagium AI</span>
                         </Link>
                         <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                             Systematic financial risk monitoring for capital preservation focused investors.
@@ -50,10 +50,10 @@ export default function Footer() {
                 {/* Bottom Bar */}
                 <div className="border-t border-gray-100 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-xs text-slate-400 dark:text-slate-500">
-                        &copy; {new Date().getFullYear()} Flagium. All rights reserved.
+                        &copy; {new Date().getFullYear()} Flagium AI. All rights reserved.
                     </p>
                     <p className="text-xs text-slate-400 dark:text-slate-500 max-w-xl text-center md:text-right">
-                        Flagium provides analytical signals based on publicly available financial information. It does not provide investment advice.
+                        Flagium AI provides analytical signals based on publicly available financial information. It does not provide investment advice.
                     </p>
                 </div>
             </div>

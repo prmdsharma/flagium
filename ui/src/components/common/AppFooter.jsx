@@ -7,7 +7,7 @@ export default function AppFooter() {
 
                 {/* Left: Copyright */}
                 <div>
-                    &copy; {new Date().getFullYear()} Flagium
+                    &copy; {new Date().getFullYear()} Flagium AI
                 </div>
 
                 {/* Right: Links */}

@@ -9,7 +9,7 @@ export default function RegistrationSuccess() {
         <div className="success-page-full">
             <div className="heroic-content">
                 <div style={{ marginBottom: '64px' }}>
-                    <img src={logo} alt="Flagium" style={{ width: '100px', margin: '0 auto' }} />
+                    <img src={logo} alt="Flagium AI" style={{ width: '100px', margin: '0 auto' }} />
                 </div>
 
                 <div className="heroic-icon-container">

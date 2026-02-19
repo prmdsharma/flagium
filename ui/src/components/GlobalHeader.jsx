@@ -109,7 +109,7 @@ export default function GlobalHeader() {
                         <div className="w-8 h-8 bg-slate-900 dark:bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl transition-colors">
                             F
                         </div>
-                        <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">Flagium</span>
+                        <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">Flagium AI</span>
                     </Link>
 
                     {/* Navigation */}

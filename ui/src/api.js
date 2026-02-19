@@ -1,5 +1,5 @@
 /**
- * Flagium API Client
+ * Flagium AI API Client
  * Centralized API calls to the FastAPI backend.
  */
 

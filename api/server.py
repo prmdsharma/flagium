@@ -6,7 +6,7 @@ from api import auth, portfolios, admin
 import os
 
 app = FastAPI(
-    title="Flagium Analysis Engine",
+    title="Flagium AI Analysis Engine",
     docs_url="/api-docs",  # Move Swagger UI
     redoc_url="/api-redoc" # Move Redoc
 )

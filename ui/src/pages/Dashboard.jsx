@@ -29,7 +29,7 @@ export default function Dashboard() {
                 <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-4xl mb-6">
                     📊
                 </div>
-                <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Welcome to Flagium</h1>
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Welcome to Flagium AI</h1>
                 <p className="text-slate-500 dark:text-slate-400 max-w-md mb-8">
                     You haven't initialized any portfolios yet. Create your first portfolio to start monitoring capital risk.
                 </p>

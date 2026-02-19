@@ -1,7 +1,7 @@
 """
-Flagium — Main Entry Point
+Flagium AI — Main Entry Point
 
-CLI tool for the Flagium financial risk detection engine.
+CLI tool for the Flagium AI financial risk detection engine.
 
 Usage:
     python main.py ingest                     # Ingest all Nifty 50 companies
@@ -38,7 +38,7 @@ def cmd_status():
     cursor = conn.cursor()
 
     print("\n" + "=" * 50)
-    print("  📊 Flagium Database Status")
+    print("  📊 Flagium AI Database Status")
     print("=" * 50)
 
     # Companies count

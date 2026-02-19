@@ -41,7 +41,7 @@ export default function LoginPage() {
         <div className="login-page">
             <div className="login-card">
                 <div className="login-header">
-                    <img src={logo} alt="Flagium" className="login-logo" />
+                    <img src={logo} alt="Flagium AI" className="login-logo" />
                     <h1>Risk Terminal Access</h1>
                     <p>{isLogin ? "Authenticate" : "Initialize Identity"}</p>
                 </div>

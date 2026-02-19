@@ -1,8 +1,8 @@
-# Flagium v1.0.0
+# Flagium AI v1.0.0
 
-**Flagium — detects early signs of financial deterioration in stocks.**
+**Flagium AI — detects early signs of financial deterioration in stocks.**
 
-Flagium is a rule-based risk intelligence engine that identifies
+Flagium AI is a rule-based risk intelligence engine that identifies
 fundamental red flags in listed companies using publicly available
 financial data.
 

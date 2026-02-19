@@ -1,7 +1,7 @@
 """
-Flagium — API Routes
+Flagium AI — API Routes
 
-All REST endpoints for the Flagium financial risk engine.
+All REST endpoints for the Flagium AI financial risk engine.
 """
 
 import json

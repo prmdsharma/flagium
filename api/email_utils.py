@@ -18,14 +18,14 @@ def send_verification_email(to_email, token):
     
     # Construction of verification URL
     # In production, this should be the domain or Public IP
-    base_url = os.getenv("FRONTEND_URL", "http://80.225.201.34")
+    base_url = os.getenv("FRONTEND_URL", "https://flagiumai.com")
     verify_url = f"{base_url}/verify/{token}"
     
-    subject = "Verify your Flagium Account"
+    subject = "Verify your Flagium AI Account"
     body = f"""
     Hello,
     
-    Thank you for registering with Flagium. Please click the link below to verify your email address:
+    Thank you for registering with Flagium AI. Please click the link below to verify your email address:
     
     {verify_url}
     
@@ -70,10 +70,10 @@ def send_reset_password_email(to_email, token):
     smtp_port = int(os.getenv("SMTP_PORT", 587))
     
     # Construction of reset URL
-    base_url = os.getenv("FRONTEND_URL", "http://80.225.201.34")
+    base_url = os.getenv("FRONTEND_URL", "https://flagiumai.com")
     reset_url = f"{base_url}/reset-password/{token}"
     
-    subject = "Reset your Flagium Password"
+    subject = "Reset your Flagium AI Password"
     body = f"""
     Hello,
     

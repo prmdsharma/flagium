@@ -13,7 +13,7 @@ export default function LandingPage() {
                         <span className="text-slate-500">Not Speculation.</span>
                     </h1>
                     <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-                        Flagium monitors structural financial deterioration in listed companies using objective, rules-based risk signals — so investors can detect trouble before it becomes collapse.
+                        Flagium AI monitors structural financial deterioration in listed companies using objective, rules-based risk signals — so investors can detect trouble before it becomes collapse.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <button
@@ -48,7 +48,7 @@ export default function LandingPage() {
                                 By the time the price reflects the risk, the damage is already done.
                             </p>
                             <p className="font-medium text-slate-900">
-                                Flagium exists to monitor that deterioration — systematically.
+                                Flagium AI exists to monitor that deterioration — systematically.
                             </p>
                         </div>
                     </div>
@@ -139,7 +139,7 @@ export default function LandingPage() {
                         <div className="text-center">
                             <div className="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-6 border-4 border-white shadow-sm">2</div>
                             <h3 className="text-lg font-bold text-slate-900 mb-2">Engine scans financials</h3>
-                            <p className="text-slate-600">Flagium analyzes multi-quarter financial data automatically.</p>
+                            <p className="text-slate-600">Flagium AI analyzes multi-quarter financial data automatically.</p>
                         </div>
 
                         {/* Step 3 */}
@@ -178,7 +178,7 @@ export default function LandingPage() {
                     </div>
                     <div className="md:w-1/3 border-l border-slate-700 pl-0 md:pl-12">
                         <p className="text-lg text-white font-medium italic">
-                            "If you prioritize downside protection over speculation — Flagium is built for you."
+                            "If you prioritize downside protection over speculation — Flagium AI is built for you."
                         </p>
                     </div>
                 </div>
@@ -189,7 +189,7 @@ export default function LandingPage() {
                 <div className="max-w-2xl mx-auto">
                     <h2 className="text-3xl font-bold text-slate-900 mb-6">Clarity Over Noise</h2>
                     <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-                        Markets react to price. Flagium monitors financial structure. <br />
+                        Markets react to price. Flagium AI monitors financial structure. <br />
                         Instead of asking <span className="text-slate-900 font-semibold">"Will it go up?"</span> <br />
                         We ask <span className="text-slate-900 font-semibold">"Is structural risk increasing?"</span>
                     </p>
@@ -202,7 +202,7 @@ export default function LandingPage() {
                 <div className="max-w-2xl mx-auto text-center">
                     <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">About</h4>
                     <p className="text-lg text-slate-700 leading-relaxed mb-6">
-                        Flagium is built by investors and engineers focused on systematic financial risk assessment and long-term capital protection.
+                        Flagium AI is built by investors and engineers focused on systematic financial risk assessment and long-term capital protection.
                     </p>
                     <p className="text-slate-600">
                         The platform is grounded in rule-based analysis of publicly reported financial data. <br />

@@ -35,13 +35,13 @@ XBRL_TAG_MAP = {
         "Income",
     ],
     "net_profit": [
+        "ProfitLossForPeriod",   # Prioritize this for "Total Profit"
         "ProfitLossAfterTax",
-        "ProfitLossForPeriod",
+        "ProfitLossAttributableToOwnersOfParent",
         "NetProfitLossAfterTax",
         "ProfitAfterTax",
         "NetProfitAfterTaxes",
         "ProfitLoss",
-        "ProfitLossAttributableToOwnersOfParent",
         # Banking taxonomy
         "ProfitLossForThePeriod",
         "ProfitLossFromOrdinaryActivitiesAfterTax",
@@ -212,7 +212,11 @@ def _extract_contexts(tree):
 
     # Fallback for BSE-style filings where contexts might be referenced but not explicitly defined as xbrli:context
     # We look for metadata tags that define the period for a given contextRef
-    for tag_name, start_or_end in [("DateOfStartOfReportingPeriod", "start"), ("DateOfEndOfReportingPeriod", "end"), ("DateOfEndOfFinancialYear", "end"), ("DateOfStartOfFinancialYear", "start")]:
+    # IMPORTANT: We prioritize Reporting Period over Financial Year for duration calc
+    for tag_name, start_or_end in [
+        ("DateOfStartOfReportingPeriod", "start"), 
+        ("DateOfEndOfReportingPeriod", "end")
+    ]:
         for node in tree.xpath(f"//*[local-name()='{tag_name}']"):
             ctx_id = node.attrib.get("contextRef")
             if not ctx_id: continue
@@ -331,8 +335,9 @@ def _build_records(raw_values, contexts):
             if key not in records_map:
                 records_map[key] = {}
             
-            # Add field
-            records_map[key][v["field"]] = v["value"]
+            # Add field (First match in XBRL_TAG_MAP wins)
+            if v["field"] not in records_map[key]:
+                records_map[key][v["field"]] = v["value"]
             
         elif ctx["type"] == "instant":
             instant_values.append(v)
@@ -344,7 +349,8 @@ def _build_records(raw_values, contexts):
         for is_annual in [True, False]:
             key = (date, is_annual)
             if key in records_map:
-                records_map[key][v["field"]] = v["value"]
+                if v["field"] not in records_map[key]:
+                    records_map[key][v["field"]] = v["value"]
 
     # Build final records list
     records = []

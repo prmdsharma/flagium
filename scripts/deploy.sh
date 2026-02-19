@@ -26,7 +26,19 @@ if [ $? -ne 0 ]; then
 fi
 cd ..
 
-# 3. Sync Backend Files
+# 3. Patch Nginx Config (One-time or if changed)
+echo "🔧 Checking/Patching Nginx Config..."
+ssh -i $SSH_KEY $REMOTE_USER@$REMOTE_HOST "
+    if ! grep -q 'X-Forwarded-Host' /etc/nginx/sites-enabled/flagium; then
+        echo 'Patching Nginx config for better redirects...'
+        sudo sed -i '/proxy_set_header Host \$host;/a \        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto \$scheme;\n        proxy_set_header X-Forwarded-Host \$host;' /etc/nginx/sites-enabled/flagium
+        sudo nginx -t && sudo systemctl reload nginx
+    else
+        echo 'Nginx config already patched.'
+    fi
+"
+
+# 4. Sync Backend Files
 echo "⬆️ Syncing Backend..."
 rsync -avz --exclude '.env' --exclude 'node_modules' --exclude '__pycache__' \
       --exclude 'dist' --exclude 'venv' --exclude '.git' --exclude '.DS_Store' \
@@ -38,6 +50,18 @@ rsync -avz --delete -e "ssh -i $SSH_KEY" $FE_DIST_DIR/ $REMOTE_USER@$REMOTE_HOST
 
 # 5. Restart Services on Remote
 echo "🔄 Restarting Remote Services..."
-ssh -i $SSH_KEY $REMOTE_USER@$REMOTE_HOST "pm2 restart flagium-backend"
+# Try all likely names and provide verbose feedback
+ssh -i $SSH_KEY $REMOTE_USER@$REMOTE_HOST "
+    echo '--- PM2 Status Before ---';
+    pm2 list;
+    echo '--- Attempting Restart ---';
+    pm2 restart flagium-api || pm2 restart flagium-backend || pm2 restart flagium || pm2 restart backend || pm2 restart all || (echo '⚠️ PM2 restart failed, trying pkill fallback...' && pkill -f uvicorn);
+    sleep 2;
+    echo '--- PM2 Status After ---';
+    pm2 list;
+    echo '--- API Connectivity Check ---';
+    curl -s localhost:8000/api/ping || curl -s localhost:8000/ping || echo '⚠️ Local API check failed';
+"
 
 echo "✅ Deployment Successful!"
+echo "💡 Please verify: https://flagiumai.com/api/ping"

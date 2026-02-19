@@ -18,15 +18,15 @@ class ZerodhaBroker(BaseBroker):
             raise Exception("KITE_API_KEY is not set in environment variables. Please set the Flagium App credentials in .env")
         return self.kite.login_url()
 
-    def authenticate(self, auth_code: str) -> str:
+    def authenticate(self, request_token: str) -> str:
         """
-        Exchange the short-lived auth_code (request_token) for a long-lived access_token.
+        Exchange the short-lived request_token for a long-lived access_token.
         This happens server-side using the App's API Secret.
         """
         if not self.api_secret:
             raise Exception("KITE_API_SECRET is not set in environment variables.")
             
-        data = self.kite.generate_session(auth_code, api_secret=self.api_secret)
+        data = self.kite.generate_session(request_token, api_secret=self.api_secret)
         self.access_token = data["access_token"]
         self.kite.set_access_token(self.access_token)
         return self.access_token

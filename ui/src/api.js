@@ -91,8 +91,10 @@ export const api = {
       return r.json();
     });
   },
-  getBrokerLoginUrl: (brokerType) => fetchJSON(`/portfolios/brokers/${brokerType}/login`),
-  syncBrokerPortfolio: (portfolioId, brokerType, authCode) => fetchJSON(`/portfolios/${portfolioId}/sync/${brokerType}`, { method: "POST", body: { auth_code: authCode } }),
+  getZerodhaLoginUrl: () => fetchJSON("/portfolios/brokers/zerodha/login"),
+  syncZerodhaPortfolio: (portfolioId, requestToken) => fetchJSON(`/portfolios/${portfolioId}/sync/zerodha`, { method: "POST", body: { request_token: requestToken } }),
+  getGrowwLoginUrl: () => fetchJSON("/portfolios/brokers/groww/login"),
+  syncGrowwPortfolio: (portfolioId, requestToken) => fetchJSON(`/portfolios/${portfolioId}/sync/groww`, { method: "POST", body: { request_token: requestToken } }),
 
   // Admin
   getIngestionStatus: () => fetchJSON("/admin/ingestion-status"),

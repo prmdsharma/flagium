@@ -8,7 +8,7 @@ class BaseBroker(ABC):
         pass
 
     @abstractmethod
-    def authenticate(self, auth_code: str) -> str:
+    def authenticate(self, code: str) -> str:
         """Exchange the authorization code for an access token and return it."""
         pass
 

@@ -113,39 +113,26 @@ export default function PortfolioDashboard() {
         }
     }, [id, navigate, isCreatingNew]);
 
-    // Check for Broker Redirects (Zerodha Kite or Groww)
+    // Check for Zerodha Redirect
     useEffect(() => {
         const requestToken = queryParams.get('request_token');
-        const growwCode = queryParams.get('code');
-
         if (requestToken && id) {
-            handleBrokerSync('zerodha', requestToken);
-            window.history.replaceState({}, document.title, window.location.pathname);
-        } else if (growwCode && id) {
-            handleBrokerSync('groww', growwCode);
+            handleZerodhaSync(requestToken);
+            // Clean up URL
             window.history.replaceState({}, document.title, window.location.pathname);
         }
     }, [id, location]);
 
-    const handleBrokerSync = async (brokerType, token) => {
+    const handleZerodhaSync = async (token) => {
         setLoading(true);
         try {
-            const res = await api.syncBrokerPortfolio(id, brokerType, token);
+            const res = await api.syncZerodhaPortfolio(id, token);
             setUploadResult(res);
             loadDetail(id); // Refresh
         } catch (err) {
-            alert(`${brokerType.charAt(0).toUpperCase() + brokerType.slice(1)} sync failed: ` + err.message);
+            alert("Broker sync failed: " + err.message);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleConnectBroker = async (brokerType) => {
-        try {
-            const { url } = await api.getBrokerLoginUrl(brokerType);
-            window.location.href = url;
-        } catch (err) {
-            alert(`Failed to initiate ${brokerType} login: ` + err.message);
         }
     };
 
@@ -605,25 +592,27 @@ export default function PortfolioDashboard() {
                         {/* Broker Sync (Premium) */}
                         <div className="group relative">
                             <button
-                                className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-bold border border-blue-200 dark:border-blue-900/30 hover:bg-blue-100 transition-all"
-                                onClick={() => handleConnectBroker('zerodha')}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed transition-all"
+                                onClick={() => alert("Direct Broker Sync is a Premium Feature coming in V2. For now, please use the CSV Upload below (it's free!).")}
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l2 2m-2-2l-2-2" />
                                 </svg>
-                                Zerodha Sync
+                                Zerodha
+                                <span className="px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded text-[9px]">PREMIUM</span>
                             </button>
                         </div>
 
                         <div className="group relative">
                             <button
-                                className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg text-xs font-bold border border-emerald-200 dark:border-emerald-900/30 hover:bg-emerald-100 transition-all"
-                                onClick={() => handleConnectBroker('groww')}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 text-slate-400 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-700 cursor-not-allowed transition-all"
+                                onClick={() => alert("Direct Broker Sync is a Premium Feature coming in V2. For now, please use the CSV Upload below (it's free!).")}
                             >
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                     <circle cx="12" cy="12" r="10" /><path d="M8 12h8m-4-4v8" />
                                 </svg>
-                                Groww Sync
+                                Groww
+                                <span className="px-1.5 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded text-[9px]">PREMIUM</span>
                             </button>
                         </div>
 
@@ -712,21 +701,43 @@ export default function PortfolioDashboard() {
                                             <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                                                 <span className="text-xs font-mono text-slate-500">₹</span>
                                                 <input
+                                                    id={`inv-${h.ticker}`}
                                                     type="number"
                                                     defaultValue={h.investment || 100000}
                                                     onBlur={(e) => handleUpdateInvestment(h.ticker, parseInt(e.target.value))}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter') e.target.blur();
+                                                    }}
                                                     className="w-24 bg-transparent border-b border-dashed border-slate-300 focus:border-blue-500 focus:outline-none text-xs font-mono text-slate-900 dark:text-white"
                                                 />
                                             </div>
                                         </td>
                                         <td style={{ textAlign: 'right', verticalAlign: 'middle' }}>
-                                            <button
-                                                className="btn-icon-danger opacity-0 group-hover:opacity-100 transition-opacity"
-                                                onClick={(e) => { e.stopPropagation(); handleRemoveStock(h.ticker); }}
-                                            >
-                                                ✕
-                                            </button>
+                                            <div className="btn-action-group" onClick={(e) => e.stopPropagation()}>
+                                                <button
+                                                    className="btn-action btn-action-edit"
+                                                    onClick={() => document.getElementById(`inv-${h.ticker}`)?.focus()}
+                                                    title="Update Investment"
+                                                >
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    className="btn-action btn-action-delete"
+                                                    onClick={() => handleRemoveStock(h.ticker)}
+                                                    title="Remove from Portfolio"
+                                                >
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                        <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                                        <line x1="10" y1="11" x2="10" y2="17" />
+                                                        <line x1="14" y1="11" x2="14" y2="17" />
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         </td>
+
                                     </tr>
                                 ))}
                             </tbody>

@@ -3028,6 +3028,52 @@
   /* Ensure alignment */
 }
 
+/* ── Heatmap Action Buttons ── */
+.btn-action-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-action {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  transition: all 0.2s var(--ease-emphasized);
+  padding: 0;
+}
+
+.btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-primary);
+}
+
+.btn-action-edit:hover {
+  border-color: #3B82F6;
+  color: #3B82F6;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.btn-action-delete:hover {
+  border-color: #EF4444;
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.btn-action svg {
+  width: 16px;
+  height: 16px;
+}
+
+
 /* ── Grid System (Phase 3.10 - Structural Fix) ── */
 .pf-grid-12 {
   display: grid;
@@ -3150,7 +3196,10 @@
 }
 
 .tooltip-box {
-  position: fixed;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
   width: 220px;
   padding: 12px;
   background: var(--bg-surface-elevated);
@@ -3162,9 +3211,19 @@
   font-weight: 500;
   line-height: 1.5;
   text-align: left;
-  z-index: 9999;
+  z-index: 2000;
   pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--speed-normal) var(--ease-standard),
+    transform var(--speed-normal) var(--ease-standard);
   backdrop-filter: blur(8px);
+}
+
+.tooltip-trigger:hover .tooltip-box {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* Arrow for tooltip */
@@ -3237,4 +3296,52 @@
   margin-top: 4px;
   display: block;
   font-weight: 400;
+}
+
+/* ── Registration Success (Full Page) ── */
+.success-page-full {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-page);
+  padding: 48px 24px;
+  animation: fadeIn 0.8s var(--ease-emphasized);
+  text-align: center;
+}
+
+.heroic-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.heroic-icon-container {
+  font-size: 120px;
+  color: var(--risk-low);
+  margin-bottom: 40px;
+  filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.2));
+}
+
+.heroic-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+}
+
+.heroic-msg {
+  font-size: 22px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto 56px;
+}
+
+.heroic-msg strong {
+  color: var(--text-primary);
+  font-weight: 700;
 }

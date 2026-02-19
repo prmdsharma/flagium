@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
+import RegistrationSuccess from "./pages/RegistrationSuccess";
 import LandingPage from "./pages/public/LandingPage";
 import MethodologyPage from "./pages/public/MethodologyPage";
 import AboutPage from "./pages/public/AboutPage";
@@ -44,6 +45,7 @@ function AppContent() {
       {/* Auth Routes */}
       <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
       <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
+      <Route path="/registration-success" element={<RegistrationSuccess />} />
       <Route path="/verify/:token" element={<VerifyEmail />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />

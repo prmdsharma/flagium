@@ -30,7 +30,7 @@ export default function LoginPage() {
                 navigate("/dashboard");
             } else {
                 await register(email, password, name);
-                setSuccess("Registration successful! We've sent a verification link to your email. Please verify to continue.");
+                navigate("/registration-success");
             }
         } catch (err) {
             setError(err.message || "Authentication failed");

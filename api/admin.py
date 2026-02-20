@@ -105,64 +105,26 @@ def get_sanity_report(current_user: dict = Depends(get_current_user)):
     cursor = conn.cursor(dictionary=True)
 
     try:
-        # 1. Duplicates
-        cursor.execute("""
-            SELECT company_id, year, quarter, COUNT(*) as count 
-            FROM financials 
-            GROUP BY company_id, year, quarter 
-            HAVING count > 1
-        """)
-        duplicates = cursor.fetchall()
-
-        # 2. Missing Data (Companies with 0 records)
-        cursor.execute("""
-            SELECT c.ticker, c.name 
-            FROM companies c 
-            LEFT JOIN financials f ON c.id = f.company_id 
-            WHERE f.id IS NULL
-        """)
-        missing_data = cursor.fetchall()
-
-        # 3. Flag Distribution
-        cursor.execute("SELECT COUNT(*) as count FROM companies")
-        total_companies = cursor.fetchone()["count"]
+        # Fetch the latest automated daily sanity report
+        cursor.execute("SELECT report_data FROM system_reports WHERE report_type = 'daily_sanity'")
+        row = cursor.fetchone()
         
-        cursor.execute("""
-            SELECT flag_name, COUNT(DISTINCT company_id) as companies 
-            FROM flags 
-            GROUP BY flag_name 
-            ORDER BY companies DESC
-        """)
-        flag_stats = cursor.fetchall()
-        for f in flag_stats:
-            f["coverage"] = (f["companies"] / total_companies * 100) if total_companies > 0 else 0
-
-        # 4. Synthesis Discrepancies (Annual vs SUM of Quarters)
-        cursor.execute("""
-            SELECT 
-                f1.company_id, c.ticker, f1.year, 
-                MAX(f1.revenue) as annual_rev, 
-                SUM(f2.revenue) as sum_q_rev
-            FROM financials f1
-            JOIN companies c ON f1.company_id = c.id
-            JOIN financials f2 ON f1.company_id = f2.company_id AND f1.year = f2.year
-            WHERE f1.quarter = 0 AND f2.quarter > 0
-            GROUP BY f1.company_id, f1.year
-            HAVING ABS(MAX(f1.revenue) - SUM(f2.revenue)) > 100
-            LIMIT 50
-        """)
-        discrepancies = cursor.fetchall()
-
+        if row and row["report_data"]:
+            import json
+            data = json.loads(row["report_data"]) if isinstance(row["report_data"], str) else row["report_data"]
+            return data
+            
+        # Fallback if the cron job hasn't run yet
         return {
-            "summary": {
-                "total_duplicates": len(duplicates),
-                "companies_missing_data": len(missing_data),
-                "symmetry_discrepancies": len(discrepancies)
-            },
-            "duplicates": duplicates,
-            "missing_data": missing_data,
-            "flag_stats": flag_stats,
-            "discrepancies": discrepancies
+            "total_anomalies": 0,
+            "details": {
+                "duplicates": [],
+                "missing_data": [],
+                "missing_profit": [],
+                "synthesis_discrepancies": [],
+                "negative_revenue": [],
+                "orphaned_flags": []
+            }
         }
 
     finally:

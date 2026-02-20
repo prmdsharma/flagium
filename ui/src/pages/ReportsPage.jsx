@@ -311,25 +311,42 @@ export default function ReportsPage() {
                     </>
                 ) : (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        {/* Sanity Metrics Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
                             <SanityCard
                                 title="Duplicate Records"
                                 value={sanity.summary.total_duplicates}
                                 status={sanity.summary.total_duplicates > 0 ? 'critical' : 'success'}
-                                subtitle="Financial records with identical periods"
+                                subtitle="Identical periods"
                             />
                             <SanityCard
                                 title="Total Data Gaps"
                                 value={sanity.summary.companies_missing_data}
                                 status={sanity.summary.companies_missing_data > 0 ? 'amber' : 'success'}
-                                subtitle="Companies with 0 financial records"
+                                subtitle="0 financial records"
                             />
                             <SanityCard
                                 title="Symmetry Issues"
                                 value={sanity.summary.symmetry_discrepancies}
                                 status={sanity.summary.symmetry_discrepancies > 0 ? 'amber' : 'success'}
-                                subtitle="Annual != SUM(Quarters) discrepancies"
+                                subtitle="Annual != SUM(Quarters)"
+                            />
+                            <SanityCard
+                                title="Missing Net Profit"
+                                value={sanity.summary.missing_profit_count}
+                                status={sanity.summary.missing_profit_count > 0 ? 'critical' : 'success'}
+                                subtitle="Revenue without profit"
+                            />
+                            <SanityCard
+                                title="Negative Revenue"
+                                value={sanity.summary.negative_revenue_count}
+                                status={sanity.summary.negative_revenue_count > 0 ? 'critical' : 'success'}
+                                subtitle="Revenue < 0"
+                            />
+                            <SanityCard
+                                title="Orphaned Flags"
+                                value={sanity.summary.orphaned_flags_count}
+                                status={sanity.summary.orphaned_flags_count > 0 ? 'amber' : 'success'}
+                                subtitle="Deleted companies"
                             />
                         </div>
 

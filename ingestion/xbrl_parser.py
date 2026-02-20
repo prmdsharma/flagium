@@ -81,6 +81,13 @@ XBRL_TAG_MAP = {
         # Banking taxonomy
         "Income",
     ],
+    # Other income is added to revenue to compute Total Income (matching NSE-reported figures)
+    "other_income": [
+        "OtherIncome",
+        "OtherOperatingIncome",
+        "OtherOperatingRevenues",
+        "MiscellaneousIncome",
+    ],
     "net_profit": [
         "ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates", # Banking headliner
         "ProfitOrLossAttributableToOwnersOfParent", # Standard headliner (Consolidated)
@@ -420,6 +427,10 @@ def _build_records(raw_values, contexts):
             # Logic: If month > 3, year = year + 1. If month <= 3, year = year.
             if dt.month > 3:
                 year = year + 1
+
+        # Total Income = RevenueFromOperations + OtherIncome (matches NSE-reported figures)
+        if "revenue" in fields and "other_income" in fields:
+            fields["revenue"] = (fields["revenue"] or 0) + (fields["other_income"] or 0)
 
         # Compute free_cash_flow if not directly available
         if "free_cash_flow" not in fields and "operating_cash_flow" in fields:

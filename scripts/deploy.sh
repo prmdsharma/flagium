@@ -6,6 +6,8 @@ REMOTE_HOST="80.225.201.34"
 SSH_KEY="~/ocip/ssh-key-2026-02-17.key"
 REMOTE_DIR="~/flagium"
 FE_DIST_DIR="ui/dist"
+PM2_APP_NAME="flagium-api"
+START_CMD="venv/bin/uvicorn api.server:app --host 0.0.0.0 --port 8000"
 
 # 1. Enforce Main Branch
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -50,17 +52,25 @@ rsync -avz --delete -e "ssh -i $SSH_KEY" $FE_DIST_DIR/ $REMOTE_USER@$REMOTE_HOST
 
 # 5. Restart Services on Remote
 echo "🔄 Restarting Remote Services..."
-# Try all likely names and provide verbose feedback
 ssh -i $SSH_KEY $REMOTE_USER@$REMOTE_HOST "
-    echo '--- PM2 Status Before ---';
-    pm2 list;
-    echo '--- Attempting Restart ---';
-    pm2 restart flagium-api || pm2 restart flagium-backend || pm2 restart flagium || pm2 restart backend || pm2 restart all || (echo '⚠️ PM2 restart failed, trying pkill fallback...' && pkill -f uvicorn);
-    sleep 2;
-    echo '--- PM2 Status After ---';
-    pm2 list;
-    echo '--- API Connectivity Check ---';
-    curl -s localhost:8000/api/ping || curl -s localhost:8000/ping || echo '⚠️ Local API check failed';
+    cd $REMOTE_DIR
+    echo '--- PM2 Status Before ---'
+    pm2 list
+    echo '--- Restarting $PM2_APP_NAME ---'
+    if pm2 describe $PM2_APP_NAME > /dev/null 2>&1; then
+        pm2 restart $PM2_APP_NAME
+        echo '✅ PM2 process restarted.'
+    else
+        echo '⚠️  Process not found in PM2, starting fresh...'
+        pm2 start '$START_CMD' --name $PM2_APP_NAME
+        pm2 save
+        echo '✅ PM2 process started and saved.'
+    fi
+    sleep 2
+    echo '--- PM2 Status After ---'
+    pm2 list
+    echo '--- API Connectivity Check ---'
+    curl -s localhost:8000/api/ping || echo '⚠️ Local API check failed'
 "
 
 echo "✅ Deployment Successful!"

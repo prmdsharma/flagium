@@ -195,17 +195,41 @@ def get_company_info(session, ticker):
 
 def get_financial_results(session, ticker, period="Quarterly"):
     """Fetch corporate financial results listing."""
-    url = (
+    results = []
+    
+    # 1. Fetch from new Integrated Filing API
+    new_url = f"{NSE_BASE_URL}/api/NextApi/apiClient/GetQuoteApi?functionName=getIntegratedFilingData&symbol={quote(ticker)}"
+    new_data = session.get_json(new_url)
+    if new_data and isinstance(new_data, list):
+        for item in new_data:
+            # Map new API keys to old structure expected by ingest.py
+            # New format: "31 Dec 2025" -> Old format: "31-Dec-2025"
+            date_str = item.get("gfrQuaterEnded", "").replace(" ", "-")
+            
+            mapped = {
+                "period": "Quarterly",
+                "toDate": date_str,
+                "consolidated": item.get("gfrConsolidated", "Non-Consolidated"),
+                "xbrl": item.get("gfrXbrlFname", ""),
+            }
+            results.append(mapped)
+
+    # 2. Fetch from old Quarterly API
+    old_url = (
         f"{NSE_BASE_URL}/api/corporates-financial-results?"
         f"index=equities&symbol={quote(ticker)}&period={period}"
     )
-    data = session.get_json(url)
-    if data:
-        if isinstance(data, list):
-            return data
-        elif isinstance(data, dict) and "results" in data:
-            return data["results"]
-    return []
+    old_data = session.get_json(old_url)
+    if old_data:
+        old_list = []
+        if isinstance(old_data, list):
+            old_list = old_data
+        elif isinstance(old_data, dict) and "results" in old_data:
+            old_list = old_data["results"]
+            
+        results.extend(old_list)
+
+    return results
 
 
 def download_xbrl_file(session, xbrl_url, save_path):

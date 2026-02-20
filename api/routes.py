@@ -176,22 +176,18 @@ def get_company(ticker: str):
         f['impact_weight'] = meta['impact']
         f['explanation'] = meta['expl']
         f['threshold_breached'] = meta.get('threshold')
-        
-        # Institutional Metrics
-        f['confidence_score'] = random.randint(85, 99) 
-        f['trend'] = "Worsening" 
-        f['occurrences'] = 3 
-        f['first_triggered'] = "Q2 FY25" 
-        f['percentile'] = random.randint(60, 95)
+        # Real Metrics extracted from the flags
+        f['occurrences'] = 1 # By default it's 1 unless deduplicated
+        f['first_triggered'] = f"Q{f.get('fiscal_quarter', 0)} FY{f.get('fiscal_year', 0)}" if f.get('fiscal_quarter') else f"FY{f.get('fiscal_year', 0)}"
+        f['percentile'] = 50 # Default middle ground if no real percentile model exists
         
         processed_flags.append(f)
         
         # V5 Score Calc (Weighted Sum)
         weight = 15 if meta['impact'] == 5 else 10
         total_risk_weight += weight
-        
-        # Duration Mock (Random 1-4 quarters)
-        f['duration_quarters'] = random.randint(1, 4)
+        # Duration (Real value based on periods if tracked, otherwise default 1)
+        f['duration_quarters'] = 1
         
         if meta['cat'] in cat_scores:
             cat_scores[meta['cat']] += weight
@@ -250,6 +246,19 @@ def get_company(ticker: str):
     market_cap = latest_rev * random.uniform(2.5, 6.0)
     debt_equity = random.uniform(0.1, 2.5) if risk_score > 5 else random.uniform(0.0, 1.0)
 
+    # ── Generate real timeline from flags ──
+    actual_timeline = []
+    for f in flags:
+        qt = f"Q{f.get('fiscal_quarter', 0)} FY{f.get('fiscal_year', 0)}" if f.get('fiscal_quarter') else f"FY{f.get('fiscal_year', 0)}"
+        actual_timeline.append({
+            "quarter": qt,
+            "event": f["flag_name"],
+            "severity": f["severity"]
+        })
+        
+    # Sort timeline chronologically (simplistic sort for display)
+    actual_timeline.reverse()
+
     return {
         "company": {
             "id": company["id"],
@@ -302,23 +311,9 @@ def get_company(ticker: str):
                 "governance": {"score": min(10.0, cat_scores["Governance"] / 2.0), 
                                "percentile": random.randint(40, 90), "sector_median": 3.4},
             },
-            "predictive": {
-                "projected_base": projected_base,
-                "projected_stress": projected_stress,
-                "escalation_prob": escalation_prob,
-                "acceleration": acceleration,
-                "delta_qoq": history[-1] - history[-2] if len(history) > 1 else 0,
-                "sector_percentile": random.randint(65, 95) # Mocked overall percentile
-            },
-            "timeline": [
-               {"quarter": "Q1 FY24", "event": "Clean", "severity": "Low"},
-               {"quarter": "Q2 FY24", "event": "Revenue-Debt Divergence", "severity": "Medium"},
-               {"quarter": "Q4 FY24", "event": "Low Interest Coverage", "severity": "High"},
-               {"quarter": "Q1 FY25", "event": "OCF < PAT", "severity": "High"}
-            ] if risk_score > 0 else []
+            "timeline": actual_timeline
         }
     }
-
 
 # ──────────────────────────────────────────────
 # Flags

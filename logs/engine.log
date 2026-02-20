@@ -1,0 +1,7 @@
+[2026-02-20 23:59:12], [INFO], [ENGINE], Running 5 flags on 1 companies for 1 quarter(s)
+[2026-02-20 23:59:12], [INFO], [ENGINE], Target periods: [(2026, 4)]
+[2026-02-20 23:59:12], [INFO], [TCS], Analyzing TCS
+[2026-02-20 23:59:12], [DEBUG], [TCS], No flags detected for TCS
+[2026-02-20 23:59:12], [INFO], [ENGINE], ============================================================
+[2026-02-20 23:59:12], [INFO], [ENGINE], Finished. Total flags detected: 0
+[2026-02-20 23:59:12], [INFO], [ENGINE], ============================================================

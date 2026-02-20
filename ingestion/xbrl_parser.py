@@ -382,8 +382,9 @@ def _build_records(raw_values, contexts):
             if key not in records_map:
                 records_map[key] = {}
             
-            # Add field (First match in XBRL_TAG_MAP wins)
-            if v["field"] not in records_map[key]:
+            # Add field (First match in XBRL_TAG_MAP wins, unless existing is 0 and new is not)
+            existing_val = records_map[key].get(v["field"])
+            if existing_val is None or (existing_val == 0 and v["value"] != 0):
                 records_map[key][v["field"]] = v["value"]
             
         elif ctx["type"] == "instant":
@@ -396,7 +397,8 @@ def _build_records(raw_values, contexts):
         for is_annual in [True, False]:
             key = (date, is_annual)
             if key in records_map:
-                if v["field"] not in records_map[key]:
+                existing_val = records_map[key].get(v["field"])
+                if existing_val is None or (existing_val == 0 and v["value"] != 0):
                     records_map[key][v["field"]] = v["value"]
 
     # Build final records list

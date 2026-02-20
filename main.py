@@ -10,13 +10,14 @@ Usage:
 
 Options:
     --keep    Keep downloaded XBRL files (do not delete after ingestion)
+    --delta   Delta mode: only fetch files newer than what's in the DB
 """
 
 import sys
 from db.connection import get_connection
 
 
-def cmd_ingest(tickers=None, keep_files=False):
+def cmd_ingest(tickers=None, keep_files=False, delta_mode=False, limit=None, offset=0):
     """Run NSE data ingestion."""
     from ingestion.ingest import ingest_all
 
@@ -25,7 +26,7 @@ def cmd_ingest(tickers=None, keep_files=False):
     else:
         print("Ingesting data for all Nifty 50 companies...")
 
-    ingest_all(tickers=tickers if tickers else None, keep_files=keep_files)
+    ingest_all(tickers=tickers if tickers else None, keep_files=keep_files, delta_mode=delta_mode, limit=limit, offset=offset)
 
 
 def cmd_ingest_file(file_path, ticker):
@@ -93,12 +94,39 @@ def main():
     if command == "ingest":
         args = sys.argv[2:]
         keep_files = False
-        if "--keep" in args:
-            keep_files = True
-            args.remove("--keep")
+        delta_mode = False
+        limit = None
+        offset = 0
         
-        tickers = args if args else None
-        cmd_ingest(tickers, keep_files=keep_files)
+        # Parse arguments manually to handle --limit and --offset
+        filtered_args = []
+        skip_next = 0
+        for i, arg in enumerate(args):
+            if skip_next > 0:
+                skip_next -= 1
+                continue
+            
+            if arg == "--keep":
+                keep_files = True
+            elif arg == "--delta":
+                delta_mode = True
+            elif arg == "--limit" and i + 1 < len(args):
+                try:
+                    limit = int(args[i+1])
+                    skip_next = 1
+                except ValueError:
+                    filtered_args.append(arg)
+            elif arg == "--offset" and i + 1 < len(args):
+                try:
+                    offset = int(args[i+1])
+                    skip_next = 1
+                except ValueError:
+                    filtered_args.append(arg)
+            else:
+                filtered_args.append(arg)
+        
+        tickers = filtered_args if filtered_args else None
+        cmd_ingest(tickers, keep_files=keep_files, delta_mode=delta_mode, limit=limit, offset=offset)
 
     elif command == "ingest-file":
         if len(sys.argv) < 4:

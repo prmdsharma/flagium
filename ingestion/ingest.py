@@ -13,6 +13,9 @@ Coordinates the full data ingestion pipeline:
 import os
 import sys
 
+import random
+import time
+import threading
 from ingestion.nse_fetcher import (
     NSESession, get_company_info, get_financial_results,
     download_xbrl_file, fetch_nifty50_tickers, fetch_nifty500_tickers
@@ -35,8 +38,12 @@ from db.utils import update_job_status
 # Directory to store downloaded XBRL files
 XBRL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "xbrl")
 
+# Memory Safety: Limit concurrent XBRL parsing (very memory intensive)
+# Especially for the 1GB production server.
+PARSE_SEMAPHORE = threading.Semaphore(2)
 
-def ingest_company(session, conn, ticker, download_dir=None, keep_files=False):
+
+def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, delta_mode=False):
     """Ingest financial data for a single company.
 
     Pipeline:
@@ -159,6 +166,24 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False):
         result["status"] = "no_filings"
         return result
 
+    # Step 2: Delta Checkout (Skip existing data)
+    latest_db = None
+    if delta_mode:
+        latest_db = _get_latest_db_period(conn, ticker)
+        if latest_db:
+            print(f"  📅 Delta Mode: Latest in DB is FY{latest_db['year']} Q{latest_db['quarter']}")
+            
+            initial_count = len(filings)
+            filings = [f for f in filings if _is_filing_new(f, latest_db)]
+            skipped = initial_count - len(filings)
+            if skipped > 0:
+                print(f"  ⏭️  Skipped {skipped} old filing(s) already in DB")
+            
+            if not filings:
+                print(f"  ✅ Ticker {ticker} is already up-to-date")
+                result["status"] = "success"
+                return result
+
     import hashlib
     
     # Step 3: Download XBRL files
@@ -202,20 +227,21 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False):
 
         result["xbrl_downloaded"] += 1
 
-        # Step 4: Parse XBRL
-        records = parse_xbrl_file(save_path)
-        if records:
-            # Detect consolidation status from filing metadata
-            is_cons = False
-            cons_field = str(filing.get("consolidated", "")).lower()
-            if "consolidated" in cons_field and "non" not in cons_field:
-                is_cons = True
-            
-            for r in records:
-                r["is_consolidated"] = is_cons
+        # Step 4: Parse XBRL (with memory guard)
+        with PARSE_SEMAPHORE:
+            records = parse_xbrl_file(save_path)
+            if records:
+                # Detect consolidation status from filing metadata
+                is_cons = False
+                cons_field = str(filing.get("consolidated", "")).lower()
+                if "consolidated" in cons_field and "non" not in cons_field:
+                    is_cons = True
                 
-            all_records.extend(records)
-            print(f"  📊 Parsed {len(records)} record(s) from {filename} (Consolidated: {is_cons})")
+                for r in records:
+                    r["is_consolidated"] = is_cons
+                    
+                all_records.extend(records)
+                print(f"  📊 Parsed {len(records)} record(s) from {filename} (Consolidated: {is_cons})")
 
     result["records_parsed"] = len(all_records)
 
@@ -288,13 +314,15 @@ def _is_consolidated(filing):
     return False
 
 
-def ingest_all(tickers=None, limit=None, keep_files=False):
+def ingest_all(tickers=None, limit=None, offset=0, keep_files=False, delta_mode=False):
     """Ingest financial data for multiple companies.
 
     Args:
         tickers: List of tickers. Defaults to Nifty 500.
-        limit: Max companies to process (useful for testing).
+        limit: Max companies to process.
+        offset: Number of companies to skip.
         keep_files: If True, do not delete XBRL files after ingestion.
+        delta_mode: If True, only fetch data newer than what's in the DB.
 
     Returns:
         List of result dicts (one per company).
@@ -305,6 +333,10 @@ def ingest_all(tickers=None, limit=None, keep_files=False):
         if not tickers:
             print("  ⚠️  Nifty 500 fetch failed, falling back to Nifty 50.")
             tickers = fetch_nifty50_tickers()
+
+    if offset:
+        print(f"  ⏩ Skipping first {offset} companies.")
+        tickers = tickers[offset:]
 
     if limit:
         print(f"  🛑 Limiting ingestion to {limit} companies.")
@@ -323,9 +355,16 @@ def ingest_all(tickers=None, limit=None, keep_files=False):
 
     try:
         for i, ticker in enumerate(tickers, 1):
-            print(f"\n[{i}/{len(tickers)}]", end="")
+            # Progress update in terminal
+            print(f"\n[{i}/{len(tickers)}] ", end="")
+            
+            # Rate limiting / Jitter (0.5s to 2.0s) to avoid IP blocking
+            if i > 1:
+                delay = random.uniform(0.5, 2.0)
+                time.sleep(delay)
+
             try:
-                result = ingest_company(session, conn, ticker, keep_files=keep_files)
+                result = ingest_company(session, conn, ticker, keep_files=keep_files, delta_mode=delta_mode)
                 results.append(result)
             except Exception as e:
                 print(f"\n❌ Fatal error for {ticker}: {e}")
@@ -334,6 +373,11 @@ def ingest_all(tickers=None, limit=None, keep_files=False):
                     "status": "error",
                     "error": str(e),
                 })
+            
+            # Periodically update job status with progress message
+            if i % 10 == 0 or i == len(tickers):
+                progress = int((i / len(tickers)) * 100)
+                update_job_status("Ingestion Job", "running", f"Ingestion {progress}% complete ({i}/{len(tickers)} companies)")
 
         success_count = sum(1 for r in results if r.get("status") == "success")
         update_job_status("Ingestion Job", "completed", f"Processed {len(tickers)} companies. Success: {success_count}")
@@ -412,11 +456,83 @@ def _extract_xbrl_link(filing):
 
 def _extract_period(filing):
     """Extract period string from a filing for filename purposes."""
-    for key in ["toDate", "period", "periodEnded", "to_date"]:
+    for key in ["financialResultEnded", "toDate", "period", "periodEnded", "to_date"]:
         val = filing.get(key)
         if val:
             return str(val).replace("/", "-").replace(" ", "_")
     return "unknown"
+
+
+def _get_latest_db_period(conn, ticker):
+    """Retrieve the latest year and quarter currently stored in DB for a ticker."""
+    cursor = conn.cursor()
+    # Note: Annual reports have quarter=0, so (2024, 0) > (2023, 4)
+    # We order by year DESC, then quarter DESC
+    query = """
+        SELECT f.year, f.quarter 
+        FROM financials f
+        JOIN companies c ON c.id = f.company_id
+        WHERE c.ticker = %s
+        ORDER BY f.year DESC, f.quarter DESC
+        LIMIT 1
+    """
+    try:
+        cursor.execute(query, (ticker,))
+        row = cursor.fetchone()
+        if row:
+            return {"year": row[0], "quarter": row[1] or 0}
+    except Exception as e:
+        print(f"  ⚠️ DB Check error for {ticker}: {e}")
+    finally:
+        cursor.close()
+    return None
+
+
+def _is_filing_new(filing, latest_db):
+    """Boolean check if filing is newer than what we have in DB."""
+    if not latest_db:
+        return True
+        
+    period_str = _extract_period(filing)
+    if period_str == "unknown":
+        return True
+        
+    # Standard format is "31-Mar-2024" or "31-Dec-2023"
+    try:
+        parts = period_str.split("-")
+        if len(parts) >= 3:
+            day, month_str, year_str = parts[0], parts[1], parts[2]
+            f_year = int(year_str)
+            
+            # Map month to quarter
+            # Mar -> Q4 or Annual (0), Jun -> Q1, Sep -> Q2, Dec -> Q3
+            month_map = {
+                "Jan": 4, "Feb": 4, "Mar": 4, # Usually Q4/Annual
+                "Apr": 1, "May": 1, "Jun": 1,
+                "Jul": 2, "Aug": 2, "Sep": 2,
+                "Oct": 3, "Nov": 3, "Dec": 3
+            }
+            f_quarter = month_map.get(month_str[:3].capitalize(), 0)
+            
+            # Some filings are explicit about being Annual
+            is_annual = "annual" in str(filing.get("period", "")).lower()
+            if is_annual:
+                f_quarter = 0 # Annual is 0 in our schema
+            
+            # Compare
+            if f_year > latest_db["year"]:
+                return True
+            if f_year == latest_db["year"]:
+                # If DB has Q4(4) and filing is Annual(0), we consider Annual(0) as newer/same but worth getting
+                # Correct logic: if DB has (year, quarter), and filing is (year, f_quarter)
+                # Annual (0) is special. Usually it's the final version of Q4.
+                if f_quarter == 0 and latest_db["quarter"] > 0:
+                    return True # Upgrade Q data to Annual
+                return f_quarter > latest_db["quarter"]
+    except Exception:
+        return True # On parse error, assume it's new
+        
+    return False
 
 
 def _deduplicate_records(records):

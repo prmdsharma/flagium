@@ -205,8 +205,11 @@ def fetch_nifty500_tickers(session=None):
         import csv
         import io
         
+        if not isinstance(csv_content, str):
+            print("  ⚠️  NSE 500 CSV content is not a string")
+            return []
+
         tickers = []
-        # Skip header logic handled by DictReader
         reader = csv.DictReader(io.StringIO(csv_content))
         
         for row in reader:
@@ -227,6 +230,56 @@ def fetch_nifty500_tickers(session=None):
 
     except Exception as e:
         print(f"  ❌ Error fetching Nifty 500: {e}")
+        return []
+        if local_session:
+            session.close()
+
+
+def fetch_equity_tickers(session=None):
+    """Fetch all listed equity tickers from NSE via the official master CSV.
+
+    Returns:
+        List of tickers (e.g. ['RELIANCE', 'TCS', ...])
+    """
+    # Using archives URL as it's more stable for raw CSV access
+    url = "https://archives.nseindia.com/content/equities/EQUITY_L.csv"
+    print(f"  🌍 Fetching full NSE Equity list from {url}...")
+
+    local_session = False
+    if not session:
+        session = NSESession()
+        local_session = True
+
+    try:
+        csv_content = session._curl(url)
+        if not csv_content or not isinstance(csv_content, str) or "SYMBOL" not in csv_content.upper():
+            print("  ⚠️  Failed to fetch NSE Equity CSV (or blocked)")
+            return []
+
+        import csv
+        import io
+        
+        tickers = []
+        reader = csv.DictReader(io.StringIO(csv_content))
+        
+        for row in reader:
+            # The column name in EQUITY_L.csv is "SYMBOL"
+            symbol = row.get("SYMBOL") or row.get("symbol")
+            if symbol:
+                symbol = symbol.strip()
+                # Skip demerged/suspended if needed, but for now we want coverage
+                if symbol == "TATAMOTORS": continue
+                tickers.append(symbol)
+        
+        # Ensure replacements are there
+        if "TMPV" not in tickers: tickers.append("TMPV")
+        if "TMCV" not in tickers: tickers.append("TMCV")
+        
+        print(f"  ✅ Fetched {len(tickers)} tickers from NSE Equity Master")
+        return sorted(tickers)
+
+    except Exception as e:
+        print(f"  ❌ Error fetching NSE Equity Master: {e}")
         return []
     finally:
         if local_session:

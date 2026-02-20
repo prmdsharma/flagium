@@ -18,7 +18,7 @@ import time
 import threading
 from ingestion.nse_fetcher import (
     NSESession, get_company_info, get_financial_results,
-    download_xbrl_file, fetch_nifty50_tickers, fetch_nifty500_tickers
+    download_xbrl_file, fetch_nifty50_tickers, fetch_total_market_tickers
 )
 from ingestion.bse_fetcher import (
     BSESession, get_bse_scrip_code, get_financial_results_bse,
@@ -368,7 +368,7 @@ def ingest_all(tickers=None, limit=None, offset=0, keep_files=False, delta_mode=
     """Ingest financial data for multiple companies.
 
     Args:
-        tickers: List of tickers. Defaults to Nifty 500.
+        tickers: List of tickers. Defaults to Nifty Total Market (750).
         limit: Max companies to process.
         offset: Number of companies to skip.
         keep_files: If True, do not delete XBRL files after ingestion.
@@ -378,10 +378,10 @@ def ingest_all(tickers=None, limit=None, offset=0, keep_files=False, delta_mode=
         List of result dicts (one per company).
     """
     if tickers is None:
-        # Default to Nifty 500
-        tickers = fetch_nifty500_tickers()
+        # Default to Nifty Total Market (750)
+        tickers = fetch_total_market_tickers()
         if not tickers:
-            print("  ⚠️  Nifty 500 fetch failed, falling back to Nifty 50.")
+            print("  ⚠️  Nifty Total Market fetch failed, falling back to Nifty 50.")
             tickers = fetch_nifty50_tickers()
 
     if offset:

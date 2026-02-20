@@ -244,10 +244,10 @@ def fetch_nifty50_tickers():
     return NIFTY50_TICKERS.copy()
 
 
-def fetch_nifty500_tickers(session=None):
-    """Fetch Nifty 500 tickers from NiftyIndices CSV."""
-    url = "https://www.niftyindices.com/IndexConstituent/ind_nifty500list.csv"
-    _logger.info(f"Fetching Nifty 500 list from {url}")
+def fetch_total_market_tickers(session=None):
+    """Fetch Nifty Total Market (750) tickers from NiftyIndices CSV."""
+    url = "https://www.niftyindices.com/IndexConstituent/ind_niftytotalmarket_list.csv"
+    _logger.info(f"Fetching Nifty Total Market list from {url}")
 
     local_session = False
     if not session:
@@ -257,7 +257,7 @@ def fetch_nifty500_tickers(session=None):
     try:
         csv_content = session._curl(url)
         if not csv_content or "Symbol" not in csv_content:
-            _logger.warning("Failed to fetch Nifty 500 CSV (or blocked)")
+            _logger.warning("Failed to fetch Nifty Total Market CSV (or blocked)")
             return []
 
         import csv
@@ -283,11 +283,11 @@ def fetch_nifty500_tickers(session=None):
         if "TMPV" not in tickers: tickers.append("TMPV")
         if "TMCV" not in tickers: tickers.append("TMCV")
         
-        _logger.info(f"Fetched {len(tickers)} tickers from Nifty 500 (with Tata demerger logic)")
+        _logger.info(f"Fetched {len(tickers)} tickers from Nifty Total Market (with Tata demerger logic)")
         return tickers
 
     except Exception as e:
-        _logger.error(f"Error fetching Nifty 500: {e}")
+        _logger.error(f"Error fetching Nifty Total Market: {e}")
         return []
         if local_session:
             session.close()

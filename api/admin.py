@@ -109,22 +109,48 @@ def get_sanity_report(current_user: dict = Depends(get_current_user)):
         cursor.execute("SELECT report_data FROM system_reports WHERE report_type = 'daily_sanity'")
         row = cursor.fetchone()
         
+        daily_anomalies = {
+            "duplicates": [],
+            "missing_data": [],
+            "missing_profit": [],
+            "synthesis_discrepancies": [],
+            "negative_revenue": [],
+            "orphaned_flags": []
+        }
+        
         if row and row["report_data"]:
             import json
-            data = json.loads(row["report_data"]) if isinstance(row["report_data"], str) else row["report_data"]
-            return data
-            
-        # Fallback if the cron job hasn't run yet
+            daily_data = json.loads(row["report_data"]) if isinstance(row["report_data"], str) else row["report_data"]
+            if "details" in daily_data:
+                for k in daily_anomalies:
+                    daily_anomalies[k] = daily_data["details"].get(k, [])
+
+        # Flag Distribution (Used to render the heatmap)
+        cursor.execute("SELECT COUNT(*) as count FROM companies")
+        total_companies = cursor.fetchone()["count"]
+        
+        cursor.execute("""
+            SELECT flag_name, COUNT(DISTINCT company_id) as companies 
+            FROM flags 
+            GROUP BY flag_name 
+            ORDER BY companies DESC
+        """)
+        flag_stats = cursor.fetchall()
+        for f in flag_stats:
+            f["coverage"] = (f["companies"] / total_companies * 100) if total_companies > 0 else 0
+
+        # Construct the exact payload expected by ReportsPage.jsx
         return {
-            "total_anomalies": 0,
-            "details": {
-                "duplicates": [],
-                "missing_data": [],
-                "missing_profit": [],
-                "synthesis_discrepancies": [],
-                "negative_revenue": [],
-                "orphaned_flags": []
-            }
+            "summary": {
+                "total_duplicates": len(daily_anomalies["duplicates"]),
+                "companies_missing_data": len(daily_anomalies["missing_data"]),
+                "symmetry_discrepancies": len(daily_anomalies["synthesis_discrepancies"]),
+                "missing_profit_count": len(daily_anomalies["missing_profit"]),
+                "negative_revenue_count": len(daily_anomalies["negative_revenue"]),
+                "orphaned_flags_count": len(daily_anomalies["orphaned_flags"])
+            },
+            "discrepancies": daily_anomalies["synthesis_discrepancies"],
+            "flag_stats": flag_stats
         }
 
     finally:

@@ -4,17 +4,19 @@ Flagium AI — Main Entry Point
 CLI tool for the Flagium AI financial risk detection engine.
 
 Usage:
-    python main.py ingest                     # Ingest all Nifty 50 companies
-    python main.py ingest RELIANCE TCS        # Ingest specific companies
-    python main.py ingest-file <path> TICKER  # Ingest from local XBRL file
-    python main.py status                     # Show DB status
+    python main.py ingest [--keep] [TICKERS...]  # Ingest Nifty 50 or specific tickers
+    python main.py ingest-file <path> TICKER     # Ingest from local XBRL file
+    python main.py status                        # Show DB status
+
+Options:
+    --keep    Keep downloaded XBRL files (do not delete after ingestion)
 """
 
 import sys
 from db.connection import get_connection
 
 
-def cmd_ingest(tickers=None):
+def cmd_ingest(tickers=None, keep_files=False):
     """Run NSE data ingestion."""
     from ingestion.ingest import ingest_all
 
@@ -23,7 +25,7 @@ def cmd_ingest(tickers=None):
     else:
         print("Ingesting data for all Nifty 50 companies...")
 
-    ingest_all(tickers=tickers if tickers else None)
+    ingest_all(tickers=tickers if tickers else None, keep_files=keep_files)
 
 
 def cmd_ingest_file(file_path, ticker):
@@ -89,8 +91,14 @@ def main():
     command = sys.argv[1].lower()
 
     if command == "ingest":
-        tickers = sys.argv[2:] if len(sys.argv) > 2 else None
-        cmd_ingest(tickers)
+        args = sys.argv[2:]
+        keep_files = False
+        if "--keep" in args:
+            keep_files = True
+            args.remove("--keep")
+        
+        tickers = args if args else None
+        cmd_ingest(tickers, keep_files=keep_files)
 
     elif command == "ingest-file":
         if len(sys.argv) < 4:

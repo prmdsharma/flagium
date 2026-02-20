@@ -36,7 +36,7 @@ from db.utils import update_job_status
 XBRL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "xbrl")
 
 
-def ingest_company(session, conn, ticker, download_dir=None):
+def ingest_company(session, conn, ticker, download_dir=None, keep_files=False):
     """Ingest financial data for a single company.
 
     Pipeline:
@@ -45,12 +45,14 @@ def ingest_company(session, conn, ticker, download_dir=None):
         3. Download XBRL files
         4. Parse XBRL
         5. Save to database
+        6. Cleanup XBRL files (optional)
 
     Args:
         session: Active NSESession.
         conn: Active MySQL connection.
         ticker: Stock ticker.
         download_dir: Directory to save XBRL files. Defaults to data/xbrl/.
+        keep_files: If True, do not delete XBRL files after ingestion.
 
     Returns:
         dict with ingestion results.
@@ -240,20 +242,23 @@ def ingest_company(session, conn, ticker, download_dir=None):
         for err in db_result["errors"]:
             print(f"  ❌ {err}")
 
-    # Step 6: Cleanup XBRL files (Debugging Done)
-    # if result["status"] == "success":
-    #     for filing in filings:
-    #         xbrl_link = _extract_xbrl_link(filing)
-    #         if not xbrl_link:
-    #             continue
-    #         period_str = _extract_period(filing)
-    #         link_hash = hashlib.md5(xbrl_link.encode("utf-8")).hexdigest()[:6]
-    #         filename = f"{ticker}_{period_str}_{link_hash}.xml"
-    #         save_path = os.path.join(download_dir, filename)
-    #         if os.path.exists(save_path):
-    #             os.remove(save_path)
-
-    # Step 7: Backfill Annual PBT from Q4 if missing
+    # Step 6: Cleanup XBRL files
+    if not keep_files and result["status"] in ("success", "partial"):
+        import hashlib
+        for filing in filings:
+            xbrl_link = _extract_xbrl_link(filing)
+            if not xbrl_link:
+                continue
+            period_str = _extract_period(filing)
+            link_hash = hashlib.md5(xbrl_link.encode("utf-8")).hexdigest()[:6]
+            filename = f"{ticker}_{period_str}_{link_hash}.xml"
+            save_path = os.path.join(download_dir, filename)
+            if os.path.exists(save_path):
+                try:
+                    os.remove(save_path)
+                except Exception as e:
+                    print(f"  ⚠️  Failed to cleanup {filename}: {e}")
+        print(f"  ✨ Cleaned up {len(filings)} XBRL file(s)")
     _backfill_annual_pbt(conn, ticker)
 
     return result
@@ -283,12 +288,13 @@ def _is_consolidated(filing):
     return False
 
 
-def ingest_all(tickers=None, limit=None):
+def ingest_all(tickers=None, limit=None, keep_files=False):
     """Ingest financial data for multiple companies.
 
     Args:
         tickers: List of tickers. Defaults to Nifty 500.
         limit: Max companies to process (useful for testing).
+        keep_files: If True, do not delete XBRL files after ingestion.
 
     Returns:
         List of result dicts (one per company).
@@ -319,7 +325,7 @@ def ingest_all(tickers=None, limit=None):
         for i, ticker in enumerate(tickers, 1):
             print(f"\n[{i}/{len(tickers)}]", end="")
             try:
-                result = ingest_company(session, conn, ticker)
+                result = ingest_company(session, conn, ticker, keep_files=keep_files)
                 results.append(result)
             except Exception as e:
                 print(f"\n❌ Fatal error for {ticker}: {e}")

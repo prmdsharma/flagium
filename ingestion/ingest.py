@@ -12,7 +12,7 @@ Coordinates the full data ingestion pipeline:
 
 import os
 import sys
-
+import logging
 import random
 import time
 import threading
@@ -20,11 +20,6 @@ from ingestion.nse_fetcher import (
     NSESession, get_company_info, get_financial_results,
     download_xbrl_file, fetch_nifty50_tickers, fetch_nifty500_tickers
 )
-
-# ... (omitted lines)
-
-
-
 from ingestion.bse_fetcher import (
     BSESession, get_bse_scrip_code, get_financial_results_bse,
     download_xbrl_from_bse, scrape_announcement_feed
@@ -33,6 +28,68 @@ from ingestion.xbrl_parser import parse_xbrl_file, parse_xbrl_content
 from ingestion.db_writer import save_financials, ensure_company
 from db.connection import get_connection
 from db.utils import update_job_status
+
+
+# ──────────────────────────────────────────────
+# Logging Setup
+# ──────────────────────────────────────────────
+
+LOG_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
+_LOG_FORMAT = "[%(asctime)s], [%(levelname)s], [%(ticker)s], %(message)s"
+_LOG_DATEFMT = "%Y-%m-%d %H:%M:%S"
+
+
+class _TickerFilter(logging.Filter):
+    """Injects a 'ticker' field into every log record."""
+    def __init__(self, ticker: str):
+        super().__init__()
+        self.ticker = ticker
+
+    def filter(self, record):
+        record.ticker = self.ticker
+        return True
+
+
+def _get_ingestion_logger(ticker: str = "-") -> logging.Logger:
+    """Returns a logger configured for the ingestion module.
+
+    Format: [Timestamp], [Level], [Ticker], [Message]
+    Writes to both stdout and logs/ingestion.log.
+    """
+    logger_name = f"flagium.ingestion.{ticker}"
+    logger = logging.getLogger(logger_name)
+
+    # Only configure once per ticker
+    if logger.handlers:
+        return logger
+
+    logger.setLevel(logging.DEBUG)
+    ticker_filter = _TickerFilter(ticker)
+    formatter = logging.Formatter(_LOG_FORMAT, datefmt=_LOG_DATEFMT)
+
+    # Console handler
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(formatter)
+    ch.addFilter(ticker_filter)
+    logger.addHandler(ch)
+
+    # File handler — appends to logs/ingestion.log
+    log_file = os.path.join(LOG_DIR, "ingestion.log")
+    fh = logging.FileHandler(log_file, encoding="utf-8")
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(formatter)
+    fh.addFilter(ticker_filter)
+    logger.addHandler(fh)
+
+    logger.propagate = False
+    return logger
+
+
+# Module-level logger (used by ingest_all and helpers)
+_logger = _get_ingestion_logger()
 
 
 # Directory to store downloaded XBRL files
@@ -80,9 +137,10 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
     }
 
     # Step 1: Fetch company info + financial filings
-    print(f"\n{'─' * 50}")
-    print(f"📊 Processing {ticker}")
-    print(f"{'─' * 50}")
+    logger = _get_ingestion_logger(ticker)
+    logger.info(f"{'─' * 50}")
+    logger.info(f"Processing {ticker}")
+    logger.info(f"{'─' * 50}")
 
     company_info = None
     filings = []
@@ -91,7 +149,7 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
     if session.is_available:
         company_info = get_company_info(session, ticker)
         if company_info:
-            print(f"  ✅ Company (NSE): {company_info.get('name', ticker)}")
+            logger.info(f"Company (NSE): {company_info.get('name', ticker)}")
 
         for period in ["Annual", "Quarterly"]:
             new_filings = get_financial_results(session, ticker, period=period)
@@ -99,16 +157,16 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
                 # Filter for consolidated only
                 cons_filings = [f for f in new_filings if _is_consolidated(f)]
                 if cons_filings:
-                    print(f"  📄 Found {len(cons_filings)} consolidated {period.lower()} filing(s) from NSE")
+                    logger.info(f"Found {len(cons_filings)} consolidated {period.lower()} filing(s) from NSE")
                     filings.extend(cons_filings)
                 else:
-                    print(f"  ⏭️  Skipping {len(new_filings)} standalone {period.lower()} filing(s) from NSE")
+                    logger.info(f"Skipping {len(new_filings)} standalone {period.lower()} filing(s) from NSE")
 
     # BSE fallback (or primary when NSE is blocked)
     if not filings:
         bse_code = get_bse_scrip_code(ticker)
         if bse_code:
-            print(f"  🔄 Trying BSE (scrip: {bse_code})...")
+            logger.info(f"Trying BSE (scrip: {bse_code})")
             bse_session = BSESession()
 
             try:
@@ -123,14 +181,14 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
                     bse_filings = [f for f in bse_filings_raw if _is_consolidated(f)]
                     if bse_filings:
                         filings = bse_filings
-                        print(f"  📄 Found {len(filings)} consolidated filing(s) from BSE")
+                        logger.info(f"Found {len(filings)} consolidated filing(s) from BSE")
                     else:
-                        print(f"  ⏭️  Skipping {len(bse_filings_raw)} standalone filing(s) from BSE")
+                        logger.info(f"Skipping {len(bse_filings_raw)} standalone filing(s) from BSE")
                 else:
                     # Try direct XBRL download from BSE
                     xbrl_path = os.path.join(download_dir, f"{ticker}_bse_latest.xml")
                     if download_xbrl_from_bse(bse_session, bse_code, xbrl_path):
-                        print(f"  ⬇️  Downloaded XBRL from BSE")
+                        logger.info("Downloaded XBRL from BSE")
                         records = parse_xbrl_file(xbrl_path)
                         if records:
                             deduped = _deduplicate_records(records)
@@ -139,7 +197,7 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
                             db_result = save_financials(conn, ticker, deduped, company_info)
                             result["db_result"] = db_result
                             result["status"] = "success" if not db_result["errors"] else "partial"
-                            print(f"  💾 DB: {db_result['inserted']} inserted, {db_result['updated']} updated")
+                            logger.info(f"DB: {db_result['inserted']} inserted, {db_result['updated']} updated")
                             return result
 
                 # Check for revisions in BSE announcements
@@ -147,13 +205,13 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
                     announcements = scrape_announcement_feed(bse_session, [bse_code])
                     revisions = [a for a in announcements if a.get("is_revision")]
                     if revisions:
-                        print(f"  🔄 Found {len(revisions)} revision(s) in BSE announcements")
+                        logger.info(f"Found {len(revisions)} revision(s) in BSE announcements")
                 except Exception:
                     pass  # Announcement scraping is best-effort
             finally:
                 bse_session.close()
         else:
-            print(f"  ⚠️  No BSE scrip code mapped for {ticker}")
+            logger.warning(f"No BSE scrip code mapped for {ticker}")
 
     if not company_info:
         company_info = {"name": ticker, "ticker": ticker}
@@ -162,7 +220,7 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
     result["filings_found"] = len(filings)
 
     if not filings:
-        print(f"  ⚠️  No filings found on NSE or BSE for {ticker}")
+        logger.warning(f"No filings found on NSE or BSE for {ticker}")
         result["status"] = "no_filings"
         return result
 
@@ -171,16 +229,16 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
     if delta_mode:
         latest_db = _get_latest_db_period(conn, ticker)
         if latest_db:
-            print(f"  📅 Delta Mode: Latest in DB is FY{latest_db['year']} Q{latest_db['quarter']}")
-            
+            logger.info(f"Delta mode: latest in DB is FY{latest_db['year']} Q{latest_db['quarter']}")
+
             initial_count = len(filings)
             filings = [f for f in filings if _is_filing_new(f, latest_db)]
             skipped = initial_count - len(filings)
             if skipped > 0:
-                print(f"  ⏭️  Skipped {skipped} old filing(s) already in DB")
-            
+                logger.info(f"Skipped {skipped} old filing(s) already in DB")
+
             if not filings:
-                print(f"  ✅ Ticker {ticker} is already up-to-date")
+                logger.info(f"Ticker {ticker} is already up-to-date")
                 result["status"] = "success"
                 return result
 
@@ -210,19 +268,11 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
 
         # Skip if already downloaded
         if os.path.exists(save_path):
-            print(f"  📁 Using cached: {filename}")
+            logger.debug(f"Using cached: {filename}")
         else:
-            print(f"  ⬇️  Downloading: {filename}")
+            logger.info(f"Downloading: {filename}")
             if not download_xbrl_file(session, xbrl_link, save_path):
-                print(f"  ❌ Failed to download {filename}")
-                # The user's provided snippet seems to indicate a cleanup here,
-                # but the original code does not have it.
-                # Assuming the intent was to comment out a potential cleanup
-                # that might have been here or was intended to be here.
-                # Cleanup: Delete the XML file after success
-                # os.remove(xml_path)
-                # print(f"✨ Cleaned up: {os.path.basename(xml_path)}")
-                pass # This pass is from the user's snippet, keeping it.
+                logger.error(f"Failed to download {filename}")
                 continue
 
         result["xbrl_downloaded"] += 1
@@ -241,18 +291,18 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
                     r["is_consolidated"] = is_cons
                     
                 all_records.extend(records)
-                print(f"  📊 Parsed {len(records)} record(s) from {filename} (Consolidated: {is_cons})")
+                logger.info(f"Parsed {len(records)} record(s) from {filename} (Consolidated: {is_cons})")
 
     result["records_parsed"] = len(all_records)
 
     if not all_records:
-        print(f"  ⚠️  No financial records parsed for {ticker}")
+        logger.warning(f"No financial records parsed for {ticker}")
         result["status"] = "no_records"
         return result
 
     # Deduplicate by year (keep most recent)
     deduped = _deduplicate_records(all_records)
-    print(f"  📊 {len(deduped)} unique year(s) of data")
+    logger.info(f"{len(deduped)} unique period(s) of data after deduplication")
 
     # Step 5: Save to database
     db_result = save_financials(conn, ticker, deduped, company_info)
@@ -262,11 +312,11 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
     inserted = db_result["inserted"]
     updated = db_result["updated"]
     errors = len(db_result["errors"])
-    print(f"  💾 DB: {inserted} inserted, {updated} updated, {errors} errors")
+    logger.info(f"DB: {inserted} inserted, {updated} updated, {errors} errors")
 
     if db_result["errors"]:
         for err in db_result["errors"]:
-            print(f"  ❌ {err}")
+            logger.error(f"DB error: {err}")
 
     # Step 6: Cleanup XBRL files
     if not keep_files and result["status"] in ("success", "partial"):
@@ -283,8 +333,8 @@ def ingest_company(session, conn, ticker, download_dir=None, keep_files=False, d
                 try:
                     os.remove(save_path)
                 except Exception as e:
-                    print(f"  ⚠️  Failed to cleanup {filename}: {e}")
-        print(f"  ✨ Cleaned up {len(filings)} XBRL file(s)")
+                    logger.warning(f"Failed to cleanup {filename}: {e}")
+        logger.info(f"Cleaned up XBRL files for {ticker}")
     _backfill_annual_pbt(conn, ticker)
 
     return result
@@ -342,10 +392,9 @@ def ingest_all(tickers=None, limit=None, offset=0, keep_files=False, delta_mode=
         print(f"  🛑 Limiting ingestion to {limit} companies.")
         tickers = tickers[:limit]
 
-    print(f"\n{'═' * 60}")
-    print(f"  🚀 Flagium Data Ingestion")
-    print(f"  Companies: {len(tickers)}")
-    print(f"{'═' * 60}")
+    _logger.info("="*60)
+    _logger.info(f"Flagium Data Ingestion — {len(tickers)} companies")
+    _logger.info("="*60)
 
     update_job_status("Ingestion Job", "running", f"Starting ingestion for {len(tickers)} companies")
 
@@ -355,9 +404,8 @@ def ingest_all(tickers=None, limit=None, offset=0, keep_files=False, delta_mode=
 
     try:
         for i, ticker in enumerate(tickers, 1):
-            # Progress update in terminal
-            print(f"\n[{i}/{len(tickers)}] ", end="")
-            
+            _logger.info(f"[{i}/{len(tickers)}] Starting {ticker}")
+
             # Rate limiting / Jitter (0.5s to 2.0s) to avoid IP blocking
             if i > 1:
                 delay = random.uniform(0.5, 2.0)
@@ -367,7 +415,7 @@ def ingest_all(tickers=None, limit=None, offset=0, keep_files=False, delta_mode=
                 result = ingest_company(session, conn, ticker, keep_files=keep_files, delta_mode=delta_mode)
                 results.append(result)
             except Exception as e:
-                print(f"\n❌ Fatal error for {ticker}: {e}")
+                _get_ingestion_logger(ticker).error(f"Fatal error: {e}", exc_info=True)
                 results.append({
                     "ticker": ticker,
                     "status": "error",
@@ -406,22 +454,21 @@ def ingest_from_xbrl_file(file_path, ticker):
     Returns:
         Result dict.
     """
-    print(f"\n📂 Ingesting from local file: {file_path}")
-    print(f"   Ticker: {ticker}")
+    logger = _get_ingestion_logger(ticker)
+    logger.info(f"Ingesting from local file: {file_path}")
 
     records = parse_xbrl_file(file_path)
     if not records:
-        print("❌ No records parsed from file")
+        logger.error("No records parsed from file")
         return {"ticker": ticker, "status": "no_records"}
 
     deduped = _deduplicate_records(records)
-    print(f"  📊 Parsed {len(deduped)} record(s)")
+    logger.info(f"Parsed {len(deduped)} record(s)")
 
     conn = get_connection()
     try:
         db_result = save_financials(conn, ticker, deduped)
-        print(f"  💾 DB: {db_result['inserted']} inserted, "
-              f"{db_result['updated']} updated")
+        logger.info(f"DB: {db_result['inserted']} inserted, {db_result['updated']} updated")
         return {"ticker": ticker, "status": "success", "db_result": db_result}
     finally:
         conn.close()
@@ -482,7 +529,7 @@ def _get_latest_db_period(conn, ticker):
         if row:
             return {"year": row[0], "quarter": row[1] or 0}
     except Exception as e:
-        print(f"  ⚠️ DB Check error for {ticker}: {e}")
+        _get_ingestion_logger(ticker).warning(f"DB check error: {e}")
     finally:
         cursor.close()
     return None
@@ -577,26 +624,25 @@ def _backfill_annual_pbt(conn, ticker):
     """
     cursor.execute(sql, (ticker,))
     if cursor.rowcount > 0:
-        print(f"  🔄 Backfilled PBT for {cursor.rowcount} annual record(s) from Q4")
+        _get_ingestion_logger(ticker).info(f"Backfilled PBT for {cursor.rowcount} annual record(s) from Q4")
     conn.commit()
     cursor.close()
 
 
 def _print_summary(results):
-    """Print ingestion summary."""
-    print(f"\n{'═' * 60}")
-    print(f"  📋 Ingestion Summary")
-    print(f"{'═' * 60}")
-
+    """Log ingestion summary."""
     success = sum(1 for r in results if r.get("status") == "success")
     partial = sum(1 for r in results if r.get("status") == "partial")
     failed = sum(1 for r in results if r.get("status") in ("error", "no_filings", "no_records"))
     total_records = sum(r.get("records_parsed", 0) for r in results)
 
-    print(f"  ✅ Successful: {success}")
+    _logger.info("="*60)
+    _logger.info("Ingestion Summary")
+    _logger.info("="*60)
+    _logger.info(f"Successful: {success}")
     if partial:
-        print(f"  ⚠️  Partial:    {partial}")
+        _logger.warning(f"Partial:    {partial}")
     if failed:
-        print(f"  ❌ Failed:      {failed}")
-    print(f"  📊 Total records: {total_records}")
-    print(f"{'═' * 60}\n")
+        _logger.error(f"Failed:     {failed}")
+    _logger.info(f"Total records: {total_records}")
+    _logger.info("="*60)

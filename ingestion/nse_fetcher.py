@@ -11,7 +11,55 @@ import json
 import time
 import os
 import tempfile
+import logging
+import sys
 from urllib.parse import quote
+
+
+# ──────────────────────────────────────────────
+# Module Logger
+# ──────────────────────────────────────────────
+
+_LOG_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
+os.makedirs(_LOG_DIR, exist_ok=True)
+
+_LOG_FORMAT = "[%(asctime)s], [%(levelname)s], [%(ticker)s], %(message)s"
+_LOG_DATEFMT = "%Y-%m-%d %H:%M:%S"
+
+
+class _NSETickerFilter(logging.Filter):
+    def __init__(self, ticker="NSE"):
+        super().__init__()
+        self.ticker = ticker
+    def filter(self, record):
+        record.ticker = self.ticker
+        return True
+
+
+def _get_nse_logger(ticker="NSE") -> logging.Logger:
+    logger_name = f"flagium.nse.{ticker}"
+    logger = logging.getLogger(logger_name)
+    if logger.handlers:
+        return logger
+    logger.setLevel(logging.DEBUG)
+    tf = _NSETickerFilter(ticker)
+    fmt = logging.Formatter(_LOG_FORMAT, datefmt=_LOG_DATEFMT)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(fmt)
+    ch.addFilter(tf)
+    logger.addHandler(ch)
+    fh = logging.FileHandler(os.path.join(_LOG_DIR, "ingestion.log"), encoding="utf-8")
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(fmt)
+    fh.addFilter(tf)
+    logger.addHandler(fh)
+    logger.propagate = False
+    return logger
+
+
+_logger = _get_nse_logger()
+
 
 # ──────────────────────────────────────────────
 # Constants
@@ -71,33 +119,30 @@ class NSESession:
             cmd.extend(["-o", output_file])
 
         try:
-            # print(f"  CMD: {' '.join(cmd)}")
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
             if result.returncode == 0:
                 if output_file:
                     return True
                 return result.stdout
             else:
-                print(f"  ⚠️  Curl failed: {result.stderr}")
+                _logger.warning(f"Curl failed: {result.stderr}")
         except Exception as e:
-            print(f"  ❌ Curl error: {e}")
+            _logger.error(f"Curl error: {e}")
         return None
 
     def _init_session(self):
         """Hit NSE homepage to establish session cookies."""
-        print("  🌍 Connecting to NSE (system curl)...")
-        # Remove old cookies
+        _logger.info("Connecting to NSE (system curl)...")
         if os.path.exists(COOKIES_FILE):
             try:
                 os.remove(COOKIES_FILE)
             except:
                 pass
-                
         resp = self._curl(NSE_BASE_URL)
         if resp:
             self._initialized = True
             self._available = True
-            print("  ✅ NSE session initialized")
+            _logger.info("NSE session initialized")
         else:
             self._available = False
 
@@ -125,11 +170,8 @@ class NSESession:
             try:
                 return json.loads(json_str)
             except json.JSONDecodeError:
-                 # Check if we got HTML (blocked)
-                 if "<html" in json_str.lower():
-                     print("  ⚠️  NSE blocked API request (HTML response)")
-                 else:
-                     pass
+                if "<html" in json_str.lower():
+                    _logger.warning("NSE blocked API request (HTML response)")
         return None
         
     def download(self, url, path):
@@ -179,15 +221,10 @@ def fetch_nifty50_tickers():
 
 
 def fetch_nifty500_tickers(session=None):
-    """Fetch Nifty 500 tickers from NiftyIndices CSV.
-
-    Returns:
-        List of tickers (e.g. ['RELIANCE', 'TCS', ...])
-    """
+    """Fetch Nifty 500 tickers from NiftyIndices CSV."""
     url = "https://www.niftyindices.com/IndexConstituent/ind_nifty500list.csv"
-    print(f"  🌍 Fetching Nifty 500 list from {url}...")
+    _logger.info(f"Fetching Nifty 500 list from {url}")
 
-    # Use session if provided, else create temporary one
     local_session = False
     if not session:
         session = NSESession()
@@ -196,17 +233,14 @@ def fetch_nifty500_tickers(session=None):
     try:
         csv_content = session._curl(url)
         if not csv_content or "Symbol" not in csv_content:
-            print("  ⚠️  Failed to fetch Nifty 500 CSV (or blocked)")
-            # Fallback to Nifty 50 for now if 500 fails
-            # But better to return empty list so caller knows
+            _logger.warning("Failed to fetch Nifty 500 CSV (or blocked)")
             return []
 
-        # Parse CSV
         import csv
         import io
-        
+
         if not isinstance(csv_content, str):
-            print("  ⚠️  NSE 500 CSV content is not a string")
+            _logger.warning("NSE 500 CSV content is not a string")
             return []
 
         tickers = []
@@ -225,25 +259,20 @@ def fetch_nifty500_tickers(session=None):
         if "TMPV" not in tickers: tickers.append("TMPV")
         if "TMCV" not in tickers: tickers.append("TMCV")
         
-        print(f"  ✅ Fetched {len(tickers)} tickers from Nifty 500 (with Tata demerger logic)")
+        _logger.info(f"Fetched {len(tickers)} tickers from Nifty 500 (with Tata demerger logic)")
         return tickers
 
     except Exception as e:
-        print(f"  ❌ Error fetching Nifty 500: {e}")
+        _logger.error(f"Error fetching Nifty 500: {e}")
         return []
         if local_session:
             session.close()
 
 
 def fetch_equity_tickers(session=None):
-    """Fetch all listed equity tickers from NSE via the official master CSV.
-
-    Returns:
-        List of tickers (e.g. ['RELIANCE', 'TCS', ...])
-    """
-    # Using archives URL as it's more stable for raw CSV access
+    """Fetch all listed equity tickers from NSE via the official master CSV."""
     url = "https://archives.nseindia.com/content/equities/EQUITY_L.csv"
-    print(f"  🌍 Fetching full NSE Equity list from {url}...")
+    _logger.info(f"Fetching full NSE Equity list from {url}")
 
     local_session = False
     if not session:
@@ -253,7 +282,7 @@ def fetch_equity_tickers(session=None):
     try:
         csv_content = session._curl(url)
         if not csv_content or not isinstance(csv_content, str) or "SYMBOL" not in csv_content.upper():
-            print("  ⚠️  Failed to fetch NSE Equity CSV (or blocked)")
+            _logger.warning("Failed to fetch NSE Equity CSV (or blocked)")
             return []
 
         import csv
@@ -275,11 +304,11 @@ def fetch_equity_tickers(session=None):
         if "TMPV" not in tickers: tickers.append("TMPV")
         if "TMCV" not in tickers: tickers.append("TMCV")
         
-        print(f"  ✅ Fetched {len(tickers)} tickers from NSE Equity Master")
+        _logger.info(f"Fetched {len(tickers)} tickers from NSE Equity Master")
         return sorted(tickers)
 
     except Exception as e:
-        print(f"  ❌ Error fetching NSE Equity Master: {e}")
+        _logger.error(f"Error fetching NSE Equity Master: {e}")
         return []
     finally:
         if local_session:

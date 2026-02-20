@@ -5,7 +5,55 @@ Takes parsed financial data and saves it to the MySQL database.
 Handles company upserts and financial data insertion.
 """
 
+import logging
+import os
+import sys
 from db.connection import get_connection
+
+
+# ──────────────────────────────────────────────
+# Module Logger
+# ──────────────────────────────────────────────
+
+_LOG_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
+os.makedirs(_LOG_DIR, exist_ok=True)
+_LOG_FORMAT = "[%(asctime)s], [%(levelname)s], [%(ticker)s], %(message)s"
+_LOG_DATEFMT = "%Y-%m-%d %H:%M:%S"
+
+
+class _DBTickerFilter(logging.Filter):
+    def __init__(self, ticker="DB"):
+        super().__init__()
+        self.ticker = ticker
+    def filter(self, record):
+        record.ticker = self.ticker
+        return True
+
+
+def _get_db_logger(ticker="DB") -> logging.Logger:
+    logger_name = f"flagium.db.{ticker}"
+    logger = logging.getLogger(logger_name)
+    if logger.handlers:
+        return logger
+    logger.setLevel(logging.DEBUG)
+    tf = _DBTickerFilter(ticker)
+    fmt = logging.Formatter(_LOG_FORMAT, datefmt=_LOG_DATEFMT)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(fmt)
+    ch.addFilter(tf)
+    logger.addHandler(ch)
+    fh = logging.FileHandler(os.path.join(_LOG_DIR, "ingestion.log"), encoding="utf-8")
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(fmt)
+    fh.addFilter(tf)
+    logger.addHandler(fh)
+    logger.propagate = False
+    return logger
+
+
+_logger = _get_db_logger()
+
 
 
 def ensure_company(cursor, ticker, name=None, sector=None, index_name=None):
@@ -73,7 +121,7 @@ def save_financials(conn, ticker, records, company_info=None):
         )
 
         if was_created:
-            print(f"  📝 Created company: {ticker} ({name})")
+            _get_db_logger(ticker).info(f"Created company: {ticker} ({name})")
 
         # Insert/update each financial record
         for record in records:
@@ -193,7 +241,7 @@ def save_shareholding(conn, company_id, year, promoter_pct):
         conn.commit()
     except Exception as e:
         conn.rollback()
-        print(f"❌ Failed to save shareholding: {e}")
+        _get_db_logger().error(f"Failed to save shareholding: {e}")
     finally:
         cursor.close()
 

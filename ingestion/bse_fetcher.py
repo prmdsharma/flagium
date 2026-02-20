@@ -8,7 +8,54 @@ Uses Playwright to bypass robust anti-bot protections and TLS fingerprinting.
 import time
 import os
 import json
+import logging
+import sys
 from playwright.sync_api import sync_playwright
+
+
+# ──────────────────────────────────────────────
+# Module Logger
+# ──────────────────────────────────────────────
+
+_LOG_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
+os.makedirs(_LOG_DIR, exist_ok=True)
+_LOG_FORMAT = "[%(asctime)s], [%(levelname)s], [%(ticker)s], %(message)s"
+_LOG_DATEFMT = "%Y-%m-%d %H:%M:%S"
+
+
+class _BSETickerFilter(logging.Filter):
+    def __init__(self, ticker="BSE"):
+        super().__init__()
+        self.ticker = ticker
+    def filter(self, record):
+        record.ticker = self.ticker
+        return True
+
+
+def _get_bse_logger(ticker="BSE") -> logging.Logger:
+    logger_name = f"flagium.bse.{ticker}"
+    logger = logging.getLogger(logger_name)
+    if logger.handlers:
+        return logger
+    logger.setLevel(logging.DEBUG)
+    tf = _BSETickerFilter(ticker)
+    fmt = logging.Formatter(_LOG_FORMAT, datefmt=_LOG_DATEFMT)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(fmt)
+    ch.addFilter(tf)
+    logger.addHandler(ch)
+    fh = logging.FileHandler(os.path.join(_LOG_DIR, "ingestion.log"), encoding="utf-8")
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(fmt)
+    fh.addFilter(tf)
+    logger.addHandler(fh)
+    logger.propagate = False
+    return logger
+
+
+_logger = _get_bse_logger()
+
 
 # ──────────────────────────────────────────────
 # Constants
@@ -130,12 +177,10 @@ def get_financial_results_bse(session, scrip_code):
     
     try:
         page.goto(url, timeout=30000)
-        # Wait for table to load
         page.wait_for_selector("table#lblann", timeout=10000)
-        # Give a little extra time for the JSON to be fully captured
         page.wait_for_timeout(2000)
     except Exception as e:
-        print(f"  ⚠️  BSE navigation error: {e}")
+        _logger.warning(f"BSE navigation error for {scrip_code}: {e}")
     finally:
         page.remove_listener("response", handle_response)
 
@@ -206,23 +251,17 @@ def download_xbrl_from_bse(session, scrip_code, save_path):
         # https://www.bseindia.com/corporates/XBRLInput.aspx?scripcd={scrip_code}
         
         url = f"https://www.bseindia.com/corporates/XBRLInput.aspx?scripcd={scrip_code}"
-        print(f"  🌍 Navigating to BSE XBRL page: {url}")
-        
+        _logger.info(f"Navigating to BSE XBRL page for {scrip_code}")
         response = page.goto(url, timeout=30000)
-        
-        # Check if page loaded (sometimes 404 for companies without recent XBRL)
+
         if response.status == 404:
-            print(f"  ⚠️  No XBRL page found for {scrip_code}")
+            _logger.warning(f"No XBRL page found for {scrip_code}")
             return False
 
-        # Find XML/XBRL links
-        # Selector for the anchor tags in the grid
-        # Usually inside a table
         try:
-             # Wait for the table/links to appear
             page.wait_for_selector("a[href*='.xml'], a[href*='.xbrl']", timeout=5000)
         except:
-            print(f"  ⚠️  No XBRL links found on page")
+            _logger.warning(f"No XBRL links found on page for {scrip_code}")
             return False
 
         # Get the first link
@@ -236,19 +275,16 @@ def download_xbrl_from_bse(session, scrip_code, save_path):
                 elif href.startswith("/"):
                     href = f"https://www.bseindia.com{href}"
                 
-                print(f"  ⬇️  Downloading XBRL: {href}")
-                
-                # Fetch content
-                # We can use page.request (APIRequestContext) which shares cookies
+                _logger.info(f"Downloading XBRL from BSE: {href}")
                 file_resp = page.request.get(href)
                 if file_resp.ok:
                     with open(save_path, "wb") as f:
                         f.write(file_resp.body())
                     return True
                 else:
-                    print(f"  ❌ Download failed: {file_resp.status} {file_resp.status_text}")
+                    _logger.error(f"BSE XBRL download failed: {file_resp.status} {file_resp.status_text}")
 
     except Exception as e:
-        print(f"  ❌ BSE XBRL download error: {e}")
+        _logger.error(f"BSE XBRL download error for {scrip_code}: {e}")
 
     return False

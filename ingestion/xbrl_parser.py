@@ -12,6 +12,53 @@ from lxml import etree
 from io import BytesIO
 from datetime import datetime
 import os
+import logging
+import sys
+
+
+# ──────────────────────────────────────────────
+# Module Logger
+# ──────────────────────────────────────────────
+
+_LOG_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs")
+os.makedirs(_LOG_DIR, exist_ok=True)
+_LOG_FORMAT = "[%(asctime)s], [%(levelname)s], [%(ticker)s], %(message)s"
+_LOG_DATEFMT = "%Y-%m-%d %H:%M:%S"
+
+
+class _XBRLFilter(logging.Filter):
+    def __init__(self, ticker="XBRL"):
+        super().__init__()
+        self.ticker = ticker
+    def filter(self, record):
+        record.ticker = self.ticker
+        return True
+
+
+def _get_xbrl_logger() -> logging.Logger:
+    logger_name = "flagium.xbrl"
+    logger = logging.getLogger(logger_name)
+    if logger.handlers:
+        return logger
+    logger.setLevel(logging.DEBUG)
+    tf = _XBRLFilter()
+    fmt = logging.Formatter(_LOG_FORMAT, datefmt=_LOG_DATEFMT)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+    ch.setFormatter(fmt)
+    ch.addFilter(tf)
+    logger.addHandler(ch)
+    fh = logging.FileHandler(os.path.join(_LOG_DIR, "ingestion.log"), encoding="utf-8")
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(fmt)
+    fh.addFilter(tf)
+    logger.addHandler(fh)
+    logger.propagate = False
+    return logger
+
+
+_logger = _get_xbrl_logger()
+
 
 
 # ──────────────────────────────────────────────
@@ -132,7 +179,7 @@ def parse_xbrl_file(file_path):
         }
     """
     if not os.path.exists(file_path):
-        print(f"❌ File not found: {file_path}")
+        _logger.error(f"File not found: {file_path}")
         return []
 
     with open(file_path, "rb") as f:
@@ -140,18 +187,11 @@ def parse_xbrl_file(file_path):
 
 
 def parse_xbrl_content(content):
-    """Parse XBRL XML content (bytes) and extract financial data.
-
-    Args:
-        content: Raw bytes of the XBRL XML file.
-
-    Returns:
-        List of financial data dicts grouped by period.
-    """
+    """Parse XBRL XML content (bytes) and extract financial data."""
     try:
         tree = etree.parse(BytesIO(content))
     except etree.XMLSyntaxError as e:
-        print(f"❌ Failed to parse XBRL XML: {e}")
+        _logger.error(f"Failed to parse XBRL XML: {e}")
         return []
 
     # Step 1: Extract all contexts (periods)

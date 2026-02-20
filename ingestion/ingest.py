@@ -561,6 +561,12 @@ def _is_filing_new(filing, latest_db):
             }
             f_quarter = month_map.get(month_str[:3].capitalize(), 0)
             
+            # Adjust to Indian Financial Year
+            # If the quarter is 1 (Apr-Jun), 2 (Jul-Sep), or 3 (Oct-Dec), the FY is calendar year + 1.
+            # If the quarter is 4 (Jan-Mar) or Annual (ending in March), the FY is the calendar year.
+            if f_quarter in (1, 2, 3):
+                f_year += 1
+            
             # Some filings are explicit about being Annual
             is_annual = "annual" in str(filing.get("period", "")).lower()
             if is_annual:

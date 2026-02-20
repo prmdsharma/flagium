@@ -6,11 +6,14 @@ CLI tool for the Flagium AI financial risk detection engine.
 Usage:
     python main.py ingest [--keep] [TICKERS...]  # Ingest Nifty 50 or specific tickers
     python main.py ingest-file <path> TICKER     # Ingest from local XBRL file
+    python main.py flags [--ticker X] [--backfill N]  # Run flag engine
     python main.py status                        # Show DB status
 
 Options:
-    --keep    Keep downloaded XBRL files (do not delete after ingestion)
-    --delta   Delta mode: only fetch files newer than what's in the DB
+    --keep       Keep downloaded XBRL files (do not delete after ingestion)
+    --delta      Delta mode: only fetch files newer than what's in the DB
+    --ticker     Run flag engine for a specific ticker
+    --backfill   Number of quarters to backfill (default: 1)
 """
 
 import sys
@@ -33,6 +36,12 @@ def cmd_ingest_file(file_path, ticker):
     """Ingest from a local XBRL file."""
     from ingestion.ingest import ingest_from_xbrl_file
     ingest_from_xbrl_file(file_path, ticker)
+
+
+def cmd_flags(ticker=None, backfill=1):
+    """Run the flag engine."""
+    from engine.runner import run_flags
+    run_flags(ticker=ticker, backfill_quarters=backfill)
 
 
 def cmd_status():
@@ -136,6 +145,25 @@ def main():
 
     elif command == "status":
         cmd_status()
+
+    elif command == "flags":
+        args = sys.argv[2:]
+        ticker = None
+        backfill = 1
+        i = 0
+        while i < len(args):
+            if args[i] == "--ticker" and i + 1 < len(args):
+                ticker = args[i + 1]
+                i += 2
+            elif args[i] == "--backfill" and i + 1 < len(args):
+                try:
+                    backfill = int(args[i + 1])
+                except ValueError:
+                    pass
+                i += 2
+            else:
+                i += 1
+        cmd_flags(ticker=ticker, backfill=backfill)
 
     else:
         print(f"Unknown command: {command}")

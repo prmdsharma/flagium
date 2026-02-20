@@ -101,4 +101,5 @@ export const api = {
   getSanityReport: () => fetchJSON("/admin/sanity-report"),
   triggerScan: () => fetchJSON("/scan", { method: "POST" }),
   triggerIngest: (ticker) => fetchJSON(`/ingest/${ticker}`, { method: "POST" }),
+  triggerFullIngestion: () => fetchJSON("/admin/trigger-ingestion", { method: "POST" }),
 };

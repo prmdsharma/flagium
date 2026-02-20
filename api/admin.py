@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from db.connection import get_connection
 from api.auth import get_current_user
 
@@ -168,3 +168,26 @@ def get_sanity_report(current_user: dict = Depends(get_current_user)):
     finally:
         cursor.close()
         conn.close()
+
+@router.post("/trigger-ingestion")
+def trigger_full_ingestion(background_tasks: BackgroundTasks, current_user: dict = Depends(get_current_user)):
+    # RBAC: Only admin can access
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin privileges required")
+
+    # Check if already running
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("SELECT status FROM system_jobs WHERE job_name = 'Ingestion Job'")
+        row = cursor.fetchone()
+        if row and row["status"] == "running":
+            raise HTTPException(status_code=409, detail="Ingestion job is already running")
+    finally:
+        cursor.close()
+        conn.close()
+
+    from ingestion.ingest import ingest_all
+    background_tasks.add_task(ingest_all)
+    
+    return {"message": "Full ingestion job triggered in background"}

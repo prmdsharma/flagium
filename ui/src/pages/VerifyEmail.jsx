@@ -16,7 +16,7 @@ export default function VerifyEmail() {
                     setStatus('success');
                     setMessage(res.message || 'Email verified successfully!');
                     // Redirect to login after 3 seconds
-                    setTimeout(() => navigate('/'), 3000);
+                    setTimeout(() => navigate('/login'), 3000);
                 })
                 .catch(err => {
                     setStatus('error');
@@ -42,7 +42,7 @@ export default function VerifyEmail() {
                     )}
 
                     {status === 'error' && (
-                        <button className="btn-primary" onClick={() => navigate('/')}>
+                        <button className="btn-primary" onClick={() => navigate('/login')}>
                             Back to Login
                         </button>
                     )}

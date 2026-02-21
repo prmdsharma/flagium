@@ -1790,14 +1790,14 @@
 }
 
 .rem-score {
-  font-size: 42px;
+  font-size: 32px;
   font-weight: 800;
   font-family: 'JetBrains Mono', monospace;
   line-height: 1;
 }
 
 .rem-max {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--text-muted);
   font-weight: 400;
 }

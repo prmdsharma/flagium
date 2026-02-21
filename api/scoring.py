@@ -105,36 +105,39 @@ def calculate_risk_score(flags):
         status = "Stable"
 
     # Real History Calculation (Last 6 Quarters)
-    # We iterate backwards in time. A flag is active in a historical quarter 
-    # if its created_at date is before or equal to that quarter's estimated end date.
+    # We iterate backwards in time by fiscal quarters. A flag is active in a historical quarter 
+    # if its fiscal_year/quarter is before or equal to that target quarter.
     import datetime
-    
     today = datetime.date.today()
+    curr_y = today.year
+    curr_q = (today.month - 1) // 3 + 1
+    
+    # Adjust current quarter if dataset has a newer one (e.g. Indian FYs)
+    for f in unique_flags:
+        fy = f.get("fiscal_year") or curr_y
+        fq = f.get("fiscal_quarter") or curr_q
+        if fy > curr_y or (fy == curr_y and fq > curr_q):
+            curr_y, curr_q = fy, fq
+
     history = []
     
     # We'll calculate the score for the current quarter, and the 5 previous quarters.
     for quarters_back in range(5, -1, -1):
-        # Rough estimate: each quarter is ~91 days
-        target_date = today - datetime.timedelta(days=91 * quarters_back)
+        # Calculate target year and quarter
+        t_y = curr_y
+        t_q = curr_q - quarters_back
+        while t_q < 1:
+            t_q += 4
+            t_y -= 1
+            
         historical_score = 0
         
-        # We only apply deduplication logic *per quarter* if needed, but since unique_flags 
-        # is already deduplicated by flag_code, we can just filter the unique_flags by date.
         for f in unique_flags:
-            try:
-                # Handle varying date formats robustly
-                f_date_raw = f.get("created_at", str(today))
-                if isinstance(f_date_raw, str):
-                    f_date = datetime.datetime.strptime(f_date_raw[:10], "%Y-%m-%d").date()
-                elif isinstance(f_date_raw, datetime.datetime):
-                    f_date = f_date_raw.date()
-                else:
-                    f_date = f_date_raw
-            except Exception:
-                f_date = today
-                
-            # If the flag existed on or before this historical target date
-            if f_date <= target_date:
+            fy = f.get("fiscal_year") or curr_y
+            fq = f.get("fiscal_quarter") or curr_q
+            
+            # If the flag existed on or before this historical target quarter
+            if fy < t_y or (fy == t_y and fq <= t_q):
                 meta = enrichment_map.get(f['flag_name'], {"impact": 4}) # fallback 4
                 historical_score += 15 if meta['impact'] == 5 else 10
                 

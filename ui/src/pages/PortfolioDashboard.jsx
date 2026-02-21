@@ -178,15 +178,22 @@ export default function PortfolioDashboard() {
             const bTickerStarts = bTicker.startsWith(needle);
             if (aTickerStarts && !bTickerStarts) return -1;
             if (!aTickerStarts && bTickerStarts) return 1;
+            if (aTickerStarts && bTickerStarts) {
+                return aTicker.localeCompare(bTicker); // Alphabetical tie-break
+            }
 
             // 3. Name startsWith match
             const aNameStarts = aName.startsWith(needle);
             const bNameStarts = bName.startsWith(needle);
             if (aNameStarts && !bNameStarts) return -1;
             if (!aNameStarts && bNameStarts) return 1;
+            if (aNameStarts && bNameStarts) {
+                return aName.localeCompare(bName); // Alphabetical tie-break
+            }
 
-            return 0; // Default: let `.includes` fall to bottom
-        }).slice(0, 8); // Top 8 matches
+            // 4. Fallback to localeCompare
+            return aTicker.localeCompare(bTicker);
+        }).slice(0, 12); // Increased limit for better visibility
 
         setFilteredCompanies(matches);
         setShowDropdown(true); // Always show dropdown if we have input
@@ -876,24 +883,52 @@ export default function PortfolioDashboard() {
                                         onFocus={() => { if (tickerInput.length >= 1) setShowDropdown(true); }}
                                     />
                                     {showDropdown && (
-                                        <div className="absolute top-full left-0 right-0 mt-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-50">
+                                        <div className="absolute top-full left-0 right-0 mt-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl max-h-80 overflow-y-auto z-50 divide-y divide-slate-100 dark:divide-slate-800/50">
                                             {filteredCompanies.length > 0 ? (
                                                 filteredCompanies.map(c => (
                                                     <div
                                                         key={c.id}
-                                                        className="px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex justify-between items-center transition-colors border-b border-slate-100 dark:border-slate-700/50 last:border-0"
+                                                        className="px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/80 cursor-pointer flex items-center justify-between transition-colors group"
                                                         onClick={() => selectCompany(c.ticker)}
                                                     >
-                                                        <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-sm tracking-widest">{c.ticker}</span>
-                                                        <span className="text-sm font-medium text-slate-600 dark:text-slate-300 truncate max-w-[200px]">{c.name}</span>
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors shadow-sm shrink-0">
+                                                                <span className="font-black text-slate-900 dark:text-white tracking-widest text-[10px]">{c.ticker}</span>
+                                                            </div>
+                                                            <div className="flex flex-col">
+                                                                <span className="text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight">{c.name}</span>
+                                                                <span className="text-[10px] font-medium text-slate-500 dark:text-slate-500 mt-0.5">{c.sector || "Unknown Sector"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-3">
+                                                            {c.flag_count > 0 ? (
+                                                                <span className="px-2 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-black uppercase tracking-widest rounded border border-red-100/50 dark:border-red-800/30">
+                                                                    🚩 {c.flag_count}
+                                                                </span>
+                                                            ) : (
+                                                                <span className="px-2 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest rounded border border-emerald-100/50 dark:border-emerald-800/30">
+                                                                    Clean
+                                                                </span>
+                                                            )}
+                                                            <div className="w-6 h-6 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white text-slate-300 dark:text-slate-600 transition-all">
+                                                                <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                                                </svg>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 ))
                                             ) : (
-                                                <div className="px-5 py-6 text-sm font-medium text-slate-500 dark:text-slate-400 text-center flex flex-col items-center gap-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-300 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                                    </svg>
-                                                    No equities found matching "{tickerInput}"
+                                                <div className="px-5 py-12 text-center flex flex-col items-center gap-3">
+                                                    <div className="w-12 h-12 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                                                        <svg className="w-6 h-6 text-slate-300 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                        </svg>
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <h4 className="text-slate-900 dark:text-white font-black text-base tracking-tight">No Results Found</h4>
+                                                        <p className="text-slate-500 dark:text-slate-400 text-[11px] font-medium max-w-[180px] mx-auto mt-1">We couldn't find any equity matching "{tickerInput}"</p>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>

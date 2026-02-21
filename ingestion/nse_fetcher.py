@@ -14,6 +14,7 @@ import tempfile
 import logging
 import sys
 from urllib.parse import quote
+from typing import Optional, List, Dict, Any
 
 
 # ──────────────────────────────────────────────
@@ -244,11 +245,22 @@ def fetch_nifty50_tickers():
     return NIFTY50_TICKERS.copy()
 
 
-def fetch_total_market_tickers(session=None):
-    """Fetch Nifty Total Market (750) tickers from NiftyIndices CSV."""
-    url = "https://www.niftyindices.com/IndexConstituent/ind_niftytotalmarket_list.csv"
-    _logger.info(f"Fetching Nifty Total Market list from {url}")
+def fetch_microcap250_tickers(session=None):
+    """Fetch Nifty Microcap 250 tickers from NiftyIndices CSV."""
+    url = "https://www.niftyindices.com/IndexConstituent/ind_niftymicrocap250_list.csv"
+    _logger.info(f"Fetching Nifty Microcap 250 list from {url}")
+    return _fetch_nifty_csv_tickers(url, session, "Nifty Microcap 250")
 
+
+def fetch_smallcap250_tickers(session=None):
+    """Fetch Nifty Smallcap 250 tickers from NiftyIndices CSV."""
+    url = "https://www.niftyindices.com/IndexConstituent/ind_niftysmallcap250list.csv"
+    _logger.info(f"Fetching Nifty Smallcap 250 list from {url}")
+    return _fetch_nifty_csv_tickers(url, session, "Nifty Smallcap 250")
+
+
+def _fetch_nifty_csv_tickers(url: str, session: Optional[NSESession] = None, index_name: str = "Nifty Index") -> List[str]:
+    """Helper to fetch tickers from a NiftyIndices CSV URL."""
     local_session = False
     if not session:
         session = NSESession()
@@ -256,44 +268,78 @@ def fetch_total_market_tickers(session=None):
 
     try:
         csv_content = session._curl(url)
-        if not csv_content or "Symbol" not in csv_content:
-            _logger.warning("Failed to fetch Nifty Total Market CSV (or blocked)")
+        if not csv_content or not isinstance(csv_content, str) or "Symbol" not in csv_content:
+            _logger.warning(f"Failed to fetch {index_name} CSV (or blocked)")
             return []
 
         import csv
         import io
 
-        if not isinstance(csv_content, str):
-            _logger.warning("NSE 500 CSV content is not a string")
-            return []
-
         tickers = []
         reader = csv.DictReader(io.StringIO(csv_content))
         
         for row in reader:
-            # Column name is usually "Symbol"
             symbol = row.get("Symbol")
             if symbol:
-                symbol = symbol.strip()
-                # Remove TATAMOTORS (demerged)
+                symbol = str(symbol).strip()
                 if symbol == "TATAMOTORS": continue
                 tickers.append(symbol)
         
-        # Ensure TMPV and TMCV are included if not present (as replacements)
-        if "TMPV" not in tickers: tickers.append("TMPV")
-        if "TMCV" not in tickers: tickers.append("TMCV")
-        
-        _logger.info(f"Fetched {len(tickers)} tickers from Nifty Total Market (with Tata demerger logic)")
+        _logger.info(f"Fetched {len(tickers)} tickers from {index_name}")
         return tickers
 
     except Exception as e:
-        _logger.error(f"Error fetching Nifty Total Market: {e}")
+        _logger.error(f"Error fetching {index_name}: {e}")
         return []
-        if local_session:
+    finally:
+        if local_session and session:
             session.close()
 
+    return [] # Should not reach here
 
-def fetch_equity_tickers(session=None):
+
+def fetch_total_market_tickers(session: Optional[NSESession] = None) -> List[str]:
+    """Fetch Nifty Total Market (750) tickers from NiftyIndices CSV."""
+    url = "https://www.niftyindices.com/IndexConstituent/ind_niftytotalmarket_list.csv"
+    _logger.info(f"Fetching Nifty Total Market list from {url}")
+    return _fetch_nifty_csv_tickers(url, session, "Nifty Total Market")
+
+
+def fetch_universe_1000(session: Optional[NSESession] = None) -> List[str]:
+    """Combine Nifty Total Market (750) and supplement with NSE Equity Master to reach 1000."""
+    tm_tickers = fetch_total_market_tickers(session)
+    if not tm_tickers:
+        _logger.warning("Total Market fetch failed, using fallback Nifty 50")
+        tm_tickers = fetch_nifty50_tickers()
+
+    combined = set(tm_tickers)
+    
+    # Supplement with Smallcap 250
+    small_tickers = fetch_smallcap250_tickers(session)
+    if small_tickers:
+        for t in small_tickers:
+            combined.add(t)
+        
+    if len(combined) >= 1000:
+        res = list(combined)
+        res.sort()
+        return res[:1000]
+
+    # Still need more to reach 1000
+    master_tickers = fetch_equity_tickers(session)
+    if master_tickers:
+        for t in master_tickers:
+            if len(combined) >= 1000:
+                break
+            combined.add(t)
+
+    _logger.info(f"Universe expanded to {len(combined)} tickers")
+    final_res = list(combined)
+    final_res.sort()
+    return final_res
+
+
+def fetch_equity_tickers(session: Optional[NSESession] = None) -> List[str]:
     """Fetch all listed equity tickers from NSE via the official master CSV."""
     url = "https://archives.nseindia.com/content/equities/EQUITY_L.csv"
     _logger.info(f"Fetching full NSE Equity list from {url}")
@@ -319,7 +365,7 @@ def fetch_equity_tickers(session=None):
             # The column name in EQUITY_L.csv is "SYMBOL"
             symbol = row.get("SYMBOL") or row.get("symbol")
             if symbol:
-                symbol = symbol.strip()
+                symbol = str(symbol).strip()
                 # Skip demerged/suspended if needed, but for now we want coverage
                 if symbol == "TATAMOTORS": continue
                 tickers.append(symbol)
@@ -329,11 +375,14 @@ def fetch_equity_tickers(session=None):
         if "TMCV" not in tickers: tickers.append("TMCV")
         
         _logger.info(f"Fetched {len(tickers)} tickers from NSE Equity Master")
-        return sorted(tickers)
+        tickers.sort()
+        return tickers
 
     except Exception as e:
         _logger.error(f"Error fetching NSE Equity Master: {e}")
         return []
     finally:
-        if local_session:
+        if local_session and session:
             session.close()
+    
+    return []

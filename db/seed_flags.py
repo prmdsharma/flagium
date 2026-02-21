@@ -28,7 +28,7 @@ def seed_flag_definitions():
             is_active TINYINT(1) DEFAULT 1,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        );
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
         """
         cursor.execute(create_table_sql)
         print("Created new flag_definitions schema.")

@@ -9,34 +9,6 @@ def calculate_risk_score(flags):
     
     This function handles deduplication, score weighting, and capping.
     """
-    enrichment_map = {
-        "Revenue-Debt Divergence": {
-            "cat": "Balance Sheet Stress", "impact": 5, 
-            "expl": "Revenue growth is lagging behind debt accumulation.",
-            "threshold": "Rev Growth < Debt Growth",
-        },
-        "Low Interest Coverage": {
-            "cat": "Balance Sheet Stress", "impact": 5, 
-            "expl": "Earnings are barely covering interest obligations.",
-            "threshold": "ICR < 1.5x",
-        },
-        "Operating Cash Flow < Net Profit": {
-            "cat": "Earnings Quality", "impact": 4, 
-            "expl": "Reported profit is not translating into cash. Possible earnings quality concern.",
-            "threshold": "OCF/PAT < 0.8",
-        },
-        "High Pledge %": {
-            "cat": "Governance", "impact": 4, 
-            "expl": "Promoters have pledged a significant portion of shares.",
-            "threshold": "Pledge > 20%",
-        },
-        "Profit Collapse": {
-            "cat": "Earnings Quality", "impact": 5,
-            "expl": "Significant decline in operating profitability.",
-            "threshold": "Profit < 0"
-        },
-    }
-
     # 1. Deduplicate flags by flag_code
     unique_flag_map = {}
     for f in (flags or []):
@@ -59,37 +31,38 @@ def calculate_risk_score(flags):
         if not f.get("period_type"):
             f["period_type"] = "annual"
             
-        # Enrichment
-        meta = enrichment_map.get(f['flag_name'])
-        if not meta:
-             meta = {
-                 "cat": "Balance Sheet Stress", "impact": 10, 
-                 "expl": f.get('message', 'Flag triggered based on thresholds.'),
-                 "threshold": "Limit Breached"
-             }
+        # Enrichment (Values now come directly from flag_definitions DB join)
+        cat = f.get('category') or "Other Risk"
+        impact = f.get('impact_weight') or 10
         
-        f['category'] = meta['cat']
-        f['impact_weight'] = meta['impact']
-        f['explanation'] = meta['expl']
-        f['threshold_breached'] = meta.get('threshold')
+        f['category'] = cat
+        f['impact_weight'] = impact
+        f['explanation'] = f.get('message') or f.get('description') or 'Flag triggered based on thresholds.'
+        f['threshold_breached'] = 'Limit Breached'
         f['occurrences'] = 1 
         
-        fq = f.get('fiscal_quarter')
-        fy = f.get('fiscal_year', 0)
-        f['first_triggered'] = f"Q{fq} FY{fy}" if fq else f"FY{fy}"
+        fq = f.get('fiscal_quarter') or 0
+        fy = f.get('fiscal_year') or 0
+        if fq and fy:
+            f['first_triggered'] = f"Q{fq} FY{fy}"
+        elif fy:
+            f['first_triggered'] = f"FY{fy}"
+        else:
+            # Fallback to created_at date if no fiscal period info
+            created = f.get('created_at', '')
+            f['first_triggered'] = str(created)[:10] if created else "Unknown"
         f['percentile'] = 50 
         
         processed_flags.append(f)
         
         # Risk Score Logic  
-        weight = 15 if meta['impact'] == 5 else 10
+        weight = 15 if impact >= 5 else 10
         total_risk_weight += weight
         f['duration_quarters'] = 1
         
-        if meta['cat'] in cat_scores:
-            cat_scores[meta['cat']] += weight
-        else:
-            cat_scores["Balance Sheet Stress"] += weight
+        if cat not in cat_scores:
+            cat_scores[cat] = 0
+        cat_scores[cat] += weight
 
     # 0-100 Scale
     risk_score = min(100, total_risk_weight)
@@ -138,8 +111,8 @@ def calculate_risk_score(flags):
             
             # If the flag existed on or before this historical target quarter
             if fy < t_y or (fy == t_y and fq <= t_q):
-                meta = enrichment_map.get(f['flag_name'], {"impact": 4}) # fallback 4
-                historical_score += 15 if meta['impact'] == 5 else 10
+                impact = f.get('impact_weight') or 5
+                historical_score += 15 if impact >= 5 else 10
                 
         history.append(min(100, historical_score))
         
@@ -159,7 +132,7 @@ def calculate_risk_score(flags):
             break
 
     # Institutional Narrative (V6 Cause + Consequence)
-    primary_driver = max(cat_scores, key=cat_scores.get)
+    primary_driver = max(cat_scores, key=cat_scores.get) if risk_score > 0 else "No Active Risk"
     if risk_score > 50:
         narrative = f"{primary_driver} indicators have deteriorated for {acceleration} consecutive quarters, increasing the probability of credit rating downgrades. Immediate deleveraging required."
     elif risk_score > 20:

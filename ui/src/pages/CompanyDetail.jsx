@@ -24,7 +24,7 @@ export default function CompanyDetail() {
     if (!data) return <div className="error-screen">Company not found</div>;
 
     const { company, analysis, flags, annual } = data;
-    const { status, risk_score, history, trajectory, timeline, narrative, structural_scores, predictive } = analysis || {};
+    const { status, risk_score, history, trajectory, timeline, narrative, structural_scores, predictive, primary_driver } = analysis || {};
 
     // Helper colors - Updated for V5/V6 scale (0-100)
     const isHighRisk = risk_score >= 60;
@@ -51,7 +51,7 @@ export default function CompanyDetail() {
                         </div>
                         <div className="flex flex-col">
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Primary Driver</span>
-                            <span className="text-sm lg:text-base font-black text-slate-700 dark:text-slate-300">Balance Sheet Stress</span>
+                            <span className="text-sm lg:text-base font-black text-slate-700 dark:text-slate-300">{primary_driver || "No Active Risk"}</span>
                         </div>
                     </div>
                 </div>

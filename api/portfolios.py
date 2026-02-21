@@ -364,10 +364,11 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
     for c in companies:
         # Fetch ALL flags to determine history vs current
         cursor.execute("""
-            SELECT flag_code, flag_name, severity, period_type, message, details, fiscal_year, fiscal_quarter, created_at 
-            FROM flags 
-            WHERE company_id = %s
-            ORDER BY created_at DESC
+            SELECT f.flag_code, f.flag_name, f.severity, f.period_type, f.message, f.details, f.fiscal_year, f.fiscal_quarter, f.created_at, fd.category, fd.impact_weight
+            FROM flags f
+            LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code
+            WHERE f.company_id = %s
+            ORDER BY f.created_at DESC
         """, (c["id"],))
         all_flags = cursor.fetchall()
         
@@ -572,7 +573,7 @@ def get_aggregated_health(current_user: dict = Depends(get_current_user)):
         from .scoring import calculate_risk_score
         
         for item in items:
-            cursor.execute("SELECT flag_code, flag_name, severity, period_type, message, details, created_at, fiscal_year, fiscal_quarter FROM flags WHERE company_id = %s", (item["company_id"],))
+            cursor.execute("SELECT f.flag_code, f.flag_name, f.severity, f.period_type, f.message, f.details, f.created_at, f.fiscal_year, f.fiscal_quarter, fd.category, fd.impact_weight FROM flags f LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code WHERE f.company_id = %s", (item["company_id"],))
             flags = cursor.fetchall()
             
             c_score = calculate_risk_score(flags)["risk_score"]

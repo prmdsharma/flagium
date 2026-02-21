@@ -109,9 +109,11 @@ def get_company(ticker: str):
 
     # Active flags
     flags = _query(
-        """SELECT flag_code, flag_name, severity, period_type, message, details, created_at,
-                  fiscal_year, fiscal_quarter
-           FROM flags WHERE company_id = %s ORDER BY severity DESC""",
+        """SELECT f.flag_code, f.flag_name, f.severity, f.period_type, f.message, f.details, f.created_at,
+                  f.fiscal_year, f.fiscal_quarter, fd.category, fd.impact_weight
+           FROM flags f
+           LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code
+           WHERE f.company_id = %s ORDER BY f.severity DESC""",
         (cid,),
     )
 
@@ -169,7 +171,8 @@ def get_company(ticker: str):
             "narrative": score_data["narrative"],
             "structural_scores": score_data["structural_scores"],
             "predictive": score_data["predictive"],
-            "timeline": score_data["timeline"]
+            "timeline": score_data["timeline"],
+            "primary_driver": score_data["primary_driver"]
         }
     }
 
@@ -182,16 +185,20 @@ def list_flags(severity: str = None):
     """List all active flags, optionally filtered by severity."""
     if severity:
         rows = _query(
-            """SELECT f.*, c.ticker, c.name AS company_name
-               FROM flags f JOIN companies c ON f.company_id = c.id
+            """SELECT f.*, fd.category, fd.impact_weight, c.ticker, c.name AS company_name
+               FROM flags f 
+               JOIN companies c ON f.company_id = c.id
+               LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code
                WHERE f.severity = %s
                ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC, f.period_type, c.ticker, f.flag_code""",
             (severity.upper(),),
         )
     else:
         rows = _query(
-            """SELECT f.*, c.ticker, c.name AS company_name
-               FROM flags f JOIN companies c ON f.company_id = c.id
+            """SELECT f.*, fd.category, fd.impact_weight, c.ticker, c.name AS company_name
+               FROM flags f 
+               JOIN companies c ON f.company_id = c.id
+               LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code
                ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC, f.period_type, f.severity DESC, c.ticker, f.flag_code"""
         )
 
@@ -221,9 +228,12 @@ def get_flags_for_company(ticker: str):
         raise HTTPException(status_code=404, detail=f"Company {ticker} not found")
 
     flags = _query(
-        """SELECT flag_code, flag_name, severity, period_type, fiscal_year, fiscal_quarter, message, details, created_at
-           FROM flags WHERE company_id = %s 
-           ORDER BY fiscal_year DESC, fiscal_quarter DESC, severity DESC""",
+        """SELECT f.flag_code, f.flag_name, f.severity, f.period_type, f.fiscal_year, f.fiscal_quarter, f.message, f.details, f.created_at,
+                  fd.category, fd.impact_weight
+           FROM flags f
+           LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code
+           WHERE f.company_id = %s 
+           ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC, f.severity DESC""",
         (company["id"],),
     )
     for f in flags:
@@ -329,8 +339,10 @@ def dashboard():
     # Since we don't have historical scans yet, treat all flags as "current quarter"
     new_flags = _query(
         """SELECT c.ticker, c.name, f.flag_code, f.flag_name, f.severity, f.period_type, f.message,
-                  f.created_at
-           FROM flags f JOIN companies c ON f.company_id = c.id
+                  f.created_at, fd.category, fd.impact_weight
+           FROM flags f 
+           JOIN companies c ON f.company_id = c.id
+           LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code
            ORDER BY f.severity DESC, f.created_at DESC
            LIMIT 15"""
     )

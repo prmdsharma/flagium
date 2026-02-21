@@ -372,13 +372,19 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
         all_flags = cursor.fetchall()
         
         # --- Company Risk Calculation ---
-        c_current_score = 0
-        c_previous_score = 0
-        c_active_flags_count = len(all_flags)
-        c_drivers = {}
+        from .scoring import calculate_risk_score
         
         # Latest Date
         latest_flag_date = all_flags[0]["created_at"] if all_flags else None
+        
+        # 1. Current Score
+        current_score_data = calculate_risk_score(all_flags)
+        c_current_score = current_score_data["risk_score"]
+        c_active_flags_count = len(current_score_data["processed_flags"])
+        c_drivers = {}
+        
+        # 2. Previous Score & Escalations
+        previous_flags = []
         
         for f in all_flags:
             # Parse Date matches DB types (datetime or date) or string
@@ -388,26 +394,15 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
             elif isinstance(f_date_raw, datetime.date):
                 f_date = f_date_raw
             elif isinstance(f_date_raw, str):
-                # Handle string format (assuming ISO YYYY-MM-DD or similar)
                 try:
-                    # Take first 10 chars for YYYY-MM-DD
                     f_date = datetime.datetime.strptime(f_date_raw[:10], "%Y-%m-%d").date()
                 except ValueError:
-                    # Fallback to today if parsing fails to avoid crash
                     f_date = datetime.date.today()
             else:
                 f_date = datetime.date.today()
 
-            # Severity Weight
-            sev = f["severity"].capitalize() if f["severity"] else "Medium"
-            w = weights.get(sev, 5) # Default 5 (Medium)
-            
-            # 1. Current Score (All Active Flags)
-            c_current_score += w
-            
-            # 2. Previous Score (Only flags existing BEFORE this quarter)
             if f_date <= previous_quarter_end:
-                c_previous_score += w
+                previous_flags.append(f)
             
             # 3. Escalations (New This Quarter)
             if f_date >= current_quarter_start:
@@ -415,7 +410,7 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
                 event_type = "Flag"
                 
                 # Type 3: Severity Impact (New Critical Flag)
-                if f["severity"] == "CRITICAL":
+                if (f["severity"] or "").upper() == "CRITICAL":
                     urgency = "High"
                     
                 escalating.append({
@@ -430,19 +425,13 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
                     "urgency": urgency
                 })
 
-            # 4. Driver Mapping
-            driver = "Operational"
-            fn = f["flag_name"] or ""
-            if "Interest" in fn or "Debt" in fn: driver = "Balance Sheet Stress"
-            elif "Profit" in fn or "Cash" in fn or "Margin" in fn: driver = "Earnings Quality"
-            elif "Governance" in fn or "Pledge" in fn: driver = "Governance"
-            elif "Valuation" in fn: driver = "Valuation"
-            
-            c_drivers[driver] = c_drivers.get(driver, 0) + 1
+        previous_score_data = calculate_risk_score(previous_flags)
+        c_previous_score = previous_score_data["risk_score"]
 
-        # Cap Score
-        c_current_score = min(c_current_score, 100)
-        c_previous_score = min(c_previous_score, 100)
+        # 4. Driver Mapping
+        for f in current_score_data["processed_flags"]:
+            driver = f.get("category", "Operational")
+            c_drivers[driver] = c_drivers.get(driver, 0) + 1
         
         # Delta & Momentum
         delta = c_current_score - c_previous_score

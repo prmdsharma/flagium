@@ -15,19 +15,56 @@ export default function MethodologyPage() {
                         <div className="absolute -left-4 top-0 bottom-0 w-1 bg-blue-600 rounded-full hidden lg:block"></div>
                         <h2 className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.2em] mb-8">01. Core Risk Signals</h2>
                         <p className="text-base lg:text-lg text-slate-700 dark:text-slate-300 mb-10 leading-relaxed font-medium">
-                            Flagium AI evaluates companies across key financial stress dimensions. Each signal is evaluated across multiple reporting periods to assess structural consistency.
+                            Flagium AI evaluates companies across key financial stress dimensions. Each signal is evaluated across multiple reporting periods to assess structural consistency. Our engine currently tracks 5 core flags:
                         </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div className="space-y-6">
                             {[
-                                "Interest Coverage Stability",
-                                "Free Cash Flow Sustainability",
-                                "Operating Cash Flow vs Net Profit Divergence",
-                                "Profit Collapse Events",
-                                "Revenue-Debt Divergence"
-                            ].map((signal, idx) => (
-                                <div key={idx} className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-                                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                                    <span className="text-sm font-bold text-slate-900 dark:text-white">{signal}</span>
+                                {
+                                    code: "F1", name: "Operating Cash Flow < Net Profit", category: "Earnings Quality",
+                                    rule: "OCF < PAT in at least 2 of the last 3 years.",
+                                    meaning: "Reported profit is not backed by actual cash generation. This can indicate aggressive revenue recognition or working capital deterioration."
+                                },
+                                {
+                                    code: "F2", name: "Negative Free Cash Flow Streak", category: "Governance",
+                                    rule: "Free Cash Flow < 0 for 3 consecutive years.",
+                                    meaning: "The company is burning cash year after year, increasing reliance on external debt or equity dilution to fund operations."
+                                },
+                                {
+                                    code: "F3", name: "Revenue-Debt Divergence", category: "Balance Sheet Stress",
+                                    rule: "YoY Revenue declines AND YoY Total Debt increases.",
+                                    meaning: "The company is borrowing more while its top line shrinks — a classic sign of financial deterioration and operational shortfalls."
+                                },
+                                {
+                                    code: "F4", name: "Low Interest Coverage", category: "Balance Sheet Stress",
+                                    rule: "Interest Coverage Ratio (EBIT / Interest) < 2.5x.",
+                                    meaning: "The company's operating earnings are insufficient to comfortably service its debt obligations, offering a thin margin of safety."
+                                },
+                                {
+                                    code: "F5", name: "Profit Collapse", category: "Earnings Quality",
+                                    rule: "Net Profit drops by > 50% YoY.",
+                                    meaning: "A sudden and significant collapse in profitability, indicating loss of competitive advantage, regulatory impact, or one-time charges."
+                                }
+                            ].map((flag, idx) => (
+                                <div key={idx} className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+                                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-black rounded">{flag.code}</span>
+                                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{flag.name}</h3>
+                                        </div>
+                                        <span className="hidden md:block text-slate-300 dark:text-slate-600">•</span>
+                                        <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">{flag.category}</span>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2">Trigger Rule:</span>
+                                            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{flag.rule}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2">Implication:</span>
+                                            <span className="text-sm text-slate-600 dark:text-slate-400">{flag.meaning}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                         </div>

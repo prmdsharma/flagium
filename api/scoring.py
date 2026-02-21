@@ -181,7 +181,7 @@ def calculate_risk_score(flags):
     for cat, curr_score in cat_scores.items():
         max_score = max_cat_scores.get(cat, 20)
         pct = max(0, 100 - (curr_score / max_score) * 100)
-        structural_scores[cat.lower().replace(" ", "_")] = {
+        structural_scores[cat] = {
             "score": round(10 - (curr_score / 5), 1),
             "percentile": round(pct),
             "sector_median": round(random.uniform(4.5, 7.5), 1)

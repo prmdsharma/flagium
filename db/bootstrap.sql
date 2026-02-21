@@ -108,6 +108,8 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(20) DEFAULT 'free', -- 'free' or 'pro'
     is_verified TINYINT(1) DEFAULT 0,
     verification_token VARCHAR(255),
+    reset_token VARCHAR(255),
+    reset_token_expires DATETIME,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

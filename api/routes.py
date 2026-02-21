@@ -8,8 +8,9 @@ import json
 import random
 import threading
 from datetime import datetime, timedelta
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException, BackgroundTasks, Depends
 from db.connection import get_connection
+from api.auth import get_current_user
 
 router = APIRouter()
 
@@ -46,7 +47,7 @@ def _format_amount(value):
 # ──────────────────────────────────────────────
 
 @router.get("/companies", tags=["Companies"])
-def list_companies():
+def list_companies(current_user: dict = Depends(get_current_user)):
     """List all companies with flag counts."""
     rows = _query("""
         SELECT
@@ -78,7 +79,7 @@ def list_companies():
 
 
 @router.get("/companies/{ticker}", tags=["Companies"])
-def get_company(ticker: str):
+def get_company(ticker: str, current_user: dict = Depends(get_current_user)):
     """Company detail with financials, flags, and V3 intelligence."""
     company = _query(
         "SELECT * FROM companies WHERE ticker = %s", (ticker.upper(),), one=True

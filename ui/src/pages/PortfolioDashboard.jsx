@@ -163,7 +163,30 @@ export default function PortfolioDashboard() {
         const matches = allCompanies.filter(c =>
             c.ticker.toLowerCase().includes(needle) ||
             c.name.toLowerCase().includes(needle)
-        ).slice(0, 8); // Top 8 matches
+        ).sort((a, b) => {
+            const aTicker = a.ticker.toLowerCase();
+            const bTicker = b.ticker.toLowerCase();
+            const aName = a.name.toLowerCase();
+            const bName = b.name.toLowerCase();
+
+            // 1. Exact ticker match
+            if (aTicker === needle) return -1;
+            if (bTicker === needle) return 1;
+
+            // 2. Ticker startsWith match
+            const aTickerStarts = aTicker.startsWith(needle);
+            const bTickerStarts = bTicker.startsWith(needle);
+            if (aTickerStarts && !bTickerStarts) return -1;
+            if (!aTickerStarts && bTickerStarts) return 1;
+
+            // 3. Name startsWith match
+            const aNameStarts = aName.startsWith(needle);
+            const bNameStarts = bName.startsWith(needle);
+            if (aNameStarts && !bNameStarts) return -1;
+            if (!aNameStarts && bNameStarts) return 1;
+
+            return 0; // Default: let `.includes` fall to bottom
+        }).slice(0, 8); // Top 8 matches
 
         setFilteredCompanies(matches);
         setShowDropdown(true); // Always show dropdown if we have input
@@ -815,13 +838,16 @@ export default function PortfolioDashboard() {
             {/* Add Stock Modal - Refactored to match design system */}
             {
                 showAddStock && (
-                    <div className="fixed inset-0 z-[1500] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-enter">
-                        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100 dark:border-slate-700 p-6">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Add Stock to Portfolio</h3>
+                    <div className="fixed inset-0 z-[1500] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
+                        <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100 dark:border-slate-700 p-8 animate-in slide-in-from-bottom-8 duration-500">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Add Stock to Portfolio</h3>
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">Search via Ticker or Name to track risk</p>
+                                </div>
                                 <button
                                     onClick={() => setShowAddStock(false)}
-                                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                                    className="p-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors focus:outline-none"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -829,50 +855,53 @@ export default function PortfolioDashboard() {
                                 </button>
                             </div>
 
-                            <form onSubmit={handleAddStock} className="flex flex-col gap-4">
+                            <form onSubmit={handleAddStock} className="flex flex-col gap-6">
                                 <div className="relative" ref={autocompleteRef}>
                                     <input
                                         autoFocus
-                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm font-mono text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
-                                        placeholder="Ticker (e.g. RELIANCE)"
+                                        className="w-full bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-5 py-4 text-base font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-600 transition-all placeholder:text-slate-400 placeholder:font-medium tracking-wide"
+                                        placeholder="Enter Ticker (e.g. RELIANCE)"
                                         value={tickerInput}
                                         onChange={e => setTickerInput(e.target.value)}
                                         onFocus={() => { if (tickerInput.length >= 1) setShowDropdown(true); }}
                                     />
                                     {showDropdown && (
-                                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50">
+                                        <div className="absolute top-full left-0 right-0 mt-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl max-h-64 overflow-y-auto z-50">
                                             {filteredCompanies.length > 0 ? (
                                                 filteredCompanies.map(c => (
                                                     <div
                                                         key={c.id}
-                                                        className="px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex justify-between items-center transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0"
+                                                        className="px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer flex justify-between items-center transition-colors border-b border-slate-100 dark:border-slate-700/50 last:border-0"
                                                         onClick={() => selectCompany(c.ticker)}
                                                     >
-                                                        <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">{c.ticker}</span>
-                                                        <span className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[180px]">{c.name}</span>
+                                                        <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-sm tracking-widest">{c.ticker}</span>
+                                                        <span className="text-sm font-medium text-slate-600 dark:text-slate-300 truncate max-w-[200px]">{c.name}</span>
                                                     </div>
                                                 ))
                                             ) : (
-                                                <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 text-center italic">
-                                                    No companies found matching "{tickerInput}"
+                                                <div className="px-5 py-6 text-sm font-medium text-slate-500 dark:text-slate-400 text-center flex flex-col items-center gap-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-300 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                    </svg>
+                                                    No equities found matching "{tickerInput}"
                                                 </div>
                                             )}
                                         </div>
                                     )}
                                 </div>
-                                <div className="flex gap-3 justify-end mt-2">
+                                <div className="flex gap-4 justify-end mt-4">
                                     <button
                                         type="button"
-                                        className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                                        className="px-6 py-3 text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors focus:outline-none"
                                         onClick={() => setShowAddStock(false)}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-500/20 transition-all"
+                                        className="px-6 py-3 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/30 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                     >
-                                        Add Company
+                                        Add Equity to Portfolio
                                     </button>
                                 </div>
                             </form>

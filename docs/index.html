@@ -217,6 +217,21 @@
                         th {
                             background: #1e293b;
                         }
+
+                        /* Fix Mermaid diagram overflow */
+                        .mermaid {
+                            background: #f8fafc;
+                            padding: 1rem;
+                            border-radius: 8px;
+                            overflow-x: auto;
+                            display: flex;
+                            justify-content: center;
+                        }
+
+                        .mermaid svg {
+                            max-width: 100%;
+                            height: auto;
+                        }
                     </style>
                 </template>
             </zero-md>

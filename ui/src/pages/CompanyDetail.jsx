@@ -253,8 +253,8 @@ export default function CompanyDetail() {
                                                 </td>
                                                 <td className="py-4 px-4 text-sm font-mono text-slate-600 dark:text-slate-400">{r.revenue ? (r.revenue / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-"}</td>
                                                 <td className="py-4 px-4 text-sm font-mono text-slate-600 dark:text-slate-400">{r.net_profit ? (r.net_profit / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-"}</td>
-                                                <td className="py-4 px-4 text-sm font-mono text-slate-600 dark:text-slate-400">{r.operating_cash_flow ? (r.operating_cash_flow / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-"}</td>
-                                                <td className="py-4 px-4 text-sm font-mono text-slate-600 dark:text-slate-400">{r.total_debt ? (r.total_debt / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-"}</td>
+                                                <td className="py-4 px-4 text-sm font-mono text-slate-600 dark:text-slate-400">{(r.operating_cash_flow !== undefined && r.operating_cash_flow !== null) ? (r.operating_cash_flow / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : ((r.ocf !== undefined && r.ocf !== null) ? (r.ocf / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-")}</td>
+                                                <td className="py-4 px-4 text-sm font-mono text-slate-600 dark:text-slate-400">{(r.total_debt !== undefined && r.total_debt !== null) ? (r.total_debt / 10000000).toLocaleString(undefined, { maximumFractionDigits: 0 }) : "-"}</td>
                                             </tr>
                                         ))}
                                 </tbody>

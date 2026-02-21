@@ -364,7 +364,7 @@ def get_portfolio_detail(portfolio_id: int, current_user: dict = Depends(get_cur
     for c in companies:
         # Fetch ALL flags to determine history vs current
         cursor.execute("""
-            SELECT flag_name, severity, period_type, fiscal_year, fiscal_quarter, created_at 
+            SELECT flag_code, flag_name, severity, period_type, message, details, fiscal_year, fiscal_quarter, created_at 
             FROM flags 
             WHERE company_id = %s
             ORDER BY created_at DESC
@@ -568,14 +568,14 @@ def get_aggregated_health(current_user: dict = Depends(get_current_user)):
         pf_total_investment = sum(item["investment"] for item in items)
         pf_weighted_sum = 0
         
-        # Determine each company's score (reusing weights)
-        weights = {"Critical": 15, "High": 10, "Medium": 5, "Low": 2}
+        # Determine each company's score using the centralized logic
+        from .scoring import calculate_risk_score
         
         for item in items:
-            cursor.execute("SELECT flag_name, severity, created_at, fiscal_year, fiscal_quarter FROM flags WHERE company_id = %s", (item["company_id"],))
+            cursor.execute("SELECT flag_code, flag_name, severity, period_type, message, details, created_at, fiscal_year, fiscal_quarter FROM flags WHERE company_id = %s", (item["company_id"],))
             flags = cursor.fetchall()
-            c_score = sum(weights.get(f["severity"].capitalize() if f["severity"] else "Medium", 5) for f in flags)
-            c_score = min(c_score, 100)
+            
+            c_score = calculate_risk_score(flags)["risk_score"]
             
             pf_weighted_sum += (c_score * item["investment"])
             

@@ -40,33 +40,15 @@ export default function Companies() {
     const cleanCount = data.companies.length - flaggedCount;
 
     return (
-        <div className="space-y-8 max-w-5xl mx-auto pb-32 mt-4 relative">
-
-            {/* 1. Top KPI Cards (Always visible at the top) */}
-            <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-300 ${isFocused && search.trim() ? "opacity-30 scale-95" : "opacity-100 scale-100"}`}>
-                <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/20 dark:shadow-none flex flex-col items-center justify-center relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent z-0"></div>
-                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest relative z-10 mb-2">Total Monitored</span>
-                    <span className="text-5xl font-black text-slate-900 dark:text-white tracking-tight relative z-10">{data.companies.length}</span>
-                </div>
-
-                <div className="bg-gradient-to-b from-red-50 to-white dark:from-red-900/10 dark:to-slate-900 p-8 rounded-[2rem] border border-red-100 dark:border-red-900/20 shadow-xl shadow-red-500/5 dark:shadow-none flex flex-col items-center justify-center relative overflow-hidden">
-                    <span className="text-[10px] font-black text-red-500 dark:text-red-400 uppercase tracking-widest relative z-10 mb-2 flex items-center gap-1.5 bg-red-100 dark:bg-red-900/30 px-3 py-1 rounded-full">
-                        High Risk Entities
-                    </span>
-                    <span className="text-5xl font-black text-red-600 dark:text-red-400 tracking-tight relative z-10">{flaggedCount}</span>
-                </div>
-
-                <div className="bg-gradient-to-b from-emerald-50 to-white dark:from-emerald-900/10 dark:to-slate-900 p-8 rounded-[2rem] border border-emerald-100 dark:border-emerald-900/20 shadow-xl shadow-emerald-500/5 dark:shadow-none flex flex-col items-center justify-center relative overflow-hidden">
-                    <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest relative z-10 mb-2 flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full">
-                        Clean Entities
-                    </span>
-                    <span className="text-5xl font-black text-emerald-500 tracking-tight relative z-10">{cleanCount}</span>
-                </div>
+        <div className="max-w-4xl mx-auto pb-32 mt-4 relative px-4">
+            {/* Header Text (Optional context) */}
+            <div className="text-center pt-8 pb-4">
+                <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Market Intelligence</h1>
+                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Monitoring {data.companies.length} equities for structural risk signatures.</p>
             </div>
 
-            {/* 2. Prominent Search Bar with Dropdown */}
-            <div className={`relative group w-full mx-auto mt-12 z-50 transition-all duration-300 ${isFocused && search.trim() ? "-translate-y-4 shadow-2xl shadow-blue-500/20" : ""}`} ref={searchContainerRef}>
+            {/* 1. Prominent Search Bar (Search-First Professional Layout) */}
+            <div className={`relative group w-full mx-auto mt-24 z-50 transition-all duration-300 ${isFocused && search.trim() ? "-translate-y-4 shadow-2xl shadow-blue-500/20" : ""}`} ref={searchContainerRef}>
                 <div className="absolute inset-0 bg-blue-500/5 dark:bg-blue-500/10 rounded-2xl blur-xl transition-all group-focus-within:bg-blue-500/20 duration-500"></div>
                 <div className={`relative bg-white dark:bg-slate-900 border-2 ${isFocused && search.trim() && searchResults.length > 0 ? "rounded-t-2xl border-b-transparent dark:border-b-transparent" : "rounded-2xl"} border-slate-100 dark:border-slate-800 shadow-sm transition-all focus-within:ring-4 focus-within:ring-blue-500/20 focus-within:border-blue-500 flex items-center`}>
                     <div className="pl-6 text-blue-500">

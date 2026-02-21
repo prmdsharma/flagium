@@ -19,9 +19,7 @@ export default function PublicNavbar({ onOpenAuthModal }) {
             <div className="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 group">
-                    <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold text-xl group-hover:bg-blue-600 transition-colors">
-                        F
-                    </div>
+                    <img src="/favicon.png" alt="Flagium AI" className="w-8 h-8 rounded-lg" />
                     <span className="font-bold text-xl tracking-tight text-slate-900">Flagium AI</span>
                 </Link>
 

@@ -8,9 +8,7 @@ export default function Footer() {
                     {/* Brand */}
                     <div className="col-span-1 md:col-span-1">
                         <Link to="/" className="flex items-center gap-2 mb-4">
-                            <div className="w-6 h-6 bg-slate-900 dark:bg-blue-600 rounded-md flex items-center justify-center text-white font-bold text-sm transition-colors">
-                                F
-                            </div>
+                            <img src="/favicon.png" alt="Flagium AI" className="w-6 h-6 rounded-md" />
                             <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">Flagium AI</span>
                         </Link>
                         <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">

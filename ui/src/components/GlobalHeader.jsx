@@ -136,9 +136,7 @@ export default function GlobalHeader() {
 
                     {/* Brand */}
                     <Link to="/" className="flex items-center gap-2 group">
-                        <div className="w-8 h-8 bg-slate-900 dark:bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl transition-colors">
-                            F
-                        </div>
+                        <img src="/favicon.png" alt="Flagium AI" className="w-8 h-8 rounded-lg" />
                         <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white hidden sm:inline-block">Flagium AI</span>
                     </Link>
 

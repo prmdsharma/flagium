@@ -43,7 +43,7 @@ export default function Companies() {
         <div className="max-w-4xl mx-auto pb-32 mt-4 relative px-4">
             {/* Header Text (Optional context) */}
             <div className="text-center pt-8 pb-4">
-                <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Market Intelligence</h1>
+                <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Flagium AI</h1>
                 <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Monitoring {data.companies.length} equities for structural risk signatures.</p>
             </div>
 

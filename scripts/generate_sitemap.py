@@ -80,8 +80,10 @@ def generate_sitemap():
     xml_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     
     for url in urls:
+        # Escape ampersands and other special chars in URLs
+        loc = url["loc"].replace("&", "&amp;")
         xml_content += '  <url>\n'
-        xml_content += f'    <loc>{url["loc"]}</loc>\n'
+        xml_content += f'    <loc>{loc}</loc>\n'
         xml_content += f'    <lastmod>{url["lastmod"]}</lastmod>\n'
         xml_content += f'    <changefreq>{url["changefreq"]}</changefreq>\n'
         xml_content += f'    <priority>{url["priority"]}</priority>\n'

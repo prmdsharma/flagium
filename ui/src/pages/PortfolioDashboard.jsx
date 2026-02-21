@@ -888,31 +888,41 @@ export default function PortfolioDashboard() {
                                                 filteredCompanies.map(c => (
                                                     <div
                                                         key={c.id}
-                                                        className="px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/80 cursor-pointer flex items-center justify-between transition-colors group"
+                                                        className="px-6 py-4 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 cursor-pointer flex items-center justify-between transition-all group border-b border-slate-50 last:border-0 dark:border-slate-800/50"
                                                         onClick={() => selectCompany(c.ticker)}
                                                     >
                                                         <div className="flex items-center gap-4">
-                                                            <div className="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors shadow-sm shrink-0">
-                                                                <span className="font-black text-slate-900 dark:text-white tracking-widest text-[10px]">{c.ticker}</span>
+                                                            <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center group-hover:border-blue-500/50 group-hover:bg-white dark:group-hover:bg-slate-800 transition-all shadow-sm shrink-0">
+                                                                <span className="font-black text-slate-900 dark:text-white tracking-widest text-[11px]">{c.ticker}</span>
                                                             </div>
                                                             <div className="flex flex-col">
-                                                                <span className="text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight">{c.name}</span>
-                                                                <span className="text-[10px] font-medium text-slate-500 dark:text-slate-500 mt-0.5">{c.sector || "Unknown Sector"}</span>
+                                                                <span className="text-sm font-black text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors leading-tight">{c.name}</span>
+                                                                <div className="flex items-center gap-2 mt-1">
+                                                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{c.sector || "General"}</span>
+                                                                    <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+                                                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Q3 FY25</span>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div className="flex items-center gap-3">
+                                                        <div className="flex items-center gap-4">
                                                             {c.flag_count > 0 ? (
-                                                                <span className="px-2 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-black uppercase tracking-widest rounded border border-red-100/50 dark:border-red-800/30">
-                                                                    🚩 {c.flag_count}
-                                                                </span>
+                                                                <div className="flex flex-col items-end">
+                                                                    <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[10px] font-black uppercase tracking-widest rounded">
+                                                                        🚩 {c.flag_count} Signals
+                                                                    </span>
+                                                                    <span className="text-[9px] font-bold text-red-500/60 mt-0.5 uppercase tracking-tighter">Action Recommended</span>
+                                                                </div>
                                                             ) : (
-                                                                <span className="px-2 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest rounded border border-emerald-100/50 dark:border-emerald-800/30">
-                                                                    Clean
-                                                                </span>
+                                                                <div className="flex flex-col items-end">
+                                                                    <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest rounded">
+                                                                        Stable
+                                                                    </span>
+                                                                    <span className="text-[9px] font-bold text-emerald-500/60 mt-0.5 uppercase tracking-tighter">No Flags</span>
+                                                                </div>
                                                             )}
-                                                            <div className="w-6 h-6 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white text-slate-300 dark:text-slate-600 transition-all">
-                                                                <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                                            <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white text-slate-400 dark:text-slate-600 transition-all shadow-sm">
+                                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
                                                                 </svg>
                                                             </div>
                                                         </div>

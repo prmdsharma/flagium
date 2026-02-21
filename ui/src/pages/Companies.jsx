@@ -30,7 +30,30 @@ export default function Companies() {
         const q = search.toLowerCase();
         return data.companies.filter(
             (c) => c.ticker.toLowerCase().includes(q) || c.name.toLowerCase().includes(q)
-        ).slice(0, 8); // Show only top 8 suggestions in dropdown
+        ).sort((a, b) => {
+            const aTicker = a.ticker.toLowerCase();
+            const bTicker = b.ticker.toLowerCase();
+            const aName = a.name.toLowerCase();
+            const bName = b.name.toLowerCase();
+
+            // 1. Exact ticker match
+            if (aTicker === q) return -1;
+            if (bTicker === q) return 1;
+
+            // 2. Ticker startsWith match
+            const aTickerStarts = aTicker.startsWith(q);
+            const bTickerStarts = bTicker.startsWith(q);
+            if (aTickerStarts && !bTickerStarts) return -1;
+            if (!aTickerStarts && bTickerStarts) return 1;
+
+            // 3. Name startsWith match
+            const aNameStarts = aName.startsWith(q);
+            const bNameStarts = bName.startsWith(q);
+            if (aNameStarts && !bNameStarts) return -1;
+            if (!aNameStarts && bNameStarts) return 1;
+
+            return 0; // Default: let `.includes` fall to bottom
+        }).slice(0, 8); // Show only top 8 suggestions in dropdown
     }, [data, search]);
 
     if (loading) return <div className="loading"><div className="spinner" /> Loading market data…</div>;

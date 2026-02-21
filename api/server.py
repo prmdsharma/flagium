@@ -1,15 +1,34 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from api.routes import router
 from api import auth, portfolios, admin
 import os
 
 app = FastAPI(
     title="Flagium AI Analysis Engine",
-    docs_url="/api-docs",  # Standard relative path
-    redoc_url="/api-redoc"
+    docs_url=None,
+    redoc_url=None
 )
+
+FAVICON_URL = "/favicon.png"
+
+@app.get("/api-docs", include_in_schema=False)
+async def custom_swagger_ui():
+    return get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=app.title + " — API Docs",
+        swagger_favicon_url=FAVICON_URL
+    )
+
+@app.get("/api-redoc", include_in_schema=False)
+async def custom_redoc():
+    return get_redoc_html(
+        openapi_url=app.openapi_url,
+        title=app.title + " — ReDoc",
+        redoc_favicon_url=FAVICON_URL
+    )
 
 # CORS Config
 origins = [

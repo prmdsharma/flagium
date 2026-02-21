@@ -12,11 +12,13 @@ Usage:
 Options:
     --keep       Keep downloaded XBRL files (do not delete after ingestion)
     --delta      Delta mode: only fetch files newer than what's in the DB
+    --file       Path to a text file containing tickers (one per line)
     --ticker     Run flag engine for a specific ticker
     --backfill   Number of quarters to backfill (default: 1)
 """
 
 import sys
+import os
 from db.connection import get_connection
 
 
@@ -104,8 +106,8 @@ def main():
         args = sys.argv[2:]
         keep_files = False
         delta_mode = False
-        limit = None
         offset = 0
+        ticker_file = None
         
         # Parse arguments manually to handle --limit and --offset
         filtered_args = []
@@ -119,6 +121,9 @@ def main():
                 keep_files = True
             elif arg == "--delta":
                 delta_mode = True
+            elif arg == "--file" and i + 1 < len(args):
+                ticker_file = args[i+1]
+                skip_next = 1
             elif arg == "--limit" and i + 1 < len(args):
                 try:
                     limit = int(args[i+1])
@@ -134,7 +139,13 @@ def main():
             else:
                 filtered_args.append(arg)
         
-        tickers = filtered_args if filtered_args else None
+        if ticker_file and os.path.exists(ticker_file):
+            with open(ticker_file, "r") as f:
+                tickers = [line.strip() for line in f if line.strip()]
+            print(f"📖 Loaded {len(tickers)} tickers from {ticker_file}")
+        else:
+            tickers = filtered_args if filtered_args else None
+            
         cmd_ingest(tickers, keep_files=keep_files, delta_mode=delta_mode, limit=limit, offset=offset)
 
     elif command == "ingest-file":

@@ -18,7 +18,7 @@ import time
 import threading
 from ingestion.nse_fetcher import (
     NSESession, get_company_info, get_financial_results,
-    download_xbrl_file, fetch_nifty50_tickers, fetch_total_market_tickers
+    download_xbrl_file, fetch_nifty50_tickers, fetch_universe_1000
 )
 from ingestion.bse_fetcher import (
     BSESession, get_bse_scrip_code, get_financial_results_bse,
@@ -378,10 +378,10 @@ def ingest_all(tickers=None, limit=None, offset=0, keep_files=False, delta_mode=
         List of result dicts (one per company).
     """
     if tickers is None:
-        # Default to Nifty Total Market (750)
-        tickers = fetch_total_market_tickers()
+        # Default to Universe 1000
+        tickers = fetch_universe_1000()
         if not tickers:
-            print("  ⚠️  Nifty Total Market fetch failed, falling back to Nifty 50.")
+            print("  ⚠️  Universe 1000 fetch failed, falling back to Nifty 50.")
             tickers = fetch_nifty50_tickers()
 
     if offset:

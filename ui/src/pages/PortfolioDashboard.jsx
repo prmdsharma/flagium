@@ -192,9 +192,19 @@ export default function PortfolioDashboard() {
         setShowDropdown(true); // Always show dropdown if we have input
     }, [tickerInput, allCompanies]);
 
-    const selectCompany = (ticker) => {
+    const selectCompany = async (ticker) => {
         setTickerInput(ticker);
         setShowDropdown(false);
+
+        // Auto-add the stock to the portfolio to reduce click friction
+        try {
+            await api.addPortfolioItem(id, ticker.toUpperCase());
+            setTickerInput("");
+            setShowAddStock(false);
+            loadDetail(id); // Refresh
+        } catch (err) {
+            alert("Failed to add stock: " + err.message);
+        }
     };
 
     const handleCreate = async () => {

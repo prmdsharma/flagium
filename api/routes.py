@@ -109,7 +109,8 @@ def get_company(ticker: str):
 
     # Active flags
     flags = _query(
-        """SELECT flag_code, flag_name, severity, period_type, message, details, created_at
+        """SELECT flag_code, flag_name, severity, period_type, message, details, created_at,
+                  fiscal_year, fiscal_quarter
            FROM flags WHERE company_id = %s ORDER BY severity DESC""",
         (cid,),
     )
@@ -248,7 +249,7 @@ def get_company(ticker: str):
 
     # ── Generate real timeline from flags ──
     actual_timeline = []
-    for f in flags:
+    for f in processed_flags:
         qt = f"Q{f.get('fiscal_quarter', 0)} FY{f.get('fiscal_year', 0)}" if f.get('fiscal_quarter') else f"FY{f.get('fiscal_year', 0)}"
         actual_timeline.append({
             "quarter": qt,
@@ -310,6 +311,14 @@ def get_company(ticker: str):
                                      "percentile": random.randint(40, 90), "sector_median": 6.1},
                 "governance": {"score": min(10.0, cat_scores["Governance"] / 2.0), 
                                "percentile": random.randint(40, 90), "sector_median": 3.4},
+            },
+            "predictive": {
+                "projected_base": projected_base,
+                "projected_stress": projected_stress,
+                "escalation_prob": escalation_prob,
+                "acceleration": acceleration,
+                "delta_qoq": history[-1] - history[-2] if len(history) > 1 else 0,
+                "sector_percentile": random.randint(65, 95) # Mocked overall percentile
             },
             "timeline": actual_timeline
         }

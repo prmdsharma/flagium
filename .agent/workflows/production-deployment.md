@@ -24,23 +24,13 @@ Once testing is complete and verified:
 
 ### 3. Production Deployment from Main
 // turbo
-1. **Sync Backend Code**:
+1. **Run Deployment Script**:
+   Execute the automated deployment script from the project root. This script handles building the frontend, syncing the backend (while safely excluding the virtual environment), and restarting the PM2 services:
    ```bash
-   rsync -avz --exclude '.env' --exclude 'node_modules' --exclude '__pycache__' --exclude 'dist' -e "ssh -i ~/ocip/ssh-key-2026-02-17.key" ./ ubuntu@80.225.201.34:~/flagium/
-   ```
-
-2. **Build and Sync Frontend**:
-   ```bash
-   cd ui && npm run build
-   rsync -avz --delete -e "ssh -i ~/ocip/ssh-key-2026-02-17.key" ui/dist/ ubuntu@80.225.201.34:~/flagium/ui/dist/
-   ```
-
-3. **Restart Backend Services**:
-   Access the server and restart PM2:
-   ```bash
-   ssh -i ~/ocip/ssh-key-2026-02-17.key ubuntu@80.225.201.34 "pm2 restart flagium-api"
+   ./scripts/deploy.sh
    ```
 
 ### 4. Post-Deployment Verification
 - Perform a hard refresh in the browser.
-- Verify the main production URL: [http://80.225.201.34/](http://80.225.201.34/)
+- Verify the main production URL: [https://flagiumai.com/](https://flagiumai.com/)
+- Verify the API is responsive: [https://flagiumai.com/api/ping](https://flagiumai.com/api/ping)

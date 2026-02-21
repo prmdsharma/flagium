@@ -11,7 +11,7 @@ import io
 router = APIRouter()
 
 @router.get("/brokers/zerodha/login")
-def get_zerodha_login():
+def get_zerodha_login(current_user: dict = Depends(get_current_user)):
     """Get the Zerodha login URL."""
     broker = BrokerFactory.get_broker("zerodha")
     return {"url": broker.get_login_url()}
@@ -94,7 +94,7 @@ async def sync_zerodha_portfolio(
     return await sync_portfolio_holdings(portfolio_id, "zerodha", req.request_token, current_user["id"])
 
 @router.get("/brokers/groww/login")
-def get_groww_login():
+def get_groww_login(current_user: dict = Depends(get_current_user)):
     """Get the Groww login URL."""
     broker = BrokerFactory.get_broker("groww")
     return {"url": broker.get_login_url()}

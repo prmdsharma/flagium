@@ -182,7 +182,7 @@ def get_company(ticker: str, current_user: dict = Depends(get_current_user)):
 # ──────────────────────────────────────────────
 
 @router.get("/flags", tags=["Flags"])
-def list_flags(severity: str = None):
+def list_flags(severity: str = None, current_user: dict = Depends(get_current_user)):
     """List all active flags, optionally filtered by severity."""
     if severity:
         rows = _query(
@@ -218,7 +218,7 @@ def list_flags(severity: str = None):
 
 
 @router.get("/flags/{ticker}", tags=["Flags"])
-def get_flags_for_company(ticker: str):
+def get_flags_for_company(ticker: str, current_user: dict = Depends(get_current_user)):
     """Get flags for a specific company."""
     company = _query(
         "SELECT id, ticker, name FROM companies WHERE ticker = %s",
@@ -259,7 +259,7 @@ def get_flags_for_company(ticker: str):
 # ──────────────────────────────────────────────
 
 @router.get("/dashboard", tags=["Dashboard"])
-def dashboard():
+def dashboard(current_user: dict = Depends(get_current_user)):
     """V2 Risk Intelligence Dashboard."""
 
     # ── Core stats ──

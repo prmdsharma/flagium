@@ -107,6 +107,7 @@ def main():
         keep_files = False
         delta_mode = False
         offset = 0
+        limit = None
         ticker_file = None
         
         # Parse arguments manually to handle --limit and --offset

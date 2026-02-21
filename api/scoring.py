@@ -46,8 +46,8 @@ def calculate_risk_score(flags):
     unique_flags = list(unique_flag_map.values())
     
     processed_flags = []
-    cat_scores = {"Balance Sheet Stress": 0, "Earnings Quality": 0, "Governance": 0, "Valuation": 0}
-    max_cat_scores = {"Balance Sheet Stress": 25, "Earnings Quality": 20, "Governance": 20, "Valuation": 15}
+    cat_scores = {"Balance Sheet Stress": 0, "Earnings Quality": 0, "Governance": 0}
+    max_cat_scores = {"Balance Sheet Stress": 25, "Earnings Quality": 20, "Governance": 20}
     
     total_risk_weight = 0
     
@@ -63,7 +63,7 @@ def calculate_risk_score(flags):
         meta = enrichment_map.get(f['flag_name'])
         if not meta:
              meta = {
-                 "cat": "Other Risk", "impact": 10, 
+                 "cat": "Balance Sheet Stress", "impact": 10, 
                  "expl": f.get('message', 'Flag triggered based on thresholds.'),
                  "threshold": "Limit Breached"
              }

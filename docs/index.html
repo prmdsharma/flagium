@@ -135,6 +135,11 @@
         </div>
 
         <div class="nav-group">
+            <div class="nav-label">Business Logic</div>
+            <a href="#flags" class="nav-link" onclick="loadDoc('flags.md', this)">Flags & Risk Scoring</a>
+        </div>
+
+        <div class="nav-group">
             <div class="nav-label">External</div>
             <a href="/api-docs" class="nav-link">API Swagger UI</a>
             <a href="https://flagiumai.com" class="nav-link">Production Site</a>
@@ -219,9 +224,15 @@
         // Handle direct hash navigation
         window.addEventListener('load', () => {
             const hash = window.location.hash;
-            if (hash === '#ingestion') {
-                const link = document.querySelector('a[href="#ingestion"]');
-                loadDoc('ingestion_architecture.md', link);
+            const hashMap = {
+                '#ingestion': ['ingestion_architecture.md', 'a[href="#ingestion"]'],
+                '#engine': ['engine_architecture.md', 'a[href="#engine"]'],
+                '#flags': ['flags.md', 'a[href="#flags"]']
+            };
+            if (hashMap[hash]) {
+                const [doc, selector] = hashMap[hash];
+                const link = document.querySelector(selector);
+                if (link) loadDoc(doc, link);
             }
         });
     </script>

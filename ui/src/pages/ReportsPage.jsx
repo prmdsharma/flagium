@@ -10,7 +10,7 @@ export default function ReportsPage() {
     const [sanity, setSanity] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useState('health'); // 'health' or 'sanity'
+    const [activeTab, setActiveTab] = useState('health'); // 'health', 'sanity', or 'docs'
 
     useEffect(() => {
         if (!authLoading && user?.role !== 'admin') {
@@ -40,6 +40,15 @@ export default function ReportsPage() {
 
     const [scanLoading, setScanLoading] = useState(false);
     const [ingestLoading, setIngestLoading] = useState(null); // Ticker or null
+
+    const handleDownloadDoc = async (filename) => {
+        try {
+            const url = await api.getAdminDocBlobUrl(filename);
+            window.open(url, '_blank');
+        } catch (err) {
+            alert("Failed to load document: " + err.message);
+        }
+    };
 
     const handleRunScan = async () => {
         if (!confirm("Are you sure you want to trigger a full flag engine scan? This happens in the background.")) return;
@@ -135,6 +144,12 @@ export default function ReportsPage() {
                             className={`flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'sanity' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
                         >
                             Data Sanity
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('docs')}
+                            className={`flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'docs' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                        >
+                            Documentation
                         </button>
                     </div>
                 </div>
@@ -309,7 +324,7 @@ export default function ReportsPage() {
                             </div>
                         )}
                     </>
-                ) : (
+                ) : activeTab === 'sanity' ? (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
                             <SanityCard
@@ -408,6 +423,38 @@ export default function ReportsPage() {
                                             {f.coverage.toFixed(1)}%
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl">
+                        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm p-8">
+                            <h2 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-widest mb-6">Technical Documentation</h2>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-8 flex items-center gap-3">
+                                <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[10px] font-black uppercase tracking-widest rounded">Admin Only</span>
+                                Access restricted technical architecture and deployment guides.
+                            </p>
+
+                            <div className="grid gap-4">
+                                {[
+                                    { title: "System Architecture", file: "ARCHITECTURE.md" },
+                                    { title: "Engine Setup & Ingestion", file: "ingestion_architecture.md" },
+                                    { title: "Flag Engine Internals", file: "engine_architecture.md" },
+                                    { title: "Production Deployment", file: "deployment.md" }
+                                ].map((doc, i) => (
+                                    <button key={i} onClick={() => handleDownloadDoc(doc.file)} className="flex w-full items-center justify-between p-4 rounded-xl border border-slate-100 dark:border-slate-700 hover:border-blue-500/50 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all group">
+                                        <div className="flex items-center gap-4 text-left">
+                                            <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                            </div>
+                                            <div>
+                                                <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{doc.title}</h3>
+                                                <p className="text-xs font-mono text-slate-500 mt-0.5">{doc.file}</p>
+                                            </div>
+                                        </div>
+                                        <svg className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                                    </button>
                                 ))}
                             </div>
                         </div>

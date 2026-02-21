@@ -102,4 +102,12 @@ export const api = {
   triggerScan: () => fetchJSON("/scan", { method: "POST" }),
   triggerIngest: (ticker) => fetchJSON(`/ingest/${ticker}`, { method: "POST" }),
   triggerFullIngestion: () => fetchJSON("/admin/trigger-ingestion", { method: "POST" }),
+  getAdminDocBlobUrl: async (filename) => {
+    const res = await fetch(`${API_BASE}/admin/docs/${filename}`, {
+      headers: authToken ? { "Authorization": `Bearer ${authToken}` } : {}
+    });
+    if (!res.ok) throw new Error("Failed to load document");
+    const blob = await res.blob();
+    return URL.createObjectURL(blob);
+  }
 };

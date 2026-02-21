@@ -63,6 +63,13 @@ function AppContent() {
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Route>
+
+      {/* Redirects for obsolete pages */}
+      <Route path="/docs" element={<Navigate to="/methodology" replace />} />
+      <Route path="/docs/*" element={<Navigate to="/methodology" replace />} />
+
+      {/* Fallback Catch-all Route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

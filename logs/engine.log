@@ -5,3 +5,1540 @@
 [2026-02-20 23:59:12], [INFO], [ENGINE], ============================================================
 [2026-02-20 23:59:12], [INFO], [ENGINE], Finished. Total flags detected: 0
 [2026-02-20 23:59:12], [INFO], [ENGINE], ============================================================
+[2026-02-21 11:49:04], [INFO], [ENGINE], Running 5 flags on 1 companies for 1 quarter(s)
+[2026-02-21 11:49:04], [INFO], [ENGINE], Target periods: [(2026, 4)]
+[2026-02-21 11:49:04], [INFO], [TITAN], Analyzing TITAN
+[2026-02-21 11:49:04], [DEBUG], [TITAN], No flags detected for TITAN
+[2026-02-21 11:49:04], [INFO], [ENGINE], ============================================================
+[2026-02-21 11:49:04], [INFO], [ENGINE], Finished. Total flags detected: 0
+[2026-02-21 11:49:04], [INFO], [ENGINE], ============================================================
+[2026-02-21 11:49:47], [INFO], [ENGINE], Running 5 flags on 1 companies for 6 quarter(s)
+[2026-02-21 11:49:47], [INFO], [ENGINE], Target periods: [(2026, 4), (2026, 3), (2026, 2), (2026, 1), (2025, 4), (2025, 3)]
+[2026-02-21 11:49:47], [INFO], [TITAN], Analyzing TITAN
+[2026-02-21 11:49:47], [DEBUG], [TITAN], No flags detected for TITAN
+[2026-02-21 11:49:47], [INFO], [ENGINE], ============================================================
+[2026-02-21 11:49:47], [INFO], [ENGINE], Finished. Total flags detected: 0
+[2026-02-21 11:49:47], [INFO], [ENGINE], ============================================================
+[2026-02-21 11:50:07], [INFO], [ENGINE], Running 5 flags on 1 companies for 12 quarter(s)
+[2026-02-21 11:50:07], [INFO], [ENGINE], Target periods: [(2026, 4), (2026, 3), (2026, 2), (2026, 1), (2025, 4), (2025, 3), (2025, 2), (2025, 1), (2024, 4), (2024, 3), (2024, 2), (2024, 1)]
+[2026-02-21 11:50:07], [INFO], [TITAN], Analyzing TITAN
+[2026-02-21 11:50:07], [DEBUG], [TITAN], No flags detected for TITAN
+[2026-02-21 11:50:07], [INFO], [ENGINE], ============================================================
+[2026-02-21 11:50:07], [INFO], [ENGINE], Finished. Total flags detected: 0
+[2026-02-21 11:50:07], [INFO], [ENGINE], ============================================================
+[2026-02-21 12:14:29], [INFO], [ENGINE], Running 5 flags on 476 companies for 8 quarter(s)
+[2026-02-21 12:14:29], [INFO], [ENGINE], Target periods: [(2026, 4), (2026, 3), (2026, 2), (2026, 1), (2025, 4), (2025, 3), (2025, 2), (2025, 1)]
+[2026-02-21 12:14:29], [INFO], [RELIANCE], Analyzing RELIANCE
+[2026-02-21 12:14:29], [DEBUG], [RELIANCE], No flags detected for RELIANCE
+[2026-02-21 12:14:29], [INFO], [TCS], Analyzing TCS
+[2026-02-21 12:14:29], [DEBUG], [TCS], No flags detected for TCS
+[2026-02-21 12:14:29], [INFO], [INFY], Analyzing INFY
+[2026-02-21 12:14:29], [DEBUG], [INFY], No flags detected for INFY
+[2026-02-21 12:14:29], [INFO], [HINDUNILVR], Analyzing HINDUNILVR
+[2026-02-21 12:14:29], [DEBUG], [HINDUNILVR], No flags detected for HINDUNILVR
+[2026-02-21 12:14:29], [INFO], [BHARTIARTL], Analyzing BHARTIARTL
+[2026-02-21 12:14:29], [INFO], [BHARTIARTL], F4 [FY2025 Q2]: BHARTIARTL: Low Interest Coverage Ratio of 1.89x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [BHARTIARTL], F4 [FY2025 Q1]: BHARTIARTL: Low Interest Coverage Ratio of 1.99x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [ITC], Analyzing ITC
+[2026-02-21 12:14:29], [INFO], [ITC], F1 [FY2026 Annual]: ITC: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:29], [INFO], [ITC], F1 [FY2025 Annual]: ITC: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:29], [DEBUG], [ITC], No flags detected for ITC
+[2026-02-21 12:14:29], [INFO], [LT], Analyzing LT
+[2026-02-21 12:14:29], [DEBUG], [LT], No flags detected for LT
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], Analyzing BAJFINANCE
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F1 [FY2026 Annual]: BAJFINANCE: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F2 [FY2026 Annual]: BAJFINANCE: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F4 [FY2026 Q3]: BAJFINANCE: Low Interest Coverage Ratio of 1.74x in FY2026 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F4 [FY2026 Q2]: BAJFINANCE: Low Interest Coverage Ratio of 1.94x in FY2026 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F4 [FY2026 Q1]: BAJFINANCE: Low Interest Coverage Ratio of 1.92x in FY2026 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F1 [FY2025 Annual]: BAJFINANCE: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F2 [FY2025 Annual]: BAJFINANCE: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F4 [FY2025 Q4]: BAJFINANCE: Low Interest Coverage Ratio of 1.86x in FY2025 Q4 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F4 [FY2025 Annual]: BAJFINANCE: Low Interest Coverage Ratio of 1.89x in 2025 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F4 [FY2025 Q3]: BAJFINANCE: Low Interest Coverage Ratio of 1.90x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F4 [FY2025 Q2]: BAJFINANCE: Low Interest Coverage Ratio of 1.88x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [BAJFINANCE], F4 [FY2025 Q1]: BAJFINANCE: Low Interest Coverage Ratio of 1.93x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:29], [INFO], [ASIANPAINT], Analyzing ASIANPAINT
+[2026-02-21 12:14:29], [DEBUG], [ASIANPAINT], No flags detected for ASIANPAINT
+[2026-02-21 12:14:29], [INFO], [MARUTI], Analyzing MARUTI
+[2026-02-21 12:14:29], [DEBUG], [MARUTI], No flags detected for MARUTI
+[2026-02-21 12:14:29], [INFO], [HCLTECH], Analyzing HCLTECH
+[2026-02-21 12:14:29], [DEBUG], [HCLTECH], No flags detected for HCLTECH
+[2026-02-21 12:14:29], [INFO], [TITAN], Analyzing TITAN
+[2026-02-21 12:14:29], [DEBUG], [TITAN], No flags detected for TITAN
+[2026-02-21 12:14:29], [INFO], [SUNPHARMA], Analyzing SUNPHARMA
+[2026-02-21 12:14:29], [DEBUG], [SUNPHARMA], No flags detected for SUNPHARMA
+[2026-02-21 12:14:29], [INFO], [ULTRACEMCO], Analyzing ULTRACEMCO
+[2026-02-21 12:14:30], [DEBUG], [ULTRACEMCO], No flags detected for ULTRACEMCO
+[2026-02-21 12:14:30], [INFO], [NESTLEIND], Analyzing NESTLEIND
+[2026-02-21 12:14:30], [DEBUG], [NESTLEIND], No flags detected for NESTLEIND
+[2026-02-21 12:14:30], [INFO], [WIPRO], Analyzing WIPRO
+[2026-02-21 12:14:30], [DEBUG], [WIPRO], No flags detected for WIPRO
+[2026-02-21 12:14:30], [INFO], [NTPC], Analyzing NTPC
+[2026-02-21 12:14:30], [DEBUG], [NTPC], No flags detected for NTPC
+[2026-02-21 12:14:30], [INFO], [POWERGRID], Analyzing POWERGRID
+[2026-02-21 12:14:30], [DEBUG], [POWERGRID], No flags detected for POWERGRID
+[2026-02-21 12:14:30], [INFO], [TATASTEEL], Analyzing TATASTEEL
+[2026-02-21 12:14:30], [INFO], [TATASTEEL], F3 [FY2026 Annual]: TATASTEEL: Revenue fell 5.8% while Debt rose 2.6% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [TATASTEEL], F3 [FY2025 Annual]: TATASTEEL: Revenue fell 5.8% while Debt rose 2.6% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [TATASTEEL], F4 [FY2025 Q3]: TATASTEEL: Low Interest Coverage Ratio of 2.10x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [TATASTEEL], F4 [FY2025 Q2]: TATASTEEL: Low Interest Coverage Ratio of 2.19x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [TATASTEEL], F4 [FY2025 Q1]: TATASTEEL: Low Interest Coverage Ratio of 2.29x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [TECHM], Analyzing TECHM
+[2026-02-21 12:14:30], [DEBUG], [TECHM], No flags detected for TECHM
+[2026-02-21 12:14:30], [INFO], [ADANIPORTS], Analyzing ADANIPORTS
+[2026-02-21 12:14:30], [DEBUG], [ADANIPORTS], No flags detected for ADANIPORTS
+[2026-02-21 12:14:30], [INFO], [BAJAJFINSV], Analyzing BAJAJFINSV
+[2026-02-21 12:14:30], [INFO], [BAJAJFINSV], F1 [FY2026 Annual]: BAJAJFINSV: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [BAJAJFINSV], F2 [FY2026 Annual]: BAJAJFINSV: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [BAJAJFINSV], F1 [FY2025 Annual]: BAJAJFINSV: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [BAJAJFINSV], F2 [FY2025 Annual]: BAJAJFINSV: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [BAJAJFINSV], F4 [FY2025 Q3]: BAJAJFINSV: Low Interest Coverage Ratio of 1.93x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BAJAJFINSV], F4 [FY2025 Q2]: BAJAJFINSV: Low Interest Coverage Ratio of 1.99x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BAJAJFINSV], F4 [FY2025 Q1]: BAJAJFINSV: Low Interest Coverage Ratio of 2.07x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ONGC], Analyzing ONGC
+[2026-02-21 12:14:30], [DEBUG], [ONGC], No flags detected for ONGC
+[2026-02-21 12:14:30], [INFO], [JSWSTEEL], Analyzing JSWSTEEL
+[2026-02-21 12:14:30], [INFO], [JSWSTEEL], F4 [FY2025 Q3]: JSWSTEEL: Low Interest Coverage Ratio of 1.54x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [JSWSTEEL], F5 [FY2025 Q3]: JSWSTEEL: Net Profit collapsed by 74.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [INFO], [JSWSTEEL], F4 [FY2025 Q2]: JSWSTEEL: Low Interest Coverage Ratio of 1.53x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [JSWSTEEL], F5 [FY2025 Q2]: JSWSTEEL: Net Profit collapsed by 75.6% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [INFO], [JSWSTEEL], F4 [FY2025 Q1]: JSWSTEEL: Low Interest Coverage Ratio of 1.67x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [JSWSTEEL], F5 [FY2025 Q1]: JSWSTEEL: Net Profit collapsed by 64.3% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [COALINDIA], Analyzing COALINDIA
+[2026-02-21 12:14:30], [DEBUG], [COALINDIA], No flags detected for COALINDIA
+[2026-02-21 12:14:30], [INFO], [LTIM], Analyzing LTIM
+[2026-02-21 12:14:30], [DEBUG], [LTIM], No flags detected for LTIM
+[2026-02-21 12:14:30], [INFO], [HINDALCO], Analyzing HINDALCO
+[2026-02-21 12:14:30], [DEBUG], [HINDALCO], No flags detected for HINDALCO
+[2026-02-21 12:14:30], [INFO], [GRASIM], Analyzing GRASIM
+[2026-02-21 12:14:30], [INFO], [GRASIM], F1 [FY2026 Annual]: GRASIM: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [GRASIM], F2 [FY2026 Annual]: GRASIM: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [GRASIM], F1 [FY2025 Annual]: GRASIM: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [GRASIM], F2 [FY2025 Annual]: GRASIM: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [GRASIM], F5 [FY2025 Q2]: GRASIM: Net Profit collapsed by 66.5% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [DEBUG], [GRASIM], No flags detected for GRASIM
+[2026-02-21 12:14:30], [INFO], [DIVISLAB], Analyzing DIVISLAB
+[2026-02-21 12:14:30], [INFO], [DIVISLAB], F1 [FY2026 Annual]: DIVISLAB: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [DIVISLAB], F1 [FY2025 Annual]: DIVISLAB: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [DIVISLAB], No flags detected for DIVISLAB
+[2026-02-21 12:14:30], [INFO], [DRREDDY], Analyzing DRREDDY
+[2026-02-21 12:14:30], [DEBUG], [DRREDDY], No flags detected for DRREDDY
+[2026-02-21 12:14:30], [INFO], [CIPLA], Analyzing CIPLA
+[2026-02-21 12:14:30], [DEBUG], [CIPLA], No flags detected for CIPLA
+[2026-02-21 12:14:30], [INFO], [APOLLOHOSP], Analyzing APOLLOHOSP
+[2026-02-21 12:14:30], [DEBUG], [APOLLOHOSP], No flags detected for APOLLOHOSP
+[2026-02-21 12:14:30], [INFO], [EICHERMOT], Analyzing EICHERMOT
+[2026-02-21 12:14:30], [INFO], [EICHERMOT], F1 [FY2026 Annual]: EICHERMOT: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [EICHERMOT], F1 [FY2025 Annual]: EICHERMOT: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [EICHERMOT], No flags detected for EICHERMOT
+[2026-02-21 12:14:30], [INFO], [TATACONSUM], Analyzing TATACONSUM
+[2026-02-21 12:14:30], [DEBUG], [TATACONSUM], No flags detected for TATACONSUM
+[2026-02-21 12:14:30], [INFO], [BPCL], Analyzing BPCL
+[2026-02-21 12:14:30], [INFO], [BPCL], F5 [FY2025 Q2]: BPCL: Net Profit collapsed by 72.1% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [INFO], [BPCL], F5 [FY2025 Q1]: BPCL: Net Profit collapsed by 73.3% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [BAJAJ-AUTO], Analyzing BAJAJ-AUTO
+[2026-02-21 12:14:30], [INFO], [BAJAJ-AUTO], F1 [FY2026 Annual]: BAJAJ-AUTO: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [BAJAJ-AUTO], F1 [FY2025 Annual]: BAJAJ-AUTO: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [BAJAJ-AUTO], F5 [FY2025 Q3]: BAJAJ-AUTO: Net Profit collapsed by 61.5% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [DEBUG], [BAJAJ-AUTO], No flags detected for BAJAJ-AUTO
+[2026-02-21 12:14:30], [INFO], [BRITANNIA], Analyzing BRITANNIA
+[2026-02-21 12:14:30], [DEBUG], [BRITANNIA], No flags detected for BRITANNIA
+[2026-02-21 12:14:30], [INFO], [HEROMOTOCO], Analyzing HEROMOTOCO
+[2026-02-21 12:14:30], [INFO], [HEROMOTOCO], F1 [FY2026 Annual]: HEROMOTOCO: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [HEROMOTOCO], F1 [FY2025 Annual]: HEROMOTOCO: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [HEROMOTOCO], No flags detected for HEROMOTOCO
+[2026-02-21 12:14:30], [INFO], [ADANIENT], Analyzing ADANIENT
+[2026-02-21 12:14:30], [INFO], [ADANIENT], F3 [FY2026 Annual]: ADANIENT: Revenue fell 29.6% while Debt rose 30.8% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [ADANIENT], F3 [FY2025 Annual]: ADANIENT: Revenue fell 29.6% while Debt rose 30.8% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [ADANIENT], F4 [FY2025 Q3]: ADANIENT: Low Interest Coverage Ratio of 1.27x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ADANIENT], F5 [FY2025 Q3]: ADANIENT: Net Profit collapsed by 96.9% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [DEBUG], [ADANIENT], No flags detected for ADANIENT
+[2026-02-21 12:14:30], [INFO], [SHRIRAMFIN], Analyzing SHRIRAMFIN
+[2026-02-21 12:14:30], [INFO], [SHRIRAMFIN], F4 [FY2025 Q3]: SHRIRAMFIN: Low Interest Coverage Ratio of 1.74x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [SHRIRAMFIN], F4 [FY2025 Q2]: SHRIRAMFIN: Low Interest Coverage Ratio of 1.64x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [SHRIRAMFIN], F4 [FY2025 Q1]: SHRIRAMFIN: Low Interest Coverage Ratio of 1.65x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [HDFCBANK], Analyzing HDFCBANK
+[2026-02-21 12:14:30], [INFO], [HDFCBANK], F4 [FY2025 Q3]: HDFCBANK: Low Interest Coverage Ratio of 1.51x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [HDFCBANK], F4 [FY2025 Q2]: HDFCBANK: Low Interest Coverage Ratio of 1.51x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [HDFCBANK], F4 [FY2025 Q1]: HDFCBANK: Low Interest Coverage Ratio of 1.51x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ICICIBANK], Analyzing ICICIBANK
+[2026-02-21 12:14:30], [INFO], [ICICIBANK], F4 [FY2025 Q3]: ICICIBANK: Low Interest Coverage Ratio of 1.82x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ICICIBANK], F4 [FY2025 Q2]: ICICIBANK: Low Interest Coverage Ratio of 1.83x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ICICIBANK], F4 [FY2025 Q1]: ICICIBANK: Low Interest Coverage Ratio of 1.79x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [SBIN], Analyzing SBIN
+[2026-02-21 12:14:30], [INFO], [SBIN], F4 [FY2025 Q3]: SBIN: Low Interest Coverage Ratio of 1.36x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [SBIN], F4 [FY2025 Q2]: SBIN: Low Interest Coverage Ratio of 1.37x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [SBIN], F4 [FY2025 Q1]: SBIN: Low Interest Coverage Ratio of 1.37x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AXISBANK], Analyzing AXISBANK
+[2026-02-21 12:14:30], [INFO], [AXISBANK], F4 [FY2025 Q3]: AXISBANK: Low Interest Coverage Ratio of 1.50x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AXISBANK], F4 [FY2025 Q2]: AXISBANK: Low Interest Coverage Ratio of 1.52x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AXISBANK], F4 [FY2025 Q1]: AXISBANK: Low Interest Coverage Ratio of 1.50x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [KOTAKBANK], Analyzing KOTAKBANK
+[2026-02-21 12:14:30], [INFO], [KOTAKBANK], F4 [FY2025 Q3]: KOTAKBANK: Low Interest Coverage Ratio of 1.93x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [KOTAKBANK], F4 [FY2025 Q2]: KOTAKBANK: Low Interest Coverage Ratio of 2.18x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [KOTAKBANK], F4 [FY2025 Q1]: KOTAKBANK: Low Interest Coverage Ratio of 2.39x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [INDUSINDBK], Analyzing INDUSINDBK
+[2026-02-21 12:14:30], [INFO], [INDUSINDBK], F4 [FY2025 Q3]: INDUSINDBK: Low Interest Coverage Ratio of 1.29x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [INDUSINDBK], F4 [FY2025 Q2]: INDUSINDBK: Low Interest Coverage Ratio of 1.32x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [INDUSINDBK], F4 [FY2025 Q1]: INDUSINDBK: Low Interest Coverage Ratio of 1.41x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [TMPV], Analyzing TMPV
+[2026-02-21 12:14:30], [INFO], [TMPV], F5 [FY2025 Annual]: TMPV: Net Profit collapsed by 82.5% from 2024 to 2025.
+[2026-02-21 12:14:30], [DEBUG], [TMPV], No flags detected for TMPV
+[2026-02-21 12:14:30], [INFO], [M&M], Analyzing M&M
+[2026-02-21 12:14:30], [DEBUG], [M&M], No flags detected for M&M
+[2026-02-21 12:14:30], [INFO], [360ONE], Analyzing 360ONE
+[2026-02-21 12:14:30], [INFO], [360ONE], F1 [FY2026 Annual]: 360ONE: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [360ONE], F1 [FY2025 Annual]: 360ONE: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [360ONE], F4 [FY2025 Q2]: 360ONE: Low Interest Coverage Ratio of 2.39x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [DEBUG], [360ONE], No flags detected for 360ONE
+[2026-02-21 12:14:30], [INFO], [3MINDIA], Analyzing 3MINDIA
+[2026-02-21 12:14:30], [INFO], [3MINDIA], F5 [FY2025 Q1]: 3MINDIA: Net Profit collapsed by 100.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [ABB], Analyzing ABB
+[2026-02-21 12:14:30], [DEBUG], [ABB], No flags detected for ABB
+[2026-02-21 12:14:30], [INFO], [ACC], Analyzing ACC
+[2026-02-21 12:14:30], [DEBUG], [ACC], No flags detected for ACC
+[2026-02-21 12:14:30], [INFO], [ACMESOLAR], Analyzing ACMESOLAR
+[2026-02-21 12:14:30], [INFO], [ACMESOLAR], F4 [FY2025 Q3]: ACMESOLAR: Low Interest Coverage Ratio of 1.58x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ACMESOLAR], F4 [FY2025 Q2]: ACMESOLAR: Low Interest Coverage Ratio of 1.10x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [DEBUG], [ACMESOLAR], No flags detected for ACMESOLAR
+[2026-02-21 12:14:30], [INFO], [AIAENG], Analyzing AIAENG
+[2026-02-21 12:14:30], [INFO], [AIAENG], F1 [FY2026 Annual]: AIAENG: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [AIAENG], F1 [FY2025 Annual]: AIAENG: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [AIAENG], No flags detected for AIAENG
+[2026-02-21 12:14:30], [INFO], [APLAPOLLO], Analyzing APLAPOLLO
+[2026-02-21 12:14:30], [DEBUG], [APLAPOLLO], No flags detected for APLAPOLLO
+[2026-02-21 12:14:30], [INFO], [AUBANK], Analyzing AUBANK
+[2026-02-21 12:14:30], [INFO], [AUBANK], F4 [FY2025 Q3]: AUBANK: Low Interest Coverage Ratio of 1.36x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AUBANK], F4 [FY2025 Q2]: AUBANK: Low Interest Coverage Ratio of 1.38x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AUBANK], F4 [FY2025 Q1]: AUBANK: Low Interest Coverage Ratio of 1.36x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AWL], Analyzing AWL
+[2026-02-21 12:14:30], [INFO], [AWL], F3 [FY2026 Annual]: AWL: Revenue fell 11.9% while Debt rose 8.5% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [AWL], F3 [FY2025 Annual]: AWL: Revenue fell 11.9% while Debt rose 8.5% in 2024 vs 2023.
+[2026-02-21 12:14:30], [DEBUG], [AWL], No flags detected for AWL
+[2026-02-21 12:14:30], [INFO], [AADHARHFC], Analyzing AADHARHFC
+[2026-02-21 12:14:30], [INFO], [AADHARHFC], F4 [FY2025 Q3]: AADHARHFC: Low Interest Coverage Ratio of 2.04x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AADHARHFC], F4 [FY2025 Q2]: AADHARHFC: Low Interest Coverage Ratio of 2.03x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AADHARHFC], F4 [FY2025 Q1]: AADHARHFC: Low Interest Coverage Ratio of 1.93x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AARTIIND], Analyzing AARTIIND
+[2026-02-21 12:14:30], [INFO], [AARTIIND], F2 [FY2026 Annual]: AARTIIND: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [AARTIIND], F3 [FY2026 Annual]: AARTIIND: Revenue fell 3.7% while Debt rose 10.8% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [AARTIIND], F2 [FY2025 Annual]: AARTIIND: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [AARTIIND], F3 [FY2025 Annual]: AARTIIND: Revenue fell 3.7% while Debt rose 10.8% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [AARTIIND], F4 [FY2025 Q3]: AARTIIND: Low Interest Coverage Ratio of 1.47x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AARTIIND], F5 [FY2025 Q3]: AARTIIND: Net Profit collapsed by 63.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [INFO], [AARTIIND], F4 [FY2025 Q2]: AARTIIND: Low Interest Coverage Ratio of 1.55x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [DEBUG], [AARTIIND], No flags detected for AARTIIND
+[2026-02-21 12:14:30], [INFO], [AAVAS], Analyzing AAVAS
+[2026-02-21 12:14:30], [INFO], [AAVAS], F1 [FY2026 Annual]: AAVAS: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [AAVAS], F2 [FY2026 Annual]: AAVAS: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [AAVAS], F1 [FY2025 Annual]: AAVAS: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [AAVAS], F2 [FY2025 Annual]: AAVAS: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [AAVAS], F4 [FY2025 Q3]: AAVAS: Low Interest Coverage Ratio of 1.73x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AAVAS], F4 [FY2025 Q2]: AAVAS: Low Interest Coverage Ratio of 1.73x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AAVAS], F4 [FY2025 Q1]: AAVAS: Low Interest Coverage Ratio of 1.68x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ACE], Analyzing ACE
+[2026-02-21 12:14:30], [DEBUG], [ACE], No flags detected for ACE
+[2026-02-21 12:14:30], [INFO], [ADANIENSOL], Analyzing ADANIENSOL
+[2026-02-21 12:14:30], [INFO], [ADANIENSOL], F4 [FY2025 Q3]: ADANIENSOL: Low Interest Coverage Ratio of 2.27x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ADANIENSOL], F4 [FY2025 Q2]: ADANIENSOL: Low Interest Coverage Ratio of 1.82x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ADANIENSOL], F4 [FY2025 Q1]: ADANIENSOL: Low Interest Coverage Ratio of 0.43x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ADANIENSOL], F5 [FY2025 Q1]: ADANIENSOL: Net Profit collapsed by 570.7% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [ADANIGREEN], Analyzing ADANIGREEN
+[2026-02-21 12:14:30], [INFO], [ADANIGREEN], F4 [FY2025 Q3]: ADANIGREEN: Low Interest Coverage Ratio of 1.31x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ADANIGREEN], F4 [FY2025 Q2]: ADANIGREEN: Low Interest Coverage Ratio of 1.32x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ADANIGREEN], F4 [FY2025 Q1]: ADANIGREEN: Low Interest Coverage Ratio of 1.44x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ADANIPOWER], Analyzing ADANIPOWER
+[2026-02-21 12:14:30], [INFO], [ADANIPOWER], F1 [FY2026 Annual]: ADANIPOWER: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ADANIPOWER], F1 [FY2025 Annual]: ADANIPOWER: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ADANIPOWER], F5 [FY2025 Q1]: ADANIPOWER: Net Profit collapsed by 55.3% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [ATGL], Analyzing ATGL
+[2026-02-21 12:14:30], [DEBUG], [ATGL], No flags detected for ATGL
+[2026-02-21 12:14:30], [INFO], [ABCAPITAL], Analyzing ABCAPITAL
+[2026-02-21 12:14:30], [INFO], [ABCAPITAL], F1 [FY2026 Annual]: ABCAPITAL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ABCAPITAL], F2 [FY2026 Annual]: ABCAPITAL: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [ABCAPITAL], F1 [FY2025 Annual]: ABCAPITAL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ABCAPITAL], F2 [FY2025 Annual]: ABCAPITAL: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [ABCAPITAL], F4 [FY2025 Q3]: ABCAPITAL: Low Interest Coverage Ratio of 1.39x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ABCAPITAL], F4 [FY2025 Q2]: ABCAPITAL: Low Interest Coverage Ratio of 1.56x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ABCAPITAL], F4 [FY2025 Q1]: ABCAPITAL: Low Interest Coverage Ratio of 1.44x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ABFRL], Analyzing ABFRL
+[2026-02-21 12:14:30], [INFO], [ABFRL], F4 [FY2025 Q3]: ABFRL: Low Interest Coverage Ratio of 0.85x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ABFRL], F4 [FY2025 Q2]: ABFRL: Low Interest Coverage Ratio of -0.12x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ABFRL], F4 [FY2025 Q1]: ABFRL: Low Interest Coverage Ratio of -0.14x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ABREL], Analyzing ABREL
+[2026-02-21 12:14:30], [INFO], [ABREL], F1 [FY2026 Annual]: ABREL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ABREL], F3 [FY2026 Annual]: ABREL: Revenue fell 6.0% while Debt rose 136.2% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [ABREL], F1 [FY2025 Annual]: ABREL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ABREL], F3 [FY2025 Annual]: ABREL: Revenue fell 6.0% while Debt rose 136.2% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [ABREL], F4 [FY2025 Q3]: ABREL: Low Interest Coverage Ratio of -3.98x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ABREL], F5 [FY2025 Q3]: ABREL: Net Profit collapsed by 148.7% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [DEBUG], [ABREL], No flags detected for ABREL
+[2026-02-21 12:14:30], [INFO], [ABSLAMC], Analyzing ABSLAMC
+[2026-02-21 12:14:30], [INFO], [ABSLAMC], F1 [FY2026 Annual]: ABSLAMC: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ABSLAMC], F1 [FY2025 Annual]: ABSLAMC: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [ABSLAMC], No flags detected for ABSLAMC
+[2026-02-21 12:14:30], [INFO], [AEGISLOG], Analyzing AEGISLOG
+[2026-02-21 12:14:30], [INFO], [AEGISLOG], F1 [FY2026 Annual]: AEGISLOG: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [AEGISLOG], F3 [FY2026 Annual]: AEGISLOG: Revenue fell 18.3% while Debt rose 67.1% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [AEGISLOG], F1 [FY2025 Annual]: AEGISLOG: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [AEGISLOG], F3 [FY2025 Annual]: AEGISLOG: Revenue fell 18.3% while Debt rose 67.1% in 2024 vs 2023.
+[2026-02-21 12:14:30], [DEBUG], [AEGISLOG], No flags detected for AEGISLOG
+[2026-02-21 12:14:30], [INFO], [AFCONS], Analyzing AFCONS
+[2026-02-21 12:14:30], [INFO], [AFCONS], F4 [FY2025 Q3]: AFCONS: Low Interest Coverage Ratio of 2.18x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AFCONS], F4 [FY2025 Q2]: AFCONS: Low Interest Coverage Ratio of 2.16x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [DEBUG], [AFCONS], No flags detected for AFCONS
+[2026-02-21 12:14:30], [INFO], [AFFLE], Analyzing AFFLE
+[2026-02-21 12:14:30], [INFO], [AFFLE], F1 [FY2026 Annual]: AFFLE: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [AFFLE], F1 [FY2025 Annual]: AFFLE: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [AFFLE], F5 [FY2025 Q1]: AFFLE: Net Profit collapsed by 100.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [AJANTPHARM], Analyzing AJANTPHARM
+[2026-02-21 12:14:30], [DEBUG], [AJANTPHARM], No flags detected for AJANTPHARM
+[2026-02-21 12:14:30], [INFO], [AKUMS], Analyzing AKUMS
+[2026-02-21 12:14:30], [DEBUG], [AKUMS], No flags detected for AKUMS
+[2026-02-21 12:14:30], [INFO], [AKZOINDIA], Analyzing AKZOINDIA
+[2026-02-21 12:14:30], [INFO], [AKZOINDIA], F5 [FY2025 Q1]: AKZOINDIA: Net Profit collapsed by 100.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [APLLTD], Analyzing APLLTD
+[2026-02-21 12:14:30], [DEBUG], [APLLTD], No flags detected for APLLTD
+[2026-02-21 12:14:30], [INFO], [ALKEM], Analyzing ALKEM
+[2026-02-21 12:14:30], [DEBUG], [ALKEM], No flags detected for ALKEM
+[2026-02-21 12:14:30], [INFO], [ALKYLAMINE], Analyzing ALKYLAMINE
+[2026-02-21 12:14:30], [DEBUG], [ALKYLAMINE], No flags detected for ALKYLAMINE
+[2026-02-21 12:14:30], [INFO], [ALOKINDS], Analyzing ALOKINDS
+[2026-02-21 12:14:30], [INFO], [ALOKINDS], F3 [FY2026 Annual]: ALOKINDS: Revenue fell 20.6% while Debt rose 7.7% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [ALOKINDS], F3 [FY2025 Annual]: ALOKINDS: Revenue fell 20.6% while Debt rose 7.7% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [ALOKINDS], F4 [FY2025 Q3]: ALOKINDS: Low Interest Coverage Ratio of -0.69x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ALOKINDS], F4 [FY2025 Q2]: ALOKINDS: Low Interest Coverage Ratio of -0.66x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ALOKINDS], F4 [FY2025 Q1]: ALOKINDS: Low Interest Coverage Ratio of -0.32x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ARE&M], Analyzing ARE&M
+[2026-02-21 12:14:30], [DEBUG], [ARE&M], No flags detected for ARE&M
+[2026-02-21 12:14:30], [INFO], [AMBER], Analyzing AMBER
+[2026-02-21 12:14:30], [INFO], [AMBER], F3 [FY2026 Annual]: AMBER: Revenue fell 2.9% while Debt rose 6.7% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [AMBER], F3 [FY2025 Annual]: AMBER: Revenue fell 2.9% while Debt rose 6.7% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [AMBER], F4 [FY2025 Q3]: AMBER: Low Interest Coverage Ratio of 2.16x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [AMBER], F4 [FY2025 Q2]: AMBER: Low Interest Coverage Ratio of 1.54x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [DEBUG], [AMBER], No flags detected for AMBER
+[2026-02-21 12:14:30], [INFO], [AMBUJACEM], Analyzing AMBUJACEM
+[2026-02-21 12:14:30], [DEBUG], [AMBUJACEM], No flags detected for AMBUJACEM
+[2026-02-21 12:14:30], [INFO], [ANANDRATHI], Analyzing ANANDRATHI
+[2026-02-21 12:14:30], [DEBUG], [ANANDRATHI], No flags detected for ANANDRATHI
+[2026-02-21 12:14:30], [INFO], [ANANTRAJ], Analyzing ANANTRAJ
+[2026-02-21 12:14:30], [INFO], [ANANTRAJ], F1 [FY2026 Annual]: ANANTRAJ: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ANANTRAJ], F1 [FY2025 Annual]: ANANTRAJ: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [ANANTRAJ], No flags detected for ANANTRAJ
+[2026-02-21 12:14:30], [INFO], [ANGELONE], Analyzing ANGELONE
+[2026-02-21 12:14:30], [INFO], [ANGELONE], F1 [FY2026 Annual]: ANGELONE: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ANGELONE], F1 [FY2025 Annual]: ANGELONE: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [ANGELONE], No flags detected for ANGELONE
+[2026-02-21 12:14:30], [INFO], [APARINDS], Analyzing APARINDS
+[2026-02-21 12:14:30], [INFO], [APARINDS], F1 [FY2026 Annual]: APARINDS: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [APARINDS], F1 [FY2025 Annual]: APARINDS: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [APARINDS], No flags detected for APARINDS
+[2026-02-21 12:14:30], [INFO], [APOLLOTYRE], Analyzing APOLLOTYRE
+[2026-02-21 12:14:30], [DEBUG], [APOLLOTYRE], No flags detected for APOLLOTYRE
+[2026-02-21 12:14:30], [INFO], [APTUS], Analyzing APTUS
+[2026-02-21 12:14:30], [INFO], [APTUS], F1 [FY2026 Annual]: APTUS: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [APTUS], F2 [FY2026 Annual]: APTUS: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [APTUS], F1 [FY2025 Annual]: APTUS: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [APTUS], F2 [FY2025 Annual]: APTUS: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [APTUS], F5 [FY2025 Q2]: APTUS: Net Profit collapsed by 100.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [DEBUG], [APTUS], No flags detected for APTUS
+[2026-02-21 12:14:30], [INFO], [ASAHIINDIA], Analyzing ASAHIINDIA
+[2026-02-21 12:14:30], [DEBUG], [ASAHIINDIA], No flags detected for ASAHIINDIA
+[2026-02-21 12:14:30], [INFO], [ASHOKLEY], Analyzing ASHOKLEY
+[2026-02-21 12:14:30], [INFO], [ASHOKLEY], F1 [FY2026 Annual]: ASHOKLEY: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ASHOKLEY], F1 [FY2025 Annual]: ASHOKLEY: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [ASHOKLEY], F4 [FY2025 Q3]: ASHOKLEY: Low Interest Coverage Ratio of 2.11x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ASHOKLEY], F4 [FY2025 Q2]: ASHOKLEY: Low Interest Coverage Ratio of 2.11x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ASHOKLEY], F4 [FY2025 Q1]: ASHOKLEY: Low Interest Coverage Ratio of 1.85x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ASTERDM], Analyzing ASTERDM
+[2026-02-21 12:14:30], [INFO], [ASTERDM], F5 [FY2025 Q3]: ASTERDM: Net Profit collapsed by 68.3% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [DEBUG], [ASTERDM], No flags detected for ASTERDM
+[2026-02-21 12:14:30], [INFO], [ASTRAZEN], Analyzing ASTRAZEN
+[2026-02-21 12:14:30], [INFO], [ASTRAZEN], F5 [FY2025 Q3]: ASTRAZEN: Net Profit collapsed by 52.9% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [INFO], [ASTRAZEN], F5 [FY2025 Q2]: ASTRAZEN: Net Profit collapsed by 74.9% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [INFO], [ASTRAZEN], F4 [FY2025 Q1]: ASTRAZEN: Low Interest Coverage Ratio of -137.79x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [ASTRAZEN], F5 [FY2025 Q1]: ASTRAZEN: Net Profit collapsed by 121.9% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [ASTRAL], Analyzing ASTRAL
+[2026-02-21 12:14:30], [DEBUG], [ASTRAL], No flags detected for ASTRAL
+[2026-02-21 12:14:30], [INFO], [ATUL], Analyzing ATUL
+[2026-02-21 12:14:30], [INFO], [ATUL], F3 [FY2026 Annual]: ATUL: Revenue fell 12.9% while Debt rose 393.5% in 2024 vs 2023.
+[2026-02-21 12:14:30], [INFO], [ATUL], F3 [FY2025 Annual]: ATUL: Revenue fell 12.9% while Debt rose 393.5% in 2024 vs 2023.
+[2026-02-21 12:14:30], [DEBUG], [ATUL], No flags detected for ATUL
+[2026-02-21 12:14:30], [INFO], [AUROPHARMA], Analyzing AUROPHARMA
+[2026-02-21 12:14:30], [DEBUG], [AUROPHARMA], No flags detected for AUROPHARMA
+[2026-02-21 12:14:30], [INFO], [AIIL], Analyzing AIIL
+[2026-02-21 12:14:30], [DEBUG], [AIIL], No flags detected for AIIL
+[2026-02-21 12:14:30], [INFO], [DMART], Analyzing DMART
+[2026-02-21 12:14:30], [DEBUG], [DMART], No flags detected for DMART
+[2026-02-21 12:14:30], [INFO], [BASF], Analyzing BASF
+[2026-02-21 12:14:30], [INFO], [BASF], F5 [FY2025 Q2]: BASF: Net Profit collapsed by 63.5% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [DEBUG], [BASF], No flags detected for BASF
+[2026-02-21 12:14:30], [INFO], [BEML], Analyzing BEML
+[2026-02-21 12:14:30], [INFO], [BEML], F4 [FY2025 Q1]: BEML: Low Interest Coverage Ratio of -7.45x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BLS], Analyzing BLS
+[2026-02-21 12:14:30], [DEBUG], [BLS], No flags detected for BLS
+[2026-02-21 12:14:30], [INFO], [BSE], Analyzing BSE
+[2026-02-21 12:14:30], [DEBUG], [BSE], No flags detected for BSE
+[2026-02-21 12:14:30], [INFO], [BAJAJHLDNG], Analyzing BAJAJHLDNG
+[2026-02-21 12:14:30], [INFO], [BAJAJHLDNG], F1 [FY2026 Annual]: BAJAJHLDNG: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [BAJAJHLDNG], F1 [FY2025 Annual]: BAJAJHLDNG: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [BAJAJHLDNG], No flags detected for BAJAJHLDNG
+[2026-02-21 12:14:30], [INFO], [BAJAJHFL], Analyzing BAJAJHFL
+[2026-02-21 12:14:30], [INFO], [BAJAJHFL], F4 [FY2025 Q3]: BAJAJHFL: Low Interest Coverage Ratio of 1.46x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BAJAJHFL], F4 [FY2025 Q2]: BAJAJHFL: Low Interest Coverage Ratio of 1.46x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [DEBUG], [BAJAJHFL], No flags detected for BAJAJHFL
+[2026-02-21 12:14:30], [INFO], [BALKRISIND], Analyzing BALKRISIND
+[2026-02-21 12:14:30], [DEBUG], [BALKRISIND], No flags detected for BALKRISIND
+[2026-02-21 12:14:30], [INFO], [BALRAMCHIN], Analyzing BALRAMCHIN
+[2026-02-21 12:14:30], [INFO], [BALRAMCHIN], F5 [FY2025 Q2]: BALRAMCHIN: Net Profit collapsed by 100.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [DEBUG], [BALRAMCHIN], No flags detected for BALRAMCHIN
+[2026-02-21 12:14:30], [INFO], [BANDHANBNK], Analyzing BANDHANBNK
+[2026-02-21 12:14:30], [INFO], [BANDHANBNK], F4 [FY2025 Q3]: BANDHANBNK: Low Interest Coverage Ratio of 1.43x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BANDHANBNK], F4 [FY2025 Q2]: BANDHANBNK: Low Interest Coverage Ratio of 1.52x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BANDHANBNK], F4 [FY2025 Q1]: BANDHANBNK: Low Interest Coverage Ratio of 1.56x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BANKBARODA], Analyzing BANKBARODA
+[2026-02-21 12:14:30], [INFO], [BANKBARODA], F4 [FY2025 Q3]: BANKBARODA: Low Interest Coverage Ratio of 1.34x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BANKBARODA], F4 [FY2025 Q2]: BANKBARODA: Low Interest Coverage Ratio of 1.39x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BANKBARODA], F4 [FY2025 Q1]: BANKBARODA: Low Interest Coverage Ratio of 1.34x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BANKINDIA], Analyzing BANKINDIA
+[2026-02-21 12:14:30], [INFO], [BANKINDIA], F4 [FY2025 Q3]: BANKINDIA: Low Interest Coverage Ratio of 1.28x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BANKINDIA], F4 [FY2025 Q2]: BANKINDIA: Low Interest Coverage Ratio of 1.28x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BANKINDIA], F4 [FY2025 Q1]: BANKINDIA: Low Interest Coverage Ratio of 1.23x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [MAHABANK], Analyzing MAHABANK
+[2026-02-21 12:14:30], [INFO], [MAHABANK], F4 [FY2025 Q3]: MAHABANK: Low Interest Coverage Ratio of 1.43x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [MAHABANK], F4 [FY2025 Q2]: MAHABANK: Low Interest Coverage Ratio of 1.43x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [MAHABANK], F4 [FY2025 Q1]: MAHABANK: Low Interest Coverage Ratio of 1.44x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BATAINDIA], Analyzing BATAINDIA
+[2026-02-21 12:14:30], [INFO], [BATAINDIA], F5 [FY2025 Q1]: BATAINDIA: Net Profit collapsed by 100.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [BERGEPAINT], Analyzing BERGEPAINT
+[2026-02-21 12:14:30], [INFO], [BERGEPAINT], F5 [FY2025 Q2]: BERGEPAINT: Net Profit collapsed by 100.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [DEBUG], [BERGEPAINT], No flags detected for BERGEPAINT
+[2026-02-21 12:14:30], [INFO], [BDL], Analyzing BDL
+[2026-02-21 12:14:30], [INFO], [BDL], F5 [FY2025 Q1]: BDL: Net Profit collapsed by 82.7% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [BEL], Analyzing BEL
+[2026-02-21 12:14:30], [DEBUG], [BEL], No flags detected for BEL
+[2026-02-21 12:14:30], [INFO], [BHARATFORG], Analyzing BHARATFORG
+[2026-02-21 12:14:30], [DEBUG], [BHARATFORG], No flags detected for BHARATFORG
+[2026-02-21 12:14:30], [INFO], [BHEL], Analyzing BHEL
+[2026-02-21 12:14:30], [INFO], [BHEL], F1 [FY2026 Annual]: BHEL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [BHEL], F1 [FY2025 Annual]: BHEL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [BHEL], F4 [FY2025 Q3]: BHEL: Low Interest Coverage Ratio of 1.87x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BHEL], F4 [FY2025 Q2]: BHEL: Low Interest Coverage Ratio of 1.62x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BHEL], F4 [FY2025 Q1]: BHEL: Low Interest Coverage Ratio of -0.81x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BHARTIHEXA], Analyzing BHARTIHEXA
+[2026-02-21 12:14:30], [DEBUG], [BHARTIHEXA], No flags detected for BHARTIHEXA
+[2026-02-21 12:14:30], [INFO], [BIKAJI], Analyzing BIKAJI
+[2026-02-21 12:14:30], [DEBUG], [BIKAJI], No flags detected for BIKAJI
+[2026-02-21 12:14:30], [INFO], [BIOCON], Analyzing BIOCON
+[2026-02-21 12:14:30], [INFO], [BIOCON], F4 [FY2025 Q3]: BIOCON: Low Interest Coverage Ratio of 1.70x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BIOCON], F5 [FY2025 Q3]: BIOCON: Net Profit collapsed by 96.2% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [INFO], [BIOCON], F4 [FY2025 Q2]: BIOCON: Low Interest Coverage Ratio of 1.44x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BIOCON], F5 [FY2025 Q2]: BIOCON: Net Profit collapsed by 112.7% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [DEBUG], [BIOCON], No flags detected for BIOCON
+[2026-02-21 12:14:30], [INFO], [BSOFT], Analyzing BSOFT
+[2026-02-21 12:14:30], [DEBUG], [BSOFT], No flags detected for BSOFT
+[2026-02-21 12:14:30], [INFO], [BLUEDART], Analyzing BLUEDART
+[2026-02-21 12:14:30], [DEBUG], [BLUEDART], No flags detected for BLUEDART
+[2026-02-21 12:14:30], [INFO], [BLUEJET], Analyzing BLUEJET
+[2026-02-21 12:14:30], [DEBUG], [BLUEJET], No flags detected for BLUEJET
+[2026-02-21 12:14:30], [INFO], [BLUESTARCO], Analyzing BLUESTARCO
+[2026-02-21 12:14:30], [INFO], [BLUESTARCO], F1 [FY2026 Annual]: BLUESTARCO: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [BLUESTARCO], F2 [FY2026 Annual]: BLUESTARCO: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [BLUESTARCO], F1 [FY2025 Annual]: BLUESTARCO: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [BLUESTARCO], F2 [FY2025 Annual]: BLUESTARCO: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [DEBUG], [BLUESTARCO], No flags detected for BLUESTARCO
+[2026-02-21 12:14:30], [INFO], [BBTC], Analyzing BBTC
+[2026-02-21 12:14:30], [DEBUG], [BBTC], No flags detected for BBTC
+[2026-02-21 12:14:30], [INFO], [BOSCHLTD], Analyzing BOSCHLTD
+[2026-02-21 12:14:30], [DEBUG], [BOSCHLTD], No flags detected for BOSCHLTD
+[2026-02-21 12:14:30], [INFO], [FIRSTCRY], Analyzing FIRSTCRY
+[2026-02-21 12:14:30], [INFO], [FIRSTCRY], F4 [FY2025 Q3]: FIRSTCRY: Low Interest Coverage Ratio of 1.16x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [FIRSTCRY], F4 [FY2025 Q2]: FIRSTCRY: Low Interest Coverage Ratio of -0.27x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [FIRSTCRY], F4 [FY2025 Q1]: FIRSTCRY: Low Interest Coverage Ratio of -0.84x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BRIGADE], Analyzing BRIGADE
+[2026-02-21 12:14:30], [INFO], [BRIGADE], F4 [FY2025 Q2]: BRIGADE: Low Interest Coverage Ratio of 2.36x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [BRIGADE], F4 [FY2025 Q1]: BRIGADE: Low Interest Coverage Ratio of 1.71x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [MAPMYINDIA], Analyzing MAPMYINDIA
+[2026-02-21 12:14:30], [INFO], [MAPMYINDIA], F1 [FY2026 Annual]: MAPMYINDIA: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [MAPMYINDIA], F1 [FY2025 Annual]: MAPMYINDIA: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [MAPMYINDIA], No flags detected for MAPMYINDIA
+[2026-02-21 12:14:30], [INFO], [CCL], Analyzing CCL
+[2026-02-21 12:14:30], [INFO], [CCL], F1 [FY2026 Annual]: CCL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CCL], F2 [FY2026 Annual]: CCL: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [CCL], F1 [FY2025 Annual]: CCL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CCL], F2 [FY2025 Annual]: CCL: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [DEBUG], [CCL], No flags detected for CCL
+[2026-02-21 12:14:30], [INFO], [CESC], Analyzing CESC
+[2026-02-21 12:14:30], [INFO], [CESC], F4 [FY2025 Q3]: CESC: Low Interest Coverage Ratio of 2.07x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CESC], F4 [FY2025 Q2]: CESC: Low Interest Coverage Ratio of 2.41x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [DEBUG], [CESC], No flags detected for CESC
+[2026-02-21 12:14:30], [INFO], [CGPOWER], Analyzing CGPOWER
+[2026-02-21 12:14:30], [INFO], [CGPOWER], F1 [FY2026 Annual]: CGPOWER: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CGPOWER], F1 [FY2025 Annual]: CGPOWER: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CGPOWER], F5 [FY2025 Q3]: CGPOWER: Net Profit collapsed by 102.7% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [DEBUG], [CGPOWER], No flags detected for CGPOWER
+[2026-02-21 12:14:30], [INFO], [CRISIL], Analyzing CRISIL
+[2026-02-21 12:14:30], [INFO], [CRISIL], F5 [FY2025 Q3]: CRISIL: Net Profit collapsed by 100.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [DEBUG], [CRISIL], No flags detected for CRISIL
+[2026-02-21 12:14:30], [INFO], [CAMPUS], Analyzing CAMPUS
+[2026-02-21 12:14:30], [DEBUG], [CAMPUS], No flags detected for CAMPUS
+[2026-02-21 12:14:30], [INFO], [CANFINHOME], Analyzing CANFINHOME
+[2026-02-21 12:14:30], [INFO], [CANFINHOME], F4 [FY2025 Q3]: CANFINHOME: Low Interest Coverage Ratio of 1.43x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CANFINHOME], F4 [FY2025 Q2]: CANFINHOME: Low Interest Coverage Ratio of 1.43x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CANFINHOME], F4 [FY2025 Q1]: CANFINHOME: Low Interest Coverage Ratio of 1.42x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CANBK], Analyzing CANBK
+[2026-02-21 12:14:30], [INFO], [CANBK], F4 [FY2025 Q3]: CANBK: Low Interest Coverage Ratio of 1.26x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CANBK], F4 [FY2025 Q2]: CANBK: Low Interest Coverage Ratio of 1.27x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CANBK], F4 [FY2025 Q1]: CANBK: Low Interest Coverage Ratio of 1.28x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CAPLIPOINT], Analyzing CAPLIPOINT
+[2026-02-21 12:14:30], [INFO], [CAPLIPOINT], F1 [FY2026 Annual]: CAPLIPOINT: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CAPLIPOINT], F1 [FY2025 Annual]: CAPLIPOINT: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [CAPLIPOINT], No flags detected for CAPLIPOINT
+[2026-02-21 12:14:30], [INFO], [CGCL], Analyzing CGCL
+[2026-02-21 12:14:30], [INFO], [CGCL], F1 [FY2026 Annual]: CGCL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CGCL], F2 [FY2026 Annual]: CGCL: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [CGCL], F1 [FY2025 Annual]: CGCL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CGCL], F2 [FY2025 Annual]: CGCL: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [CGCL], F4 [FY2025 Q3]: CGCL: Low Interest Coverage Ratio of 1.51x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CGCL], F4 [FY2025 Q2]: CGCL: Low Interest Coverage Ratio of 1.41x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CGCL], F4 [FY2025 Q1]: CGCL: Low Interest Coverage Ratio of 1.36x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CARBORUNIV], Analyzing CARBORUNIV
+[2026-02-21 12:14:30], [INFO], [CARBORUNIV], F5 [FY2025 Q3]: CARBORUNIV: Net Profit collapsed by 68.8% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [DEBUG], [CARBORUNIV], No flags detected for CARBORUNIV
+[2026-02-21 12:14:30], [INFO], [CASTROLIND], Analyzing CASTROLIND
+[2026-02-21 12:14:30], [DEBUG], [CASTROLIND], No flags detected for CASTROLIND
+[2026-02-21 12:14:30], [INFO], [CEATLTD], Analyzing CEATLTD
+[2026-02-21 12:14:30], [DEBUG], [CEATLTD], No flags detected for CEATLTD
+[2026-02-21 12:14:30], [INFO], [CENTRALBK], Analyzing CENTRALBK
+[2026-02-21 12:14:30], [INFO], [CENTRALBK], F4 [FY2025 Q3]: CENTRALBK: Low Interest Coverage Ratio of 1.28x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CENTRALBK], F4 [FY2025 Q2]: CENTRALBK: Low Interest Coverage Ratio of 1.33x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CENTRALBK], F4 [FY2025 Q1]: CENTRALBK: Low Interest Coverage Ratio of 1.17x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CENTURYPLY], Analyzing CENTURYPLY
+[2026-02-21 12:14:30], [INFO], [CENTURYPLY], F1 [FY2026 Annual]: CENTURYPLY: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CENTURYPLY], F2 [FY2026 Annual]: CENTURYPLY: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [CENTURYPLY], F1 [FY2025 Annual]: CENTURYPLY: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CENTURYPLY], F2 [FY2025 Annual]: CENTURYPLY: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [CENTURYPLY], F5 [FY2025 Q2]: CENTURYPLY: Net Profit collapsed by 58.7% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [INFO], [CENTURYPLY], F5 [FY2025 Q1]: CENTURYPLY: Net Profit collapsed by 60.4% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:30], [INFO], [CERA], Analyzing CERA
+[2026-02-21 12:14:30], [INFO], [CERA], F1 [FY2026 Annual]: CERA: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CERA], F1 [FY2025 Annual]: CERA: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [DEBUG], [CERA], No flags detected for CERA
+[2026-02-21 12:14:30], [INFO], [CHALET], Analyzing CHALET
+[2026-02-21 12:14:30], [DEBUG], [CHALET], No flags detected for CHALET
+[2026-02-21 12:14:30], [INFO], [CHAMBLFERT], Analyzing CHAMBLFERT
+[2026-02-21 12:14:30], [DEBUG], [CHAMBLFERT], No flags detected for CHAMBLFERT
+[2026-02-21 12:14:30], [INFO], [CHENNPETRO], Analyzing CHENNPETRO
+[2026-02-21 12:14:30], [INFO], [CHENNPETRO], F1 [FY2026 Annual]: CHENNPETRO: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CHENNPETRO], F1 [FY2025 Annual]: CHENNPETRO: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CHENNPETRO], F4 [FY2025 Q3]: CHENNPETRO: Low Interest Coverage Ratio of 1.18x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CHENNPETRO], F4 [FY2025 Q2]: CHENNPETRO: Low Interest Coverage Ratio of -15.88x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [DEBUG], [CHENNPETRO], No flags detected for CHENNPETRO
+[2026-02-21 12:14:30], [INFO], [CHOICEIN], Analyzing CHOICEIN
+[2026-02-21 12:14:30], [INFO], [CHOICEIN], F1 [FY2026 Annual]: CHOICEIN: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CHOICEIN], F1 [FY2025 Annual]: CHOICEIN: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CHOICEIN], F5 [FY2025 Q3]: CHOICEIN: Net Profit collapsed by 100.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [DEBUG], [CHOICEIN], No flags detected for CHOICEIN
+[2026-02-21 12:14:30], [INFO], [CHOLAHLDNG], Analyzing CHOLAHLDNG
+[2026-02-21 12:14:30], [INFO], [CHOLAHLDNG], F1 [FY2026 Annual]: CHOLAHLDNG: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CHOLAHLDNG], F2 [FY2026 Annual]: CHOLAHLDNG: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [CHOLAHLDNG], F1 [FY2025 Annual]: CHOLAHLDNG: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CHOLAHLDNG], F2 [FY2025 Annual]: CHOLAHLDNG: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [CHOLAHLDNG], F4 [FY2025 Q3]: CHOLAHLDNG: Low Interest Coverage Ratio of 1.45x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CHOLAHLDNG], F4 [FY2025 Q2]: CHOLAHLDNG: Low Interest Coverage Ratio of 1.49x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CHOLAHLDNG], F4 [FY2025 Q1]: CHOLAHLDNG: Low Interest Coverage Ratio of 1.56x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CHOLAFIN], Analyzing CHOLAFIN
+[2026-02-21 12:14:30], [INFO], [CHOLAFIN], F1 [FY2026 Annual]: CHOLAFIN: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CHOLAFIN], F2 [FY2026 Annual]: CHOLAFIN: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [CHOLAFIN], F1 [FY2025 Annual]: CHOLAFIN: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CHOLAFIN], F2 [FY2025 Annual]: CHOLAFIN: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:30], [INFO], [CHOLAFIN], F4 [FY2025 Q3]: CHOLAFIN: Low Interest Coverage Ratio of 1.45x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CHOLAFIN], F4 [FY2025 Q2]: CHOLAFIN: Low Interest Coverage Ratio of 1.43x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CHOLAFIN], F4 [FY2025 Q1]: CHOLAFIN: Low Interest Coverage Ratio of 1.46x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CUB], Analyzing CUB
+[2026-02-21 12:14:30], [INFO], [CUB], F4 [FY2025 Q3]: CUB: Low Interest Coverage Ratio of 1.41x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CUB], F4 [FY2025 Q2]: CUB: Low Interest Coverage Ratio of 1.41x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CUB], F4 [FY2025 Q1]: CUB: Low Interest Coverage Ratio of 1.40x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:30], [INFO], [CLEAN], Analyzing CLEAN
+[2026-02-21 12:14:30], [INFO], [CLEAN], F1 [FY2026 Annual]: CLEAN: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CLEAN], F1 [FY2025 Annual]: CLEAN: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:30], [INFO], [CLEAN], F5 [FY2025 Q3]: CLEAN: Net Profit collapsed by 100.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:30], [DEBUG], [CLEAN], No flags detected for CLEAN
+[2026-02-21 12:14:30], [INFO], [COCHINSHIP], Analyzing COCHINSHIP
+[2026-02-21 12:14:30], [DEBUG], [COCHINSHIP], No flags detected for COCHINSHIP
+[2026-02-21 12:14:30], [INFO], [COFORGE], Analyzing COFORGE
+[2026-02-21 12:14:30], [DEBUG], [COFORGE], No flags detected for COFORGE
+[2026-02-21 12:14:30], [INFO], [COHANCE], Analyzing COHANCE
+[2026-02-21 12:14:30], [DEBUG], [COHANCE], No flags detected for COHANCE
+[2026-02-21 12:14:30], [INFO], [COLPAL], Analyzing COLPAL
+[2026-02-21 12:14:30], [DEBUG], [COLPAL], No flags detected for COLPAL
+[2026-02-21 12:14:30], [INFO], [CONCORDBIO], Analyzing CONCORDBIO
+[2026-02-21 12:14:30], [INFO], [CONCORDBIO], F5 [FY2025 Q2]: CONCORDBIO: Net Profit collapsed by 100.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:30], [DEBUG], [CONCORDBIO], No flags detected for CONCORDBIO
+[2026-02-21 12:14:30], [INFO], [CONCOR], Analyzing CONCOR
+[2026-02-21 12:14:31], [DEBUG], [CONCOR], No flags detected for CONCOR
+[2026-02-21 12:14:31], [INFO], [COROMANDEL], Analyzing COROMANDEL
+[2026-02-21 12:14:31], [INFO], [COROMANDEL], F1 [FY2026 Annual]: COROMANDEL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [COROMANDEL], F3 [FY2026 Annual]: COROMANDEL: Revenue fell 25.5% while Debt rose 1025.9% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [COROMANDEL], F1 [FY2025 Annual]: COROMANDEL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [COROMANDEL], F3 [FY2025 Annual]: COROMANDEL: Revenue fell 25.5% while Debt rose 1025.9% in 2024 vs 2023.
+[2026-02-21 12:14:31], [DEBUG], [COROMANDEL], No flags detected for COROMANDEL
+[2026-02-21 12:14:31], [INFO], [CRAFTSMAN], Analyzing CRAFTSMAN
+[2026-02-21 12:14:31], [INFO], [CRAFTSMAN], F4 [FY2025 Q3]: CRAFTSMAN: Low Interest Coverage Ratio of 1.53x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [CRAFTSMAN], F5 [FY2025 Q3]: CRAFTSMAN: Net Profit collapsed by 82.3% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [DEBUG], [CRAFTSMAN], No flags detected for CRAFTSMAN
+[2026-02-21 12:14:31], [INFO], [CREDITACC], Analyzing CREDITACC
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F1 [FY2026 Annual]: CREDITACC: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F2 [FY2026 Annual]: CREDITACC: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F1 [FY2025 Annual]: CREDITACC: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F2 [FY2025 Annual]: CREDITACC: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F4 [FY2025 Q3]: CREDITACC: Low Interest Coverage Ratio of 0.73x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F5 [FY2025 Q3]: CREDITACC: Net Profit collapsed by 100.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F4 [FY2025 Q2]: CREDITACC: Low Interest Coverage Ratio of 1.52x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F5 [FY2025 Q2]: CREDITACC: Net Profit collapsed by 100.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F4 [FY2025 Q1]: CREDITACC: Low Interest Coverage Ratio of 2.05x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [CREDITACC], F5 [FY2025 Q1]: CREDITACC: Net Profit collapsed by 100.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:31], [INFO], [CROMPTON], Analyzing CROMPTON
+[2026-02-21 12:14:31], [DEBUG], [CROMPTON], No flags detected for CROMPTON
+[2026-02-21 12:14:31], [INFO], [CUMMINSIND], Analyzing CUMMINSIND
+[2026-02-21 12:14:31], [INFO], [CUMMINSIND], F1 [FY2026 Annual]: CUMMINSIND: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [CUMMINSIND], F1 [FY2025 Annual]: CUMMINSIND: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [CUMMINSIND], No flags detected for CUMMINSIND
+[2026-02-21 12:14:31], [INFO], [CYIENT], Analyzing CYIENT
+[2026-02-21 12:14:31], [DEBUG], [CYIENT], No flags detected for CYIENT
+[2026-02-21 12:14:31], [INFO], [DCMSHRIRAM], Analyzing DCMSHRIRAM
+[2026-02-21 12:14:31], [INFO], [DCMSHRIRAM], F3 [FY2026 Annual]: DCMSHRIRAM: Revenue fell 5.4% while Debt rose 27.5% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [DCMSHRIRAM], F3 [FY2025 Annual]: DCMSHRIRAM: Revenue fell 5.4% while Debt rose 27.5% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [DCMSHRIRAM], F5 [FY2025 Q1]: DCMSHRIRAM: Net Profit collapsed by 100.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:31], [INFO], [DLF], Analyzing DLF
+[2026-02-21 12:14:31], [DEBUG], [DLF], No flags detected for DLF
+[2026-02-21 12:14:31], [INFO], [DOMS], Analyzing DOMS
+[2026-02-21 12:14:31], [DEBUG], [DOMS], No flags detected for DOMS
+[2026-02-21 12:14:31], [INFO], [DABUR], Analyzing DABUR
+[2026-02-21 12:14:31], [DEBUG], [DABUR], No flags detected for DABUR
+[2026-02-21 12:14:31], [INFO], [DALBHARAT], Analyzing DALBHARAT
+[2026-02-21 12:14:31], [INFO], [DALBHARAT], F4 [FY2025 Q3]: DALBHARAT: Low Interest Coverage Ratio of 1.82x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [DALBHARAT], F5 [FY2025 Q3]: DALBHARAT: Net Profit collapsed by 76.8% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [DALBHARAT], F4 [FY2025 Q2]: DALBHARAT: Low Interest Coverage Ratio of 1.74x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [DALBHARAT], F5 [FY2025 Q2]: DALBHARAT: Net Profit collapsed by 61.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [DEBUG], [DALBHARAT], No flags detected for DALBHARAT
+[2026-02-21 12:14:31], [INFO], [DATAPATTNS], Analyzing DATAPATTNS
+[2026-02-21 12:14:31], [DEBUG], [DATAPATTNS], No flags detected for DATAPATTNS
+[2026-02-21 12:14:31], [INFO], [DEEPAKFERT], Analyzing DEEPAKFERT
+[2026-02-21 12:14:31], [INFO], [DEEPAKFERT], F3 [FY2026 Annual]: DEEPAKFERT: Revenue fell 23.2% while Debt rose 12.0% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [DEEPAKFERT], F3 [FY2025 Annual]: DEEPAKFERT: Revenue fell 23.2% while Debt rose 12.0% in 2024 vs 2023.
+[2026-02-21 12:14:31], [DEBUG], [DEEPAKFERT], No flags detected for DEEPAKFERT
+[2026-02-21 12:14:31], [INFO], [DEEPAKNTR], Analyzing DEEPAKNTR
+[2026-02-21 12:14:31], [INFO], [DEEPAKNTR], F1 [FY2026 Annual]: DEEPAKNTR: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [DEEPAKNTR], F3 [FY2026 Annual]: DEEPAKNTR: Revenue fell 3.6% while Debt rose 298.2% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [DEEPAKNTR], F1 [FY2025 Annual]: DEEPAKNTR: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [DEEPAKNTR], F3 [FY2025 Annual]: DEEPAKNTR: Revenue fell 3.6% while Debt rose 298.2% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [DEEPAKNTR], F5 [FY2025 Q3]: DEEPAKNTR: Net Profit collapsed by 51.5% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [DEBUG], [DEEPAKNTR], No flags detected for DEEPAKNTR
+[2026-02-21 12:14:31], [INFO], [DELHIVERY], Analyzing DELHIVERY
+[2026-02-21 12:14:31], [INFO], [DELHIVERY], F2 [FY2026 Annual]: DELHIVERY: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [DELHIVERY], F2 [FY2025 Annual]: DELHIVERY: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [DELHIVERY], F4 [FY2025 Q3]: DELHIVERY: Low Interest Coverage Ratio of 1.78x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [DELHIVERY], F5 [FY2025 Q3]: DELHIVERY: Net Profit collapsed by 100.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [DELHIVERY], F4 [FY2025 Q2]: DELHIVERY: Low Interest Coverage Ratio of 1.49x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [DEBUG], [DELHIVERY], No flags detected for DELHIVERY
+[2026-02-21 12:14:31], [INFO], [DEVYANI], Analyzing DEVYANI
+[2026-02-21 12:14:31], [INFO], [DEVYANI], F4 [FY2025 Q3]: DEVYANI: Low Interest Coverage Ratio of 1.13x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [DEVYANI], F5 [FY2025 Q3]: DEVYANI: Net Profit collapsed by 105.1% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [DEVYANI], F4 [FY2025 Q2]: DEVYANI: Low Interest Coverage Ratio of 0.94x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [DEVYANI], F5 [FY2025 Q2]: DEVYANI: Net Profit collapsed by 99.9% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [INFO], [DEVYANI], F4 [FY2025 Q1]: DEVYANI: Low Interest Coverage Ratio of 1.48x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [DIXON], Analyzing DIXON
+[2026-02-21 12:14:31], [DEBUG], [DIXON], No flags detected for DIXON
+[2026-02-21 12:14:31], [INFO], [AGARWALEYE], Analyzing AGARWALEYE
+[2026-02-21 12:14:31], [INFO], [AGARWALEYE], F4 [FY2025 Q3]: AGARWALEYE: Low Interest Coverage Ratio of 2.45x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [DEBUG], [AGARWALEYE], No flags detected for AGARWALEYE
+[2026-02-21 12:14:31], [INFO], [LALPATHLAB], Analyzing LALPATHLAB
+[2026-02-21 12:14:31], [DEBUG], [LALPATHLAB], No flags detected for LALPATHLAB
+[2026-02-21 12:14:31], [INFO], [EIDPARRY], Analyzing EIDPARRY
+[2026-02-21 12:14:31], [INFO], [EIDPARRY], F3 [FY2026 Annual]: EIDPARRY: Revenue fell 16.5% while Debt rose 6.2% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [EIDPARRY], F3 [FY2025 Annual]: EIDPARRY: Revenue fell 16.5% while Debt rose 6.2% in 2024 vs 2023.
+[2026-02-21 12:14:31], [DEBUG], [EIDPARRY], No flags detected for EIDPARRY
+[2026-02-21 12:14:31], [INFO], [EIHOTEL], Analyzing EIHOTEL
+[2026-02-21 12:14:31], [DEBUG], [EIHOTEL], No flags detected for EIHOTEL
+[2026-02-21 12:14:31], [INFO], [ELECON], Analyzing ELECON
+[2026-02-21 12:14:31], [DEBUG], [ELECON], No flags detected for ELECON
+[2026-02-21 12:14:31], [INFO], [ELGIEQUIP], Analyzing ELGIEQUIP
+[2026-02-21 12:14:31], [INFO], [ELGIEQUIP], F1 [FY2026 Annual]: ELGIEQUIP: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [ELGIEQUIP], F1 [FY2025 Annual]: ELGIEQUIP: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [ELGIEQUIP], No flags detected for ELGIEQUIP
+[2026-02-21 12:14:31], [INFO], [EMAMILTD], Analyzing EMAMILTD
+[2026-02-21 12:14:31], [DEBUG], [EMAMILTD], No flags detected for EMAMILTD
+[2026-02-21 12:14:31], [INFO], [EMCURE], Analyzing EMCURE
+[2026-02-21 12:14:31], [DEBUG], [EMCURE], No flags detected for EMCURE
+[2026-02-21 12:14:31], [INFO], [ENDURANCE], Analyzing ENDURANCE
+[2026-02-21 12:14:31], [DEBUG], [ENDURANCE], No flags detected for ENDURANCE
+[2026-02-21 12:14:31], [INFO], [ENGINERSIN], Analyzing ENGINERSIN
+[2026-02-21 12:14:31], [INFO], [ENGINERSIN], F1 [FY2026 Annual]: ENGINERSIN: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [ENGINERSIN], F1 [FY2025 Annual]: ENGINERSIN: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [ENGINERSIN], No flags detected for ENGINERSIN
+[2026-02-21 12:14:31], [INFO], [ERIS], Analyzing ERIS
+[2026-02-21 12:14:31], [INFO], [ERIS], F1 [FY2026 Annual]: ERIS: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [ERIS], F1 [FY2025 Annual]: ERIS: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [ERIS], No flags detected for ERIS
+[2026-02-21 12:14:31], [INFO], [ESCORTS], Analyzing ESCORTS
+[2026-02-21 12:14:31], [INFO], [ESCORTS], F1 [FY2026 Annual]: ESCORTS: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [ESCORTS], F1 [FY2025 Annual]: ESCORTS: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [ESCORTS], No flags detected for ESCORTS
+[2026-02-21 12:14:31], [INFO], [ETERNAL], Analyzing ETERNAL
+[2026-02-21 12:14:31], [INFO], [ETERNAL], F5 [FY2025 Q3]: ETERNAL: Net Profit collapsed by 57.2% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [DEBUG], [ETERNAL], No flags detected for ETERNAL
+[2026-02-21 12:14:31], [INFO], [EXIDEIND], Analyzing EXIDEIND
+[2026-02-21 12:14:31], [INFO], [EXIDEIND], F1 [FY2026 Annual]: EXIDEIND: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [EXIDEIND], F2 [FY2026 Annual]: EXIDEIND: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [EXIDEIND], F1 [FY2025 Annual]: EXIDEIND: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [EXIDEIND], F2 [FY2025 Annual]: EXIDEIND: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [DEBUG], [EXIDEIND], No flags detected for EXIDEIND
+[2026-02-21 12:14:31], [INFO], [NYKAA], Analyzing NYKAA
+[2026-02-21 12:14:31], [INFO], [NYKAA], F1 [FY2026 Annual]: NYKAA: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [NYKAA], F2 [FY2026 Annual]: NYKAA: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [NYKAA], F1 [FY2025 Annual]: NYKAA: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [NYKAA], F2 [FY2025 Annual]: NYKAA: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [NYKAA], F4 [FY2025 Q3]: NYKAA: Low Interest Coverage Ratio of 2.40x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [NYKAA], F4 [FY2025 Q2]: NYKAA: Low Interest Coverage Ratio of 1.88x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [NYKAA], F4 [FY2025 Q1]: NYKAA: Low Interest Coverage Ratio of 2.04x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [FEDERALBNK], Analyzing FEDERALBNK
+[2026-02-21 12:14:31], [INFO], [FEDERALBNK], F4 [FY2025 Q3]: FEDERALBNK: Low Interest Coverage Ratio of 1.28x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [FEDERALBNK], F4 [FY2025 Q2]: FEDERALBNK: Low Interest Coverage Ratio of 1.34x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [FEDERALBNK], F4 [FY2025 Q1]: FEDERALBNK: Low Interest Coverage Ratio of 1.33x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [FACT], Analyzing FACT
+[2026-02-21 12:14:31], [INFO], [FACT], F4 [FY2025 Q3]: FACT: Low Interest Coverage Ratio of 1.24x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [FACT], F5 [FY2025 Q3]: FACT: Net Profit collapsed by 73.6% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [FACT], F4 [FY2025 Q2]: FACT: Low Interest Coverage Ratio of 1.25x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [FACT], F5 [FY2025 Q2]: FACT: Net Profit collapsed by 89.4% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [INFO], [FACT], F4 [FY2025 Q1]: FACT: Low Interest Coverage Ratio of -0.04x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [FACT], F5 [FY2025 Q1]: FACT: Net Profit collapsed by 167.8% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:31], [INFO], [FINCABLES], Analyzing FINCABLES
+[2026-02-21 12:14:31], [INFO], [FINCABLES], F1 [FY2026 Annual]: FINCABLES: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [FINCABLES], F1 [FY2025 Annual]: FINCABLES: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [FINCABLES], No flags detected for FINCABLES
+[2026-02-21 12:14:31], [INFO], [FINPIPE], Analyzing FINPIPE
+[2026-02-21 12:14:31], [DEBUG], [FINPIPE], No flags detected for FINPIPE
+[2026-02-21 12:14:31], [INFO], [FIVESTAR], Analyzing FIVESTAR
+[2026-02-21 12:14:31], [DEBUG], [FIVESTAR], No flags detected for FIVESTAR
+[2026-02-21 12:14:31], [INFO], [FORCEMOT], Analyzing FORCEMOT
+[2026-02-21 12:14:31], [DEBUG], [FORCEMOT], No flags detected for FORCEMOT
+[2026-02-21 12:14:31], [INFO], [FORTIS], Analyzing FORTIS
+[2026-02-21 12:14:31], [DEBUG], [FORTIS], No flags detected for FORTIS
+[2026-02-21 12:14:31], [INFO], [GAIL], Analyzing GAIL
+[2026-02-21 12:14:31], [INFO], [GAIL], F1 [FY2026 Annual]: GAIL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GAIL], F3 [FY2026 Annual]: GAIL: Revenue fell 8.5% while Debt rose 14.3% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [GAIL], F1 [FY2025 Annual]: GAIL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GAIL], F3 [FY2025 Annual]: GAIL: Revenue fell 8.5% while Debt rose 14.3% in 2024 vs 2023.
+[2026-02-21 12:14:31], [DEBUG], [GAIL], No flags detected for GAIL
+[2026-02-21 12:14:31], [INFO], [GVT&D], Analyzing GVT&D
+[2026-02-21 12:14:31], [DEBUG], [GVT&D], No flags detected for GVT&D
+[2026-02-21 12:14:31], [INFO], [GMRAIRPORT], Analyzing GMRAIRPORT
+[2026-02-21 12:14:31], [INFO], [GMRAIRPORT], F4 [FY2025 Q3]: GMRAIRPORT: Low Interest Coverage Ratio of 1.23x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [GMRAIRPORT], F4 [FY2025 Q2]: GMRAIRPORT: Low Interest Coverage Ratio of 0.58x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [GMRAIRPORT], F4 [FY2025 Q1]: GMRAIRPORT: Low Interest Coverage Ratio of 0.62x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [GRSE], Analyzing GRSE
+[2026-02-21 12:14:31], [DEBUG], [GRSE], No flags detected for GRSE
+[2026-02-21 12:14:31], [INFO], [GILLETTE], Analyzing GILLETTE
+[2026-02-21 12:14:31], [DEBUG], [GILLETTE], No flags detected for GILLETTE
+[2026-02-21 12:14:31], [INFO], [GLAND], Analyzing GLAND
+[2026-02-21 12:14:31], [INFO], [GLAND], F1 [FY2026 Annual]: GLAND: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GLAND], F1 [FY2025 Annual]: GLAND: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [GLAND], No flags detected for GLAND
+[2026-02-21 12:14:31], [INFO], [GLAXO], Analyzing GLAXO
+[2026-02-21 12:14:31], [INFO], [GLAXO], F1 [FY2026 Annual]: GLAXO: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GLAXO], F1 [FY2025 Annual]: GLAXO: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GLAXO], F5 [FY2025 Q1]: GLAXO: Net Profit collapsed by 100.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:31], [INFO], [GLENMARK], Analyzing GLENMARK
+[2026-02-21 12:14:31], [DEBUG], [GLENMARK], No flags detected for GLENMARK
+[2026-02-21 12:14:31], [INFO], [MEDANTA], Analyzing MEDANTA
+[2026-02-21 12:14:31], [DEBUG], [MEDANTA], No flags detected for MEDANTA
+[2026-02-21 12:14:31], [INFO], [GPIL], Analyzing GPIL
+[2026-02-21 12:14:31], [DEBUG], [GPIL], No flags detected for GPIL
+[2026-02-21 12:14:31], [INFO], [GODFRYPHLP], Analyzing GODFRYPHLP
+[2026-02-21 12:14:31], [DEBUG], [GODFRYPHLP], No flags detected for GODFRYPHLP
+[2026-02-21 12:14:31], [INFO], [GODREJAGRO], Analyzing GODREJAGRO
+[2026-02-21 12:14:31], [DEBUG], [GODREJAGRO], No flags detected for GODREJAGRO
+[2026-02-21 12:14:31], [INFO], [GODREJCP], Analyzing GODREJCP
+[2026-02-21 12:14:31], [DEBUG], [GODREJCP], No flags detected for GODREJCP
+[2026-02-21 12:14:31], [INFO], [GODREJIND], Analyzing GODREJIND
+[2026-02-21 12:14:31], [INFO], [GODREJIND], F1 [FY2026 Annual]: GODREJIND: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GODREJIND], F2 [FY2026 Annual]: GODREJIND: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [GODREJIND], F3 [FY2026 Annual]: GODREJIND: Revenue fell 0.8% while Debt rose 48.1% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [GODREJIND], F1 [FY2025 Annual]: GODREJIND: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GODREJIND], F2 [FY2025 Annual]: GODREJIND: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [GODREJIND], F3 [FY2025 Annual]: GODREJIND: Revenue fell 0.8% while Debt rose 48.1% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [GODREJIND], F4 [FY2025 Q3]: GODREJIND: Low Interest Coverage Ratio of 1.60x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [GODREJIND], F4 [FY2025 Q2]: GODREJIND: Low Interest Coverage Ratio of 1.64x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [DEBUG], [GODREJIND], No flags detected for GODREJIND
+[2026-02-21 12:14:31], [INFO], [GODREJPROP], Analyzing GODREJPROP
+[2026-02-21 12:14:31], [INFO], [GODREJPROP], F1 [FY2026 Annual]: GODREJPROP: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GODREJPROP], F2 [FY2026 Annual]: GODREJPROP: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [GODREJPROP], F1 [FY2025 Annual]: GODREJPROP: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GODREJPROP], F2 [FY2025 Annual]: GODREJPROP: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [DEBUG], [GODREJPROP], No flags detected for GODREJPROP
+[2026-02-21 12:14:31], [INFO], [GRANULES], Analyzing GRANULES
+[2026-02-21 12:14:31], [INFO], [GRANULES], F3 [FY2026 Annual]: GRANULES: Revenue fell 0.1% while Debt rose 15.5% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [GRANULES], F3 [FY2025 Annual]: GRANULES: Revenue fell 0.1% while Debt rose 15.5% in 2024 vs 2023.
+[2026-02-21 12:14:31], [DEBUG], [GRANULES], No flags detected for GRANULES
+[2026-02-21 12:14:31], [INFO], [GRAPHITE], Analyzing GRAPHITE
+[2026-02-21 12:14:31], [INFO], [GRAPHITE], F1 [FY2026 Annual]: GRAPHITE: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GRAPHITE], F1 [FY2025 Annual]: GRAPHITE: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GRAPHITE], F4 [FY2025 Q3]: GRAPHITE: Low Interest Coverage Ratio of -6.00x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [GRAPHITE], F5 [FY2025 Q3]: GRAPHITE: Net Profit collapsed by 211.1% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [GRAPHITE], F5 [FY2025 Q2]: GRAPHITE: Net Profit collapsed by 75.7% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [DEBUG], [GRAPHITE], No flags detected for GRAPHITE
+[2026-02-21 12:14:31], [INFO], [GRAVITA], Analyzing GRAVITA
+[2026-02-21 12:14:31], [INFO], [GRAVITA], F1 [FY2026 Annual]: GRAVITA: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GRAVITA], F1 [FY2025 Annual]: GRAVITA: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [GRAVITA], No flags detected for GRAVITA
+[2026-02-21 12:14:31], [INFO], [GESHIP], Analyzing GESHIP
+[2026-02-21 12:14:31], [DEBUG], [GESHIP], No flags detected for GESHIP
+[2026-02-21 12:14:31], [INFO], [FLUOROCHEM], Analyzing FLUOROCHEM
+[2026-02-21 12:14:31], [INFO], [FLUOROCHEM], F1 [FY2026 Annual]: FLUOROCHEM: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [FLUOROCHEM], F3 [FY2026 Annual]: FLUOROCHEM: Revenue fell 24.7% while Debt rose 35.0% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [FLUOROCHEM], F1 [FY2025 Annual]: FLUOROCHEM: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [FLUOROCHEM], F3 [FY2025 Annual]: FLUOROCHEM: Revenue fell 24.7% while Debt rose 35.0% in 2024 vs 2023.
+[2026-02-21 12:14:31], [DEBUG], [FLUOROCHEM], No flags detected for FLUOROCHEM
+[2026-02-21 12:14:31], [INFO], [GUJGASLTD], Analyzing GUJGASLTD
+[2026-02-21 12:14:31], [INFO], [GUJGASLTD], F5 [FY2025 Q1]: GUJGASLTD: Net Profit collapsed by 100.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:31], [INFO], [GMDCLTD], Analyzing GMDCLTD
+[2026-02-21 12:14:31], [INFO], [GMDCLTD], F1 [FY2026 Annual]: GMDCLTD: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [GMDCLTD], F1 [FY2025 Annual]: GMDCLTD: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [GMDCLTD], No flags detected for GMDCLTD
+[2026-02-21 12:14:31], [INFO], [GSPL], Analyzing GSPL
+[2026-02-21 12:14:31], [DEBUG], [GSPL], No flags detected for GSPL
+[2026-02-21 12:14:31], [INFO], [HEG], Analyzing HEG
+[2026-02-21 12:14:31], [INFO], [HEG], F1 [FY2026 Annual]: HEG: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [HEG], F1 [FY2025 Annual]: HEG: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [HEG], F4 [FY2025 Q1]: HEG: Low Interest Coverage Ratio of 1.37x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HEG], F5 [FY2025 Q1]: HEG: Net Profit collapsed by 83.4% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:31], [INFO], [HBLENGINE], Analyzing HBLENGINE
+[2026-02-21 12:14:31], [INFO], [HBLENGINE], F5 [FY2025 Q2]: HBLENGINE: Net Profit collapsed by 100.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [DEBUG], [HBLENGINE], No flags detected for HBLENGINE
+[2026-02-21 12:14:31], [INFO], [HDFCAMC], Analyzing HDFCAMC
+[2026-02-21 12:14:31], [DEBUG], [HDFCAMC], No flags detected for HDFCAMC
+[2026-02-21 12:14:31], [INFO], [HFCL], Analyzing HFCL
+[2026-02-21 12:14:31], [INFO], [HFCL], F1 [FY2026 Annual]: HFCL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [HFCL], F3 [FY2026 Annual]: HFCL: Revenue fell 5.9% while Debt rose 30.6% in 2024 vs 2023.
+[2026-02-21 12:14:31], [INFO], [HFCL], F1 [FY2025 Annual]: HFCL: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [HFCL], F3 [FY2025 Annual]: HFCL: Revenue fell 5.9% while Debt rose 30.6% in 2024 vs 2023.
+[2026-02-21 12:14:31], [DEBUG], [HFCL], No flags detected for HFCL
+[2026-02-21 12:14:31], [INFO], [HAPPSTMNDS], Analyzing HAPPSTMNDS
+[2026-02-21 12:14:31], [INFO], [HAPPSTMNDS], F1 [FY2026 Annual]: HAPPSTMNDS: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [HAPPSTMNDS], F1 [FY2025 Annual]: HAPPSTMNDS: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [HAPPSTMNDS], No flags detected for HAPPSTMNDS
+[2026-02-21 12:14:31], [INFO], [HAVELLS], Analyzing HAVELLS
+[2026-02-21 12:14:31], [DEBUG], [HAVELLS], No flags detected for HAVELLS
+[2026-02-21 12:14:31], [INFO], [HEXT], Analyzing HEXT
+[2026-02-21 12:14:31], [DEBUG], [HEXT], No flags detected for HEXT
+[2026-02-21 12:14:31], [INFO], [HSCL], Analyzing HSCL
+[2026-02-21 12:14:31], [INFO], [HSCL], F1 [FY2026 Annual]: HSCL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [HSCL], F1 [FY2025 Annual]: HSCL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [HSCL], No flags detected for HSCL
+[2026-02-21 12:14:31], [INFO], [HAL], Analyzing HAL
+[2026-02-21 12:14:31], [DEBUG], [HAL], No flags detected for HAL
+[2026-02-21 12:14:31], [INFO], [HINDCOPPER], Analyzing HINDCOPPER
+[2026-02-21 12:14:31], [DEBUG], [HINDCOPPER], No flags detected for HINDCOPPER
+[2026-02-21 12:14:31], [INFO], [HINDPETRO], Analyzing HINDPETRO
+[2026-02-21 12:14:31], [INFO], [HINDPETRO], F4 [FY2025 Q2]: HINDPETRO: Low Interest Coverage Ratio of 1.78x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HINDPETRO], F4 [FY2025 Q1]: HINDPETRO: Low Interest Coverage Ratio of 1.57x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HINDZINC], Analyzing HINDZINC
+[2026-02-21 12:14:31], [DEBUG], [HINDZINC], No flags detected for HINDZINC
+[2026-02-21 12:14:31], [INFO], [POWERINDIA], Analyzing POWERINDIA
+[2026-02-21 12:14:31], [INFO], [POWERINDIA], F4 [FY2025 Q1]: POWERINDIA: Low Interest Coverage Ratio of 2.38x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HOMEFIRST], Analyzing HOMEFIRST
+[2026-02-21 12:14:31], [INFO], [HOMEFIRST], F4 [FY2025 Q3]: HOMEFIRST: Low Interest Coverage Ratio of 1.69x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HOMEFIRST], F4 [FY2025 Q2]: HOMEFIRST: Low Interest Coverage Ratio of 1.70x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HOMEFIRST], F4 [FY2025 Q1]: HOMEFIRST: Low Interest Coverage Ratio of 1.72x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HONASA], Analyzing HONASA
+[2026-02-21 12:14:31], [INFO], [HONASA], F4 [FY2025 Q2]: HONASA: Low Interest Coverage Ratio of -6.78x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HONASA], F5 [FY2025 Q2]: HONASA: Net Profit collapsed by 163.1% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [DEBUG], [HONASA], No flags detected for HONASA
+[2026-02-21 12:14:31], [INFO], [HONAUT], Analyzing HONAUT
+[2026-02-21 12:14:31], [DEBUG], [HONAUT], No flags detected for HONAUT
+[2026-02-21 12:14:31], [INFO], [HUDCO], Analyzing HUDCO
+[2026-02-21 12:14:31], [INFO], [HUDCO], F1 [FY2026 Annual]: HUDCO: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [HUDCO], F2 [FY2026 Annual]: HUDCO: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [HUDCO], F1 [FY2025 Annual]: HUDCO: OCF below Net Profit in 3/3 recent years.
+[2026-02-21 12:14:31], [INFO], [HUDCO], F2 [FY2025 Annual]: HUDCO: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [HUDCO], F4 [FY2025 Q3]: HUDCO: Low Interest Coverage Ratio of 1.53x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HUDCO], F4 [FY2025 Q2]: HUDCO: Low Interest Coverage Ratio of 1.60x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HUDCO], F4 [FY2025 Q1]: HUDCO: Low Interest Coverage Ratio of 1.47x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [HYUNDAI], Analyzing HYUNDAI
+[2026-02-21 12:14:31], [DEBUG], [HYUNDAI], No flags detected for HYUNDAI
+[2026-02-21 12:14:31], [INFO], [IDBI], Analyzing IDBI
+[2026-02-21 12:14:31], [INFO], [IDBI], F4 [FY2025 Q3]: IDBI: Low Interest Coverage Ratio of 1.74x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IDBI], F4 [FY2025 Q2]: IDBI: Low Interest Coverage Ratio of 1.69x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IDBI], F4 [FY2025 Q1]: IDBI: Low Interest Coverage Ratio of 1.74x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IDFCFIRSTB], Analyzing IDFCFIRSTB
+[2026-02-21 12:14:31], [INFO], [IDFCFIRSTB], F4 [FY2025 Q3]: IDFCFIRSTB: Low Interest Coverage Ratio of 1.10x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IDFCFIRSTB], F5 [FY2025 Q3]: IDFCFIRSTB: Net Profit collapsed by 53.5% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [IDFCFIRSTB], F4 [FY2025 Q2]: IDFCFIRSTB: Low Interest Coverage Ratio of 1.06x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IDFCFIRSTB], F5 [FY2025 Q2]: IDFCFIRSTB: Net Profit collapsed by 71.6% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [INFO], [IDFCFIRSTB], F4 [FY2025 Q1]: IDFCFIRSTB: Low Interest Coverage Ratio of 1.21x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IFCI], Analyzing IFCI
+[2026-02-21 12:14:31], [INFO], [IFCI], F1 [FY2026 Annual]: IFCI: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [IFCI], F2 [FY2026 Annual]: IFCI: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [IFCI], F1 [FY2025 Annual]: IFCI: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [IFCI], F2 [FY2025 Annual]: IFCI: Negative Free Cash Flow for last 3 consecutive years.
+[2026-02-21 12:14:31], [INFO], [IFCI], F4 [FY2025 Q3]: IFCI: Low Interest Coverage Ratio of 1.72x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IFCI], F4 [FY2025 Q1]: IFCI: Low Interest Coverage Ratio of 1.30x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IIFL], Analyzing IIFL
+[2026-02-21 12:14:31], [INFO], [IIFL], F1 [FY2026 Annual]: IIFL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [IIFL], F1 [FY2025 Annual]: IIFL: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [IIFL], F4 [FY2025 Q3]: IIFL: Low Interest Coverage Ratio of 1.10x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IIFL], F5 [FY2025 Q3]: IIFL: Net Profit collapsed by 91.7% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [IIFL], F4 [FY2025 Q2]: IIFL: Low Interest Coverage Ratio of 0.86x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IIFL], F5 [FY2025 Q2]: IIFL: Net Profit collapsed by 133.2% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [INFO], [IIFL], F4 [FY2025 Q1]: IIFL: Low Interest Coverage Ratio of 1.42x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INOXINDIA], Analyzing INOXINDIA
+[2026-02-21 12:14:31], [DEBUG], [INOXINDIA], No flags detected for INOXINDIA
+[2026-02-21 12:14:31], [INFO], [IRB], Analyzing IRB
+[2026-02-21 12:14:31], [INFO], [IRB], F4 [FY2025 Q2]: IRB: Low Interest Coverage Ratio of 1.62x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IRB], F4 [FY2025 Q1]: IRB: Low Interest Coverage Ratio of 1.64x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IRCON], Analyzing IRCON
+[2026-02-21 12:14:31], [INFO], [IRCON], F1 [FY2026 Annual]: IRCON: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [IRCON], F1 [FY2025 Annual]: IRCON: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [IRCON], F5 [FY2025 Q3]: IRCON: Net Profit collapsed by 64.6% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [DEBUG], [IRCON], No flags detected for IRCON
+[2026-02-21 12:14:31], [INFO], [ITI], Analyzing ITI
+[2026-02-21 12:14:31], [INFO], [ITI], F4 [FY2025 Q3]: ITI: Low Interest Coverage Ratio of -0.05x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [ITI], F4 [FY2025 Q2]: ITI: Low Interest Coverage Ratio of -0.14x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [ITI], F4 [FY2025 Q1]: ITI: Low Interest Coverage Ratio of -0.71x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INDGN], Analyzing INDGN
+[2026-02-21 12:14:31], [DEBUG], [INDGN], No flags detected for INDGN
+[2026-02-21 12:14:31], [INFO], [INDIACEM], Analyzing INDIACEM
+[2026-02-21 12:14:31], [INFO], [INDIACEM], F4 [FY2025 Q3]: INDIACEM: Low Interest Coverage Ratio of 2.28x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INDIACEM], F5 [FY2025 Q3]: INDIACEM: Net Profit collapsed by 100.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [INDIACEM], F4 [FY2025 Q2]: INDIACEM: Low Interest Coverage Ratio of -3.85x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INDIACEM], F4 [FY2025 Q1]: INDIACEM: Low Interest Coverage Ratio of 2.13x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INDIAMART], Analyzing INDIAMART
+[2026-02-21 12:14:31], [DEBUG], [INDIAMART], No flags detected for INDIAMART
+[2026-02-21 12:14:31], [INFO], [INDIANB], Analyzing INDIANB
+[2026-02-21 12:14:31], [INFO], [INDIANB], F4 [FY2025 Q3]: INDIANB: Low Interest Coverage Ratio of 1.40x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INDIANB], F4 [FY2025 Q2]: INDIANB: Low Interest Coverage Ratio of 1.40x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INDIANB], F4 [FY2025 Q1]: INDIANB: Low Interest Coverage Ratio of 1.37x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IEX], Analyzing IEX
+[2026-02-21 12:14:31], [INFO], [IEX], F1 [FY2026 Annual]: IEX: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [INFO], [IEX], F1 [FY2025 Annual]: IEX: OCF below Net Profit in 2/3 recent years.
+[2026-02-21 12:14:31], [DEBUG], [IEX], No flags detected for IEX
+[2026-02-21 12:14:31], [INFO], [INDHOTEL], Analyzing INDHOTEL
+[2026-02-21 12:14:31], [DEBUG], [INDHOTEL], No flags detected for INDHOTEL
+[2026-02-21 12:14:31], [INFO], [IOC], Analyzing IOC
+[2026-02-21 12:14:31], [INFO], [IOC], F4 [FY2025 Q3]: IOC: Low Interest Coverage Ratio of 2.03x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IOC], F5 [FY2025 Q3]: IOC: Net Profit collapsed by 76.6% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [IOC], F4 [FY2025 Q2]: IOC: Low Interest Coverage Ratio of 0.50x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IOC], F5 [FY2025 Q2]: IOC: Net Profit collapsed by 101.3% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [INFO], [IOC], F5 [FY2025 Q1]: IOC: Net Profit collapsed by 75.6% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:31], [INFO], [IOB], Analyzing IOB
+[2026-02-21 12:14:31], [INFO], [IOB], F4 [FY2025 Q3]: IOB: Low Interest Coverage Ratio of 1.29x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IOB], F4 [FY2025 Q2]: IOB: Low Interest Coverage Ratio of 1.23x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IOB], F4 [FY2025 Q1]: IOB: Low Interest Coverage Ratio of 1.18x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IRCTC], Analyzing IRCTC
+[2026-02-21 12:14:31], [INFO], [IRCTC], F5 [FY2025 Q3]: IRCTC: Net Profit collapsed by 100.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:31], [INFO], [IRCTC], F5 [FY2025 Q2]: IRCTC: Net Profit collapsed by 100.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [INFO], [IRCTC], F5 [FY2025 Q1]: IRCTC: Net Profit collapsed by 100.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:31], [INFO], [IRFC], Analyzing IRFC
+[2026-02-21 12:14:31], [INFO], [IRFC], F4 [FY2025 Q3]: IRFC: Low Interest Coverage Ratio of 1.31x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IRFC], F4 [FY2025 Q2]: IRFC: Low Interest Coverage Ratio of 1.31x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IRFC], F4 [FY2025 Q1]: IRFC: Low Interest Coverage Ratio of 1.31x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IREDA], Analyzing IREDA
+[2026-02-21 12:14:31], [INFO], [IREDA], F4 [FY2025 Q3]: IREDA: Low Interest Coverage Ratio of 1.49x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IREDA], F4 [FY2025 Q2]: IREDA: Low Interest Coverage Ratio of 1.47x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IREDA], F4 [FY2025 Q1]: IREDA: Low Interest Coverage Ratio of 1.49x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [IGL], Analyzing IGL
+[2026-02-21 12:14:31], [DEBUG], [IGL], No flags detected for IGL
+[2026-02-21 12:14:31], [INFO], [INDUSTOWER], Analyzing INDUSTOWER
+[2026-02-21 12:14:31], [INFO], [INDUSTOWER], F5 [FY2025 Q2]: INDUSTOWER: Net Profit collapsed by 100.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [DEBUG], [INDUSTOWER], No flags detected for INDUSTOWER
+[2026-02-21 12:14:31], [INFO], [NAUKRI], Analyzing NAUKRI
+[2026-02-21 12:14:31], [DEBUG], [NAUKRI], No flags detected for NAUKRI
+[2026-02-21 12:14:31], [INFO], [INOXWIND], Analyzing INOXWIND
+[2026-02-21 12:14:31], [INFO], [INOXWIND], F4 [FY2025 Q2]: INOXWIND: Low Interest Coverage Ratio of 2.38x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INOXWIND], F4 [FY2025 Q1]: INOXWIND: Low Interest Coverage Ratio of 1.83x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INTELLECT], Analyzing INTELLECT
+[2026-02-21 12:14:31], [DEBUG], [INTELLECT], No flags detected for INTELLECT
+[2026-02-21 12:14:31], [INFO], [INDIGO], Analyzing INDIGO
+[2026-02-21 12:14:31], [INFO], [INDIGO], F4 [FY2025 Q3]: INDIGO: Low Interest Coverage Ratio of 2.19x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [INDIGO], F4 [FY2025 Q2]: INDIGO: Low Interest Coverage Ratio of 1.79x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [DEBUG], [INDIGO], No flags detected for INDIGO
+[2026-02-21 12:14:31], [INFO], [IGIL], Analyzing IGIL
+[2026-02-21 12:14:31], [DEBUG], [IGIL], No flags detected for IGIL
+[2026-02-21 12:14:31], [INFO], [IKS], Analyzing IKS
+[2026-02-21 12:14:31], [DEBUG], [IKS], No flags detected for IKS
+[2026-02-21 12:14:31], [INFO], [IPCALAB], Analyzing IPCALAB
+[2026-02-21 12:14:31], [DEBUG], [IPCALAB], No flags detected for IPCALAB
+[2026-02-21 12:14:31], [INFO], [JBCHEPHARM], Analyzing JBCHEPHARM
+[2026-02-21 12:14:31], [DEBUG], [JBCHEPHARM], No flags detected for JBCHEPHARM
+[2026-02-21 12:14:31], [INFO], [JKCEMENT], Analyzing JKCEMENT
+[2026-02-21 12:14:31], [DEBUG], [JKCEMENT], No flags detected for JKCEMENT
+[2026-02-21 12:14:31], [INFO], [JBMA], Analyzing JBMA
+[2026-02-21 12:14:31], [INFO], [JBMA], F4 [FY2025 Q3]: JBMA: Low Interest Coverage Ratio of 2.15x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JBMA], F4 [FY2025 Q2]: JBMA: Low Interest Coverage Ratio of 2.13x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JBMA], F4 [FY2025 Q1]: JBMA: Low Interest Coverage Ratio of 2.05x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JKTYRE], Analyzing JKTYRE
+[2026-02-21 12:14:31], [DEBUG], [JKTYRE], No flags detected for JKTYRE
+[2026-02-21 12:14:31], [INFO], [JMFINANCIL], Analyzing JMFINANCIL
+[2026-02-21 12:14:31], [INFO], [JMFINANCIL], F4 [FY2025 Q3]: JMFINANCIL: Low Interest Coverage Ratio of 1.66x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JMFINANCIL], F4 [FY2025 Q2]: JMFINANCIL: Low Interest Coverage Ratio of 1.56x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JMFINANCIL], F4 [FY2025 Q1]: JMFINANCIL: Low Interest Coverage Ratio of 1.66x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JSWENERGY], Analyzing JSWENERGY
+[2026-02-21 12:14:31], [INFO], [JSWENERGY], F4 [FY2025 Q3]: JSWENERGY: Low Interest Coverage Ratio of 2.15x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JSWENERGY], F4 [FY2025 Q1]: JSWENERGY: Low Interest Coverage Ratio of 2.36x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JSWINFRA], Analyzing JSWINFRA
+[2026-02-21 12:14:31], [DEBUG], [JSWINFRA], No flags detected for JSWINFRA
+[2026-02-21 12:14:31], [INFO], [JPPOWER], Analyzing JPPOWER
+[2026-02-21 12:14:31], [DEBUG], [JPPOWER], No flags detected for JPPOWER
+[2026-02-21 12:14:31], [INFO], [J&KBANK], Analyzing J&KBANK
+[2026-02-21 12:14:31], [INFO], [J&KBANK], F4 [FY2025 Q3]: J&KBANK: Low Interest Coverage Ratio of 1.42x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [J&KBANK], F4 [FY2025 Q2]: J&KBANK: Low Interest Coverage Ratio of 1.41x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [J&KBANK], F4 [FY2025 Q1]: J&KBANK: Low Interest Coverage Ratio of 1.38x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JINDALSAW], Analyzing JINDALSAW
+[2026-02-21 12:14:31], [DEBUG], [JINDALSAW], No flags detected for JINDALSAW
+[2026-02-21 12:14:31], [INFO], [JSL], Analyzing JSL
+[2026-02-21 12:14:31], [DEBUG], [JSL], No flags detected for JSL
+[2026-02-21 12:14:31], [INFO], [JINDALSTEL], Analyzing JINDALSTEL
+[2026-02-21 12:14:31], [DEBUG], [JINDALSTEL], No flags detected for JINDALSTEL
+[2026-02-21 12:14:31], [INFO], [JIOFIN], Analyzing JIOFIN
+[2026-02-21 12:14:31], [INFO], [JIOFIN], F5 [FY2025 Q2]: JIOFIN: Net Profit collapsed by 62.3% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:31], [DEBUG], [JIOFIN], No flags detected for JIOFIN
+[2026-02-21 12:14:31], [INFO], [JUBLFOOD], Analyzing JUBLFOOD
+[2026-02-21 12:14:31], [INFO], [JUBLFOOD], F4 [FY2025 Q3]: JUBLFOOD: Low Interest Coverage Ratio of 1.60x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JUBLFOOD], F4 [FY2025 Q2]: JUBLFOOD: Low Interest Coverage Ratio of 1.63x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JUBLFOOD], F4 [FY2025 Q1]: JUBLFOOD: Low Interest Coverage Ratio of 1.61x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:31], [INFO], [JUBLINGREA], Analyzing JUBLINGREA
+[2026-02-21 12:14:31], [DEBUG], [JUBLINGREA], No flags detected for JUBLINGREA
+[2026-02-21 12:14:31], [INFO], [JUBLPHARMA], Analyzing JUBLPHARMA
+[2026-02-21 12:14:31], [DEBUG], [JUBLPHARMA], No flags detected for JUBLPHARMA
+[2026-02-21 12:14:31], [INFO], [JWL], Analyzing JWL
+[2026-02-21 12:14:32], [DEBUG], [JWL], No flags detected for JWL
+[2026-02-21 12:14:32], [INFO], [JYOTHYLAB], Analyzing JYOTHYLAB
+[2026-02-21 12:14:32], [DEBUG], [JYOTHYLAB], No flags detected for JYOTHYLAB
+[2026-02-21 12:14:32], [INFO], [JYOTICNC], Analyzing JYOTICNC
+[2026-02-21 12:14:32], [DEBUG], [JYOTICNC], No flags detected for JYOTICNC
+[2026-02-21 12:14:32], [INFO], [KPRMILL], Analyzing KPRMILL
+[2026-02-21 12:14:32], [DEBUG], [KPRMILL], No flags detected for KPRMILL
+[2026-02-21 12:14:32], [INFO], [KEI], Analyzing KEI
+[2026-02-21 12:14:32], [DEBUG], [KEI], No flags detected for KEI
+[2026-02-21 12:14:32], [INFO], [KPITTECH], Analyzing KPITTECH
+[2026-02-21 12:14:32], [DEBUG], [KPITTECH], No flags detected for KPITTECH
+[2026-02-21 12:14:32], [INFO], [KSB], Analyzing KSB
+[2026-02-21 12:14:32], [DEBUG], [KSB], No flags detected for KSB
+[2026-02-21 12:14:32], [INFO], [KAJARIACER], Analyzing KAJARIACER
+[2026-02-21 12:14:32], [DEBUG], [KAJARIACER], No flags detected for KAJARIACER
+[2026-02-21 12:14:32], [INFO], [KPIL], Analyzing KPIL
+[2026-02-21 12:14:32], [INFO], [KPIL], F4 [FY2025 Q3]: KPIL: Low Interest Coverage Ratio of 2.15x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [KPIL], F4 [FY2025 Q2]: KPIL: Low Interest Coverage Ratio of 2.10x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [KPIL], F4 [FY2025 Q1]: KPIL: Low Interest Coverage Ratio of 1.95x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [KALYANKJIL], Analyzing KALYANKJIL
+[2026-02-21 12:14:32], [DEBUG], [KALYANKJIL], No flags detected for KALYANKJIL
+[2026-02-21 12:14:32], [INFO], [KARURVYSYA], Analyzing KARURVYSYA
+[2026-02-21 12:14:32], [INFO], [KARURVYSYA], F4 [FY2025 Q3]: KARURVYSYA: Low Interest Coverage Ratio of 1.48x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [KARURVYSYA], F4 [FY2025 Q2]: KARURVYSYA: Low Interest Coverage Ratio of 1.48x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [KARURVYSYA], F4 [FY2025 Q1]: KARURVYSYA: Low Interest Coverage Ratio of 1.49x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [KAYNES], Analyzing KAYNES
+[2026-02-21 12:14:32], [DEBUG], [KAYNES], No flags detected for KAYNES
+[2026-02-21 12:14:32], [INFO], [KEC], Analyzing KEC
+[2026-02-21 12:14:32], [INFO], [KEC], F4 [FY2025 Q3]: KEC: Low Interest Coverage Ratio of 1.78x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [KEC], F4 [FY2025 Q2]: KEC: Low Interest Coverage Ratio of 1.70x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [KEC], F4 [FY2025 Q1]: KEC: Low Interest Coverage Ratio of 1.72x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [KIRLOSBROS], Analyzing KIRLOSBROS
+[2026-02-21 12:14:32], [DEBUG], [KIRLOSBROS], No flags detected for KIRLOSBROS
+[2026-02-21 12:14:32], [INFO], [KIRLOSENG], Analyzing KIRLOSENG
+[2026-02-21 12:14:32], [INFO], [KIRLOSENG], F4 [FY2025 Q3]: KIRLOSENG: Low Interest Coverage Ratio of 2.34x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [DEBUG], [KIRLOSENG], No flags detected for KIRLOSENG
+[2026-02-21 12:14:32], [INFO], [KIMS], Analyzing KIMS
+[2026-02-21 12:14:32], [DEBUG], [KIMS], No flags detected for KIMS
+[2026-02-21 12:14:32], [INFO], [LTF], Analyzing LTF
+[2026-02-21 12:14:32], [INFO], [LTF], F4 [FY2025 Q3]: LTF: Low Interest Coverage Ratio of 1.60x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LTF], F4 [FY2025 Q2]: LTF: Low Interest Coverage Ratio of 1.66x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LTF], F4 [FY2025 Q1]: LTF: Low Interest Coverage Ratio of 1.68x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LTTS], Analyzing LTTS
+[2026-02-21 12:14:32], [DEBUG], [LTTS], No flags detected for LTTS
+[2026-02-21 12:14:32], [INFO], [LICHSGFIN], Analyzing LICHSGFIN
+[2026-02-21 12:14:32], [INFO], [LICHSGFIN], F4 [FY2025 Q3]: LICHSGFIN: Low Interest Coverage Ratio of 1.35x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LICHSGFIN], F4 [FY2025 Q2]: LICHSGFIN: Low Interest Coverage Ratio of 1.34x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LICHSGFIN], F4 [FY2025 Q1]: LICHSGFIN: Low Interest Coverage Ratio of 1.34x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LTFOODS], Analyzing LTFOODS
+[2026-02-21 12:14:32], [DEBUG], [LTFOODS], No flags detected for LTFOODS
+[2026-02-21 12:14:32], [INFO], [LATENTVIEW], Analyzing LATENTVIEW
+[2026-02-21 12:14:32], [DEBUG], [LATENTVIEW], No flags detected for LATENTVIEW
+[2026-02-21 12:14:32], [INFO], [LAURUSLABS], Analyzing LAURUSLABS
+[2026-02-21 12:14:32], [INFO], [LAURUSLABS], F4 [FY2025 Q3]: LAURUSLABS: Low Interest Coverage Ratio of 2.08x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LAURUSLABS], F4 [FY2025 Q2]: LAURUSLABS: Low Interest Coverage Ratio of 1.41x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LAURUSLABS], F4 [FY2025 Q1]: LAURUSLABS: Low Interest Coverage Ratio of 1.38x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LEMONTREE], Analyzing LEMONTREE
+[2026-02-21 12:14:32], [INFO], [LEMONTREE], F4 [FY2025 Q3]: LEMONTREE: Low Interest Coverage Ratio of 2.13x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LEMONTREE], F4 [FY2025 Q2]: LEMONTREE: Low Interest Coverage Ratio of 1.72x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LEMONTREE], F4 [FY2025 Q1]: LEMONTREE: Low Interest Coverage Ratio of 1.56x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [LINDEINDIA], Analyzing LINDEINDIA
+[2026-02-21 12:14:32], [DEBUG], [LINDEINDIA], No flags detected for LINDEINDIA
+[2026-02-21 12:14:32], [INFO], [LLOYDSME], Analyzing LLOYDSME
+[2026-02-21 12:14:32], [DEBUG], [LLOYDSME], No flags detected for LLOYDSME
+[2026-02-21 12:14:32], [INFO], [LODHA], Analyzing LODHA
+[2026-02-21 12:14:32], [DEBUG], [LODHA], No flags detected for LODHA
+[2026-02-21 12:14:32], [INFO], [LUPIN], Analyzing LUPIN
+[2026-02-21 12:14:32], [DEBUG], [LUPIN], No flags detected for LUPIN
+[2026-02-21 12:14:32], [INFO], [MMTC], Analyzing MMTC
+[2026-02-21 12:14:32], [DEBUG], [MMTC], No flags detected for MMTC
+[2026-02-21 12:14:32], [INFO], [MRF], Analyzing MRF
+[2026-02-21 12:14:32], [DEBUG], [MRF], No flags detected for MRF
+[2026-02-21 12:14:32], [INFO], [MGL], Analyzing MGL
+[2026-02-21 12:14:32], [DEBUG], [MGL], No flags detected for MGL
+[2026-02-21 12:14:32], [INFO], [MAHSCOOTER], Analyzing MAHSCOOTER
+[2026-02-21 12:14:32], [DEBUG], [MAHSCOOTER], No flags detected for MAHSCOOTER
+[2026-02-21 12:14:32], [INFO], [MAHSEAMLES], Analyzing MAHSEAMLES
+[2026-02-21 12:14:32], [DEBUG], [MAHSEAMLES], No flags detected for MAHSEAMLES
+[2026-02-21 12:14:32], [INFO], [M&MFIN], Analyzing M&MFIN
+[2026-02-21 12:14:32], [INFO], [M&MFIN], F4 [FY2025 Q3]: M&MFIN: Low Interest Coverage Ratio of 1.38x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [M&MFIN], F4 [FY2025 Q2]: M&MFIN: Low Interest Coverage Ratio of 1.29x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [M&MFIN], F4 [FY2025 Q1]: M&MFIN: Low Interest Coverage Ratio of 1.33x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MANAPPURAM], Analyzing MANAPPURAM
+[2026-02-21 12:14:32], [INFO], [MANAPPURAM], F4 [FY2025 Q3]: MANAPPURAM: Low Interest Coverage Ratio of 1.71x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MANAPPURAM], F4 [FY2025 Q2]: MANAPPURAM: Low Interest Coverage Ratio of 1.87x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MANAPPURAM], F4 [FY2025 Q1]: MANAPPURAM: Low Interest Coverage Ratio of 2.09x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MRPL], Analyzing MRPL
+[2026-02-21 12:14:32], [INFO], [MRPL], F4 [FY2025 Q3]: MRPL: Low Interest Coverage Ratio of 0.35x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MRPL], F5 [FY2025 Q3]: MRPL: Net Profit collapsed by 112.8% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [INFO], [MRPL], F4 [FY2025 Q2]: MRPL: Low Interest Coverage Ratio of -0.93x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MRPL], F5 [FY2025 Q2]: MRPL: Net Profit collapsed by 130.2% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:32], [INFO], [MRPL], F4 [FY2025 Q1]: MRPL: Low Interest Coverage Ratio of 1.47x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MRPL], F5 [FY2025 Q1]: MRPL: Net Profit collapsed by 92.8% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:32], [INFO], [MANKIND], Analyzing MANKIND
+[2026-02-21 12:14:32], [DEBUG], [MANKIND], No flags detected for MANKIND
+[2026-02-21 12:14:32], [INFO], [MARICO], Analyzing MARICO
+[2026-02-21 12:14:32], [DEBUG], [MARICO], No flags detected for MARICO
+[2026-02-21 12:14:32], [INFO], [MFSL], Analyzing MFSL
+[2026-02-21 12:14:32], [DEBUG], [MFSL], No flags detected for MFSL
+[2026-02-21 12:14:32], [INFO], [MAXHEALTH], Analyzing MAXHEALTH
+[2026-02-21 12:14:32], [DEBUG], [MAXHEALTH], No flags detected for MAXHEALTH
+[2026-02-21 12:14:32], [INFO], [MAZDOCK], Analyzing MAZDOCK
+[2026-02-21 12:14:32], [DEBUG], [MAZDOCK], No flags detected for MAZDOCK
+[2026-02-21 12:14:32], [INFO], [METROPOLIS], Analyzing METROPOLIS
+[2026-02-21 12:14:32], [DEBUG], [METROPOLIS], No flags detected for METROPOLIS
+[2026-02-21 12:14:32], [INFO], [MINDACORP], Analyzing MINDACORP
+[2026-02-21 12:14:32], [DEBUG], [MINDACORP], No flags detected for MINDACORP
+[2026-02-21 12:14:32], [INFO], [MSUMI], Analyzing MSUMI
+[2026-02-21 12:14:32], [DEBUG], [MSUMI], No flags detected for MSUMI
+[2026-02-21 12:14:32], [INFO], [MOTILALOFS], Analyzing MOTILALOFS
+[2026-02-21 12:14:32], [DEBUG], [MOTILALOFS], No flags detected for MOTILALOFS
+[2026-02-21 12:14:32], [INFO], [MPHASIS], Analyzing MPHASIS
+[2026-02-21 12:14:32], [DEBUG], [MPHASIS], No flags detected for MPHASIS
+[2026-02-21 12:14:32], [INFO], [MUTHOOTFIN], Analyzing MUTHOOTFIN
+[2026-02-21 12:14:32], [INFO], [MUTHOOTFIN], F4 [FY2025 Q3]: MUTHOOTFIN: Low Interest Coverage Ratio of 2.01x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MUTHOOTFIN], F4 [FY2025 Q2]: MUTHOOTFIN: Low Interest Coverage Ratio of 2.01x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MUTHOOTFIN], F4 [FY2025 Q1]: MUTHOOTFIN: Low Interest Coverage Ratio of 2.03x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [NATCOPHARM], Analyzing NATCOPHARM
+[2026-02-21 12:14:32], [DEBUG], [NATCOPHARM], No flags detected for NATCOPHARM
+[2026-02-21 12:14:32], [INFO], [NBCC], Analyzing NBCC
+[2026-02-21 12:14:32], [DEBUG], [NBCC], No flags detected for NBCC
+[2026-02-21 12:14:32], [INFO], [NCC], Analyzing NCC
+[2026-02-21 12:14:32], [DEBUG], [NCC], No flags detected for NCC
+[2026-02-21 12:14:32], [INFO], [NHPC], Analyzing NHPC
+[2026-02-21 12:14:32], [DEBUG], [NHPC], No flags detected for NHPC
+[2026-02-21 12:14:32], [INFO], [NLCINDIA], Analyzing NLCINDIA
+[2026-02-21 12:14:32], [DEBUG], [NLCINDIA], No flags detected for NLCINDIA
+[2026-02-21 12:14:32], [INFO], [NMDC], Analyzing NMDC
+[2026-02-21 12:14:32], [DEBUG], [NMDC], No flags detected for NMDC
+[2026-02-21 12:14:32], [INFO], [NSLNISP], Analyzing NSLNISP
+[2026-02-21 12:14:32], [INFO], [NSLNISP], F4 [FY2025 Q3]: NSLNISP: Low Interest Coverage Ratio of -4.54x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [NSLNISP], F4 [FY2025 Q2]: NSLNISP: Low Interest Coverage Ratio of -4.10x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [NSLNISP], F4 [FY2025 Q1]: NSLNISP: Low Interest Coverage Ratio of -4.04x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [NTPCGREEN], Analyzing NTPCGREEN
+[2026-02-21 12:14:32], [INFO], [NTPCGREEN], F4 [FY2025 Q3]: NTPCGREEN: Low Interest Coverage Ratio of 1.59x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [DEBUG], [NTPCGREEN], No flags detected for NTPCGREEN
+[2026-02-21 12:14:32], [INFO], [NH], Analyzing NH
+[2026-02-21 12:14:32], [INFO], [NH], F5 [FY2025 Q2]: NH: Net Profit collapsed by 53.3% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:32], [INFO], [NH], F5 [FY2025 Q1]: NH: Net Profit collapsed by 53.0% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:32], [INFO], [NATIONALUM], Analyzing NATIONALUM
+[2026-02-21 12:14:32], [DEBUG], [NATIONALUM], No flags detected for NATIONALUM
+[2026-02-21 12:14:32], [INFO], [NAVA], Analyzing NAVA
+[2026-02-21 12:14:32], [INFO], [NAVA], F5 [FY2025 Q3]: NAVA: Net Profit collapsed by 67.6% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [DEBUG], [NAVA], No flags detected for NAVA
+[2026-02-21 12:14:32], [INFO], [NAVINFLUOR], Analyzing NAVINFLUOR
+[2026-02-21 12:14:32], [DEBUG], [NAVINFLUOR], No flags detected for NAVINFLUOR
+[2026-02-21 12:14:32], [INFO], [NETWEB], Analyzing NETWEB
+[2026-02-21 12:14:32], [DEBUG], [NETWEB], No flags detected for NETWEB
+[2026-02-21 12:14:32], [INFO], [NEULANDLAB], Analyzing NEULANDLAB
+[2026-02-21 12:14:32], [DEBUG], [NEULANDLAB], No flags detected for NEULANDLAB
+[2026-02-21 12:14:32], [INFO], [NEWGEN], Analyzing NEWGEN
+[2026-02-21 12:14:32], [DEBUG], [NEWGEN], No flags detected for NEWGEN
+[2026-02-21 12:14:32], [INFO], [NAM-INDIA], Analyzing NAM-INDIA
+[2026-02-21 12:14:32], [DEBUG], [NAM-INDIA], No flags detected for NAM-INDIA
+[2026-02-21 12:14:32], [INFO], [NUVAMA], Analyzing NUVAMA
+[2026-02-21 12:14:32], [DEBUG], [NUVAMA], No flags detected for NUVAMA
+[2026-02-21 12:14:32], [INFO], [NUVOCO], Analyzing NUVOCO
+[2026-02-21 12:14:32], [INFO], [NUVOCO], F4 [FY2025 Q3]: NUVOCO: Low Interest Coverage Ratio of 0.49x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [NUVOCO], F5 [FY2025 Q3]: NUVOCO: Net Profit collapsed by 405.6% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [INFO], [NUVOCO], F4 [FY2025 Q2]: NUVOCO: Low Interest Coverage Ratio of 0.56x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [NUVOCO], F5 [FY2025 Q2]: NUVOCO: Net Profit collapsed by 614.9% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:32], [INFO], [NUVOCO], F4 [FY2025 Q1]: NUVOCO: Low Interest Coverage Ratio of 1.04x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [NUVOCO], F5 [FY2025 Q1]: NUVOCO: Net Profit collapsed by 80.4% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:32], [INFO], [OBEROIRLTY], Analyzing OBEROIRLTY
+[2026-02-21 12:14:32], [DEBUG], [OBEROIRLTY], No flags detected for OBEROIRLTY
+[2026-02-21 12:14:32], [INFO], [OIL], Analyzing OIL
+[2026-02-21 12:14:32], [DEBUG], [OIL], No flags detected for OIL
+[2026-02-21 12:14:32], [INFO], [OLAELEC], Analyzing OLAELEC
+[2026-02-21 12:14:32], [INFO], [OLAELEC], F4 [FY2025 Q3]: OLAELEC: Low Interest Coverage Ratio of 1.24x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [OLAELEC], F4 [FY2025 Q2]: OLAELEC: Low Interest Coverage Ratio of -4.58x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [OLAELEC], F4 [FY2025 Q1]: OLAELEC: Low Interest Coverage Ratio of -4.19x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [OLECTRA], Analyzing OLECTRA
+[2026-02-21 12:14:32], [DEBUG], [OLECTRA], No flags detected for OLECTRA
+[2026-02-21 12:14:32], [INFO], [PAYTM], Analyzing PAYTM
+[2026-02-21 12:14:32], [INFO], [PAYTM], F4 [FY2025 Q3]: PAYTM: Low Interest Coverage Ratio of -17.29x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PAYTM], F4 [FY2025 Q2]: PAYTM: Low Interest Coverage Ratio of 0.58x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PAYTM], F4 [FY2025 Q1]: PAYTM: Low Interest Coverage Ratio of -205.15x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [ONESOURCE], Analyzing ONESOURCE
+[2026-02-21 12:14:32], [INFO], [ONESOURCE], F4 [FY2025 Q3]: ONESOURCE: Low Interest Coverage Ratio of -0.13x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [ONESOURCE], F4 [FY2025 Q2]: ONESOURCE: Low Interest Coverage Ratio of -0.75x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [DEBUG], [ONESOURCE], No flags detected for ONESOURCE
+[2026-02-21 12:14:32], [INFO], [OFSS], Analyzing OFSS
+[2026-02-21 12:14:32], [DEBUG], [OFSS], No flags detected for OFSS
+[2026-02-21 12:14:32], [INFO], [POLICYBZR], Analyzing POLICYBZR
+[2026-02-21 12:14:32], [DEBUG], [POLICYBZR], No flags detected for POLICYBZR
+[2026-02-21 12:14:32], [INFO], [PCBL], Analyzing PCBL
+[2026-02-21 12:14:32], [INFO], [PCBL], F4 [FY2025 Q3]: PCBL: Low Interest Coverage Ratio of 2.26x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PCBL], F4 [FY2025 Q2]: PCBL: Low Interest Coverage Ratio of 2.36x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PCBL], F4 [FY2025 Q1]: PCBL: Low Interest Coverage Ratio of 2.35x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PGEL], Analyzing PGEL
+[2026-02-21 12:14:32], [DEBUG], [PGEL], No flags detected for PGEL
+[2026-02-21 12:14:32], [INFO], [PIIND], Analyzing PIIND
+[2026-02-21 12:14:32], [DEBUG], [PIIND], No flags detected for PIIND
+[2026-02-21 12:14:32], [INFO], [PNBHOUSING], Analyzing PNBHOUSING
+[2026-02-21 12:14:32], [INFO], [PNBHOUSING], F4 [FY2025 Q3]: PNBHOUSING: Low Interest Coverage Ratio of 1.53x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PNBHOUSING], F4 [FY2025 Q2]: PNBHOUSING: Low Interest Coverage Ratio of 1.52x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PNBHOUSING], F4 [FY2025 Q1]: PNBHOUSING: Low Interest Coverage Ratio of 1.51x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PTCIL], Analyzing PTCIL
+[2026-02-21 12:14:32], [INFO], [PTCIL], F4 [FY2025 Q1]: PTCIL: Low Interest Coverage Ratio of 2.21x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PTCIL], F5 [FY2025 Q1]: PTCIL: Net Profit collapsed by 75.4% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:32], [INFO], [PVRINOX], Analyzing PVRINOX
+[2026-02-21 12:14:32], [INFO], [PVRINOX], F4 [FY2025 Q3]: PVRINOX: Low Interest Coverage Ratio of 0.66x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PVRINOX], F5 [FY2025 Q3]: PVRINOX: Net Profit collapsed by 258.9% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [INFO], [PVRINOX], F4 [FY2025 Q2]: PVRINOX: Low Interest Coverage Ratio of 0.38x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PVRINOX], F5 [FY2025 Q2]: PVRINOX: Net Profit collapsed by 327.0% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:32], [INFO], [PVRINOX], F4 [FY2025 Q1]: PVRINOX: Low Interest Coverage Ratio of -0.17x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PAGEIND], Analyzing PAGEIND
+[2026-02-21 12:14:32], [DEBUG], [PAGEIND], No flags detected for PAGEIND
+[2026-02-21 12:14:32], [INFO], [PATANJALI], Analyzing PATANJALI
+[2026-02-21 12:14:32], [INFO], [PATANJALI], F5 [FY2025 Q4]: PATANJALI: Net Profit collapsed by 53.1% from FY2024 Q4 to FY2025 Q4.
+[2026-02-21 12:14:32], [DEBUG], [PATANJALI], No flags detected for PATANJALI
+[2026-02-21 12:14:32], [INFO], [PERSISTENT], Analyzing PERSISTENT
+[2026-02-21 12:14:32], [DEBUG], [PERSISTENT], No flags detected for PERSISTENT
+[2026-02-21 12:14:32], [INFO], [PETRONET], Analyzing PETRONET
+[2026-02-21 12:14:32], [DEBUG], [PETRONET], No flags detected for PETRONET
+[2026-02-21 12:14:32], [INFO], [PFIZER], Analyzing PFIZER
+[2026-02-21 12:14:32], [DEBUG], [PFIZER], No flags detected for PFIZER
+[2026-02-21 12:14:32], [INFO], [PHOENIXLTD], Analyzing PHOENIXLTD
+[2026-02-21 12:14:32], [DEBUG], [PHOENIXLTD], No flags detected for PHOENIXLTD
+[2026-02-21 12:14:32], [INFO], [PIDILITIND], Analyzing PIDILITIND
+[2026-02-21 12:14:32], [DEBUG], [PIDILITIND], No flags detected for PIDILITIND
+[2026-02-21 12:14:32], [INFO], [PPLPHARMA], Analyzing PPLPHARMA
+[2026-02-21 12:14:32], [INFO], [PPLPHARMA], F4 [FY2025 Q3]: PPLPHARMA: Low Interest Coverage Ratio of 1.27x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PPLPHARMA], F4 [FY2025 Q2]: PPLPHARMA: Low Interest Coverage Ratio of 1.16x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PPLPHARMA], F4 [FY2025 Q1]: PPLPHARMA: Low Interest Coverage Ratio of 0.37x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [POLYMED], Analyzing POLYMED
+[2026-02-21 12:14:32], [DEBUG], [POLYMED], No flags detected for POLYMED
+[2026-02-21 12:14:32], [INFO], [POLYCAB], Analyzing POLYCAB
+[2026-02-21 12:14:32], [DEBUG], [POLYCAB], No flags detected for POLYCAB
+[2026-02-21 12:14:32], [INFO], [POONAWALLA], Analyzing POONAWALLA
+[2026-02-21 12:14:32], [INFO], [POONAWALLA], F4 [FY2025 Q3]: POONAWALLA: Low Interest Coverage Ratio of 0.80x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [POONAWALLA], F5 [FY2025 Q3]: POONAWALLA: Net Profit collapsed by 111.9% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [INFO], [POONAWALLA], F4 [FY2025 Q2]: POONAWALLA: Low Interest Coverage Ratio of 0.64x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [POONAWALLA], F5 [FY2025 Q2]: POONAWALLA: Net Profit collapsed by 116.5% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:32], [INFO], [POONAWALLA], F4 [FY2025 Q1]: POONAWALLA: Low Interest Coverage Ratio of 2.22x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PFC], Analyzing PFC
+[2026-02-21 12:14:32], [INFO], [PFC], F4 [FY2025 Q3]: PFC: Low Interest Coverage Ratio of 1.58x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PFC], F4 [FY2025 Q2]: PFC: Low Interest Coverage Ratio of 1.58x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PFC], F4 [FY2025 Q1]: PFC: Low Interest Coverage Ratio of 1.61x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PRAJIND], Analyzing PRAJIND
+[2026-02-21 12:14:32], [DEBUG], [PRAJIND], No flags detected for PRAJIND
+[2026-02-21 12:14:32], [INFO], [PREMIERENE], Analyzing PREMIERENE
+[2026-02-21 12:14:32], [DEBUG], [PREMIERENE], No flags detected for PREMIERENE
+[2026-02-21 12:14:32], [INFO], [PRESTIGE], Analyzing PRESTIGE
+[2026-02-21 12:14:32], [INFO], [PRESTIGE], F4 [FY2025 Q3]: PRESTIGE: Low Interest Coverage Ratio of 1.67x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PRESTIGE], F5 [FY2025 Q3]: PRESTIGE: Net Profit collapsed by 58.8% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [INFO], [PRESTIGE], F4 [FY2025 Q2]: PRESTIGE: Low Interest Coverage Ratio of 1.88x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PRESTIGE], F5 [FY2025 Q2]: PRESTIGE: Net Profit collapsed by 55.9% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:32], [INFO], [PRESTIGE], F4 [FY2025 Q1]: PRESTIGE: Low Interest Coverage Ratio of 2.22x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PGHH], Analyzing PGHH
+[2026-02-21 12:14:32], [DEBUG], [PGHH], No flags detected for PGHH
+[2026-02-21 12:14:32], [INFO], [PNB], Analyzing PNB
+[2026-02-21 12:14:32], [INFO], [PNB], F4 [FY2025 Q3]: PNB: Low Interest Coverage Ratio of 1.33x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PNB], F4 [FY2025 Q2]: PNB: Low Interest Coverage Ratio of 1.33x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [PNB], F4 [FY2025 Q1]: PNB: Low Interest Coverage Ratio of 1.31x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RRKABEL], Analyzing RRKABEL
+[2026-02-21 12:14:32], [DEBUG], [RRKABEL], No flags detected for RRKABEL
+[2026-02-21 12:14:32], [INFO], [RBLBANK], Analyzing RBLBANK
+[2026-02-21 12:14:32], [INFO], [RBLBANK], F4 [FY2025 Q3]: RBLBANK: Low Interest Coverage Ratio of 1.11x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RBLBANK], F4 [FY2025 Q2]: RBLBANK: Low Interest Coverage Ratio of 1.21x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RBLBANK], F4 [FY2025 Q1]: RBLBANK: Low Interest Coverage Ratio of 1.26x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RECLTD], Analyzing RECLTD
+[2026-02-21 12:14:32], [INFO], [RECLTD], F4 [FY2025 Q3]: RECLTD: Low Interest Coverage Ratio of 1.58x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RECLTD], F4 [FY2025 Q2]: RECLTD: Low Interest Coverage Ratio of 1.57x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RECLTD], F4 [FY2025 Q1]: RECLTD: Low Interest Coverage Ratio of 1.54x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RHIM], Analyzing RHIM
+[2026-02-21 12:14:32], [DEBUG], [RHIM], No flags detected for RHIM
+[2026-02-21 12:14:32], [INFO], [RITES], Analyzing RITES
+[2026-02-21 12:14:32], [DEBUG], [RITES], No flags detected for RITES
+[2026-02-21 12:14:32], [INFO], [RADICO], Analyzing RADICO
+[2026-02-21 12:14:32], [DEBUG], [RADICO], No flags detected for RADICO
+[2026-02-21 12:14:32], [INFO], [RVNL], Analyzing RVNL
+[2026-02-21 12:14:32], [DEBUG], [RVNL], No flags detected for RVNL
+[2026-02-21 12:14:32], [INFO], [RAILTEL], Analyzing RAILTEL
+[2026-02-21 12:14:32], [DEBUG], [RAILTEL], No flags detected for RAILTEL
+[2026-02-21 12:14:32], [INFO], [RAINBOW], Analyzing RAINBOW
+[2026-02-21 12:14:32], [DEBUG], [RAINBOW], No flags detected for RAINBOW
+[2026-02-21 12:14:32], [INFO], [RKFORGE], Analyzing RKFORGE
+[2026-02-21 12:14:32], [DEBUG], [RKFORGE], No flags detected for RKFORGE
+[2026-02-21 12:14:32], [INFO], [RCF], Analyzing RCF
+[2026-02-21 12:14:32], [INFO], [RCF], F4 [FY2025 Q3]: RCF: Low Interest Coverage Ratio of 2.14x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RCF], F4 [FY2025 Q2]: RCF: Low Interest Coverage Ratio of 1.83x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RCF], F4 [FY2025 Q1]: RCF: Low Interest Coverage Ratio of 1.23x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RCF], F5 [FY2025 Q1]: RCF: Net Profit collapsed by 84.1% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:32], [INFO], [REDINGTON], Analyzing REDINGTON
+[2026-02-21 12:14:32], [DEBUG], [REDINGTON], No flags detected for REDINGTON
+[2026-02-21 12:14:32], [INFO], [RELINFRA], Analyzing RELINFRA
+[2026-02-21 12:14:32], [INFO], [RELINFRA], F4 [FY2025 Q3]: RELINFRA: Low Interest Coverage Ratio of 2.49x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RELINFRA], F4 [FY2025 Q1]: RELINFRA: Low Interest Coverage Ratio of 1.97x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RPOWER], Analyzing RPOWER
+[2026-02-21 12:14:32], [INFO], [RPOWER], F4 [FY2025 Q2]: RPOWER: Low Interest Coverage Ratio of 1.17x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [RPOWER], F4 [FY2025 Q1]: RPOWER: Low Interest Coverage Ratio of 0.87x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SBFC], Analyzing SBFC
+[2026-02-21 12:14:32], [INFO], [SBFC], F4 [FY2025 Q3]: SBFC: Low Interest Coverage Ratio of 2.11x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SBFC], F4 [FY2025 Q2]: SBFC: Low Interest Coverage Ratio of 2.11x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SBFC], F4 [FY2025 Q1]: SBFC: Low Interest Coverage Ratio of 2.11x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SBICARD], Analyzing SBICARD
+[2026-02-21 12:14:32], [INFO], [SBICARD], F4 [FY2025 Q3]: SBICARD: Low Interest Coverage Ratio of 1.78x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SBICARD], F4 [FY2025 Q2]: SBICARD: Low Interest Coverage Ratio of 1.86x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SBICARD], F4 [FY2025 Q1]: SBICARD: Low Interest Coverage Ratio of 2.04x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SJVN], Analyzing SJVN
+[2026-02-21 12:14:32], [DEBUG], [SJVN], No flags detected for SJVN
+[2026-02-21 12:14:32], [INFO], [SRF], Analyzing SRF
+[2026-02-21 12:14:32], [DEBUG], [SRF], No flags detected for SRF
+[2026-02-21 12:14:32], [INFO], [SAGILITY], Analyzing SAGILITY
+[2026-02-21 12:14:32], [DEBUG], [SAGILITY], No flags detected for SAGILITY
+[2026-02-21 12:14:32], [INFO], [SAILIFE], Analyzing SAILIFE
+[2026-02-21 12:14:32], [DEBUG], [SAILIFE], No flags detected for SAILIFE
+[2026-02-21 12:14:32], [INFO], [SAMMAANCAP], Analyzing SAMMAANCAP
+[2026-02-21 12:14:32], [INFO], [SAMMAANCAP], F4 [FY2025 Q3]: SAMMAANCAP: Low Interest Coverage Ratio of 0.24x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SAMMAANCAP], F5 [FY2025 Q3]: SAMMAANCAP: Net Profit collapsed by 338.2% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [INFO], [SAMMAANCAP], F4 [FY2025 Q2]: SAMMAANCAP: Low Interest Coverage Ratio of -0.27x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SAMMAANCAP], F5 [FY2025 Q2]: SAMMAANCAP: Net Profit collapsed by 510.9% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:32], [INFO], [SAMMAANCAP], F4 [FY2025 Q1]: SAMMAANCAP: Low Interest Coverage Ratio of 1.33x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [MOTHERSON], Analyzing MOTHERSON
+[2026-02-21 12:14:32], [DEBUG], [MOTHERSON], No flags detected for MOTHERSON
+[2026-02-21 12:14:32], [INFO], [SAPPHIRE], Analyzing SAPPHIRE
+[2026-02-21 12:14:32], [INFO], [SAPPHIRE], F4 [FY2025 Q3]: SAPPHIRE: Low Interest Coverage Ratio of 1.03x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SAPPHIRE], F5 [FY2025 Q3]: SAPPHIRE: Net Profit collapsed by 105.3% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [INFO], [SAPPHIRE], F4 [FY2025 Q2]: SAPPHIRE: Low Interest Coverage Ratio of 0.95x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SAPPHIRE], F5 [FY2025 Q2]: SAPPHIRE: Net Profit collapsed by 115.2% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:32], [INFO], [SAPPHIRE], F4 [FY2025 Q1]: SAPPHIRE: Low Interest Coverage Ratio of 1.49x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SAPPHIRE], F5 [FY2025 Q1]: SAPPHIRE: Net Profit collapsed by 62.4% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:32], [INFO], [SARDAEN], Analyzing SARDAEN
+[2026-02-21 12:14:32], [DEBUG], [SARDAEN], No flags detected for SARDAEN
+[2026-02-21 12:14:32], [INFO], [SAREGAMA], Analyzing SAREGAMA
+[2026-02-21 12:14:32], [DEBUG], [SAREGAMA], No flags detected for SAREGAMA
+[2026-02-21 12:14:32], [INFO], [SCHAEFFLER], Analyzing SCHAEFFLER
+[2026-02-21 12:14:32], [DEBUG], [SCHAEFFLER], No flags detected for SCHAEFFLER
+[2026-02-21 12:14:32], [INFO], [SCHNEIDER], Analyzing SCHNEIDER
+[2026-02-21 12:14:32], [DEBUG], [SCHNEIDER], No flags detected for SCHNEIDER
+[2026-02-21 12:14:32], [INFO], [SCI], Analyzing SCI
+[2026-02-21 12:14:32], [DEBUG], [SCI], No flags detected for SCI
+[2026-02-21 12:14:32], [INFO], [SHREECEM], Analyzing SHREECEM
+[2026-02-21 12:14:32], [INFO], [SHREECEM], F5 [FY2025 Q3]: SHREECEM: Net Profit collapsed by 68.1% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [INFO], [SHREECEM], F5 [FY2025 Q2]: SHREECEM: Net Profit collapsed by 66.9% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:32], [INFO], [SHREECEM], F5 [FY2025 Q1]: SHREECEM: Net Profit collapsed by 51.3% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:32], [INFO], [SHYAMMETL], Analyzing SHYAMMETL
+[2026-02-21 12:14:32], [DEBUG], [SHYAMMETL], No flags detected for SHYAMMETL
+[2026-02-21 12:14:32], [INFO], [SIEMENS], Analyzing SIEMENS
+[2026-02-21 12:14:32], [DEBUG], [SIEMENS], No flags detected for SIEMENS
+[2026-02-21 12:14:32], [INFO], [SIGNATURE], Analyzing SIGNATURE
+[2026-02-21 12:14:32], [INFO], [SIGNATURE], F4 [FY2025 Q3]: SIGNATURE: Low Interest Coverage Ratio of 1.84x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SIGNATURE], F4 [FY2025 Q2]: SIGNATURE: Low Interest Coverage Ratio of 0.63x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [DEBUG], [SIGNATURE], No flags detected for SIGNATURE
+[2026-02-21 12:14:32], [INFO], [SOBHA], Analyzing SOBHA
+[2026-02-21 12:14:32], [INFO], [SOBHA], F4 [FY2025 Q3]: SOBHA: Low Interest Coverage Ratio of 1.51x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SOBHA], F4 [FY2025 Q2]: SOBHA: Low Interest Coverage Ratio of 1.49x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SOBHA], F4 [FY2025 Q1]: SOBHA: Low Interest Coverage Ratio of 1.21x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SOLARINDS], Analyzing SOLARINDS
+[2026-02-21 12:14:32], [DEBUG], [SOLARINDS], No flags detected for SOLARINDS
+[2026-02-21 12:14:32], [INFO], [SONACOMS], Analyzing SONACOMS
+[2026-02-21 12:14:32], [DEBUG], [SONACOMS], No flags detected for SONACOMS
+[2026-02-21 12:14:32], [INFO], [SONATSOFTW], Analyzing SONATSOFTW
+[2026-02-21 12:14:32], [DEBUG], [SONATSOFTW], No flags detected for SONATSOFTW
+[2026-02-21 12:14:32], [INFO], [SAIL], Analyzing SAIL
+[2026-02-21 12:14:32], [INFO], [SAIL], F4 [FY2025 Q3]: SAIL: Low Interest Coverage Ratio of 1.68x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SAIL], F5 [FY2025 Q3]: SAIL: Net Profit collapsed by 50.0% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:32], [INFO], [SAIL], F4 [FY2025 Q2]: SAIL: Low Interest Coverage Ratio of 1.70x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SAIL], F4 [FY2025 Q1]: SAIL: Low Interest Coverage Ratio of 0.99x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SAIL], F5 [FY2025 Q1]: SAIL: Net Profit collapsed by 61.5% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:32], [INFO], [SUMICHEM], Analyzing SUMICHEM
+[2026-02-21 12:14:32], [DEBUG], [SUMICHEM], No flags detected for SUMICHEM
+[2026-02-21 12:14:32], [INFO], [SUNTV], Analyzing SUNTV
+[2026-02-21 12:14:32], [DEBUG], [SUNTV], No flags detected for SUNTV
+[2026-02-21 12:14:32], [INFO], [SUNDARMFIN], Analyzing SUNDARMFIN
+[2026-02-21 12:14:32], [INFO], [SUNDARMFIN], F4 [FY2025 Q3]: SUNDARMFIN: Low Interest Coverage Ratio of 1.54x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SUNDARMFIN], F4 [FY2025 Q2]: SUNDARMFIN: Low Interest Coverage Ratio of 1.53x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SUNDARMFIN], F4 [FY2025 Q1]: SUNDARMFIN: Low Interest Coverage Ratio of 1.53x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:32], [INFO], [SUNDRMFAST], Analyzing SUNDRMFAST
+[2026-02-21 12:14:32], [DEBUG], [SUNDRMFAST], No flags detected for SUNDRMFAST
+[2026-02-21 12:14:32], [INFO], [SUPREMEIND], Analyzing SUPREMEIND
+[2026-02-21 12:14:32], [DEBUG], [SUPREMEIND], No flags detected for SUPREMEIND
+[2026-02-21 12:14:32], [INFO], [SUZLON], Analyzing SUZLON
+[2026-02-21 12:14:33], [DEBUG], [SUZLON], No flags detected for SUZLON
+[2026-02-21 12:14:33], [INFO], [SWANCORP], Analyzing SWANCORP
+[2026-02-21 12:14:33], [DEBUG], [SWANCORP], No flags detected for SWANCORP
+[2026-02-21 12:14:33], [INFO], [SWIGGY], Analyzing SWIGGY
+[2026-02-21 12:14:33], [INFO], [SWIGGY], F4 [FY2025 Q3]: SWIGGY: Low Interest Coverage Ratio of -115.19x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [SWIGGY], F4 [FY2025 Q2]: SWIGGY: Low Interest Coverage Ratio of -27.83x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [DEBUG], [SWIGGY], No flags detected for SWIGGY
+[2026-02-21 12:14:33], [INFO], [SYNGENE], Analyzing SYNGENE
+[2026-02-21 12:14:33], [DEBUG], [SYNGENE], No flags detected for SYNGENE
+[2026-02-21 12:14:33], [INFO], [SYRMA], Analyzing SYRMA
+[2026-02-21 12:14:33], [INFO], [SYRMA], F4 [FY2025 Q2]: SYRMA: Low Interest Coverage Ratio of 2.00x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [SYRMA], F5 [FY2025 Q2]: SYRMA: Net Profit collapsed by 67.9% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:33], [DEBUG], [SYRMA], No flags detected for SYRMA
+[2026-02-21 12:14:33], [INFO], [TBOTEK], Analyzing TBOTEK
+[2026-02-21 12:14:33], [DEBUG], [TBOTEK], No flags detected for TBOTEK
+[2026-02-21 12:14:33], [INFO], [TVSMOTOR], Analyzing TVSMOTOR
+[2026-02-21 12:14:33], [DEBUG], [TVSMOTOR], No flags detected for TVSMOTOR
+[2026-02-21 12:14:33], [INFO], [TATACHEM], Analyzing TATACHEM
+[2026-02-21 12:14:33], [INFO], [TATACHEM], F4 [FY2025 Q3]: TATACHEM: Low Interest Coverage Ratio of 2.13x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [TATACHEM], F5 [FY2025 Q3]: TATACHEM: Net Profit collapsed by 65.8% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:33], [INFO], [TATACHEM], F5 [FY2025 Q1]: TATACHEM: Net Profit collapsed by 67.6% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:33], [INFO], [TATACOMM], Analyzing TATACOMM
+[2026-02-21 12:14:33], [DEBUG], [TATACOMM], No flags detected for TATACOMM
+[2026-02-21 12:14:33], [INFO], [TATAELXSI], Analyzing TATAELXSI
+[2026-02-21 12:14:33], [DEBUG], [TATAELXSI], No flags detected for TATAELXSI
+[2026-02-21 12:14:33], [INFO], [TATAINVEST], Analyzing TATAINVEST
+[2026-02-21 12:14:33], [DEBUG], [TATAINVEST], No flags detected for TATAINVEST
+[2026-02-21 12:14:33], [INFO], [TATAPOWER], Analyzing TATAPOWER
+[2026-02-21 12:14:33], [INFO], [TATAPOWER], F4 [FY2025 Q3]: TATAPOWER: Low Interest Coverage Ratio of 2.50x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [TATAPOWER], F4 [FY2025 Q1]: TATAPOWER: Low Interest Coverage Ratio of 2.43x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [TATATECH], Analyzing TATATECH
+[2026-02-21 12:14:33], [DEBUG], [TATATECH], No flags detected for TATATECH
+[2026-02-21 12:14:33], [INFO], [TTML], Analyzing TTML
+[2026-02-21 12:14:33], [INFO], [TTML], F4 [FY2025 Q3]: TTML: Low Interest Coverage Ratio of 0.24x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [TTML], F4 [FY2025 Q2]: TTML: Low Interest Coverage Ratio of 0.23x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [TTML], F4 [FY2025 Q1]: TTML: Low Interest Coverage Ratio of 0.24x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [TECHNOE], Analyzing TECHNOE
+[2026-02-21 12:14:33], [DEBUG], [TECHNOE], No flags detected for TECHNOE
+[2026-02-21 12:14:33], [INFO], [TEJASNET], Analyzing TEJASNET
+[2026-02-21 12:14:33], [DEBUG], [TEJASNET], No flags detected for TEJASNET
+[2026-02-21 12:14:33], [INFO], [RAMCOCEM], Analyzing RAMCOCEM
+[2026-02-21 12:14:33], [INFO], [RAMCOCEM], F4 [FY2025 Q3]: RAMCOCEM: Low Interest Coverage Ratio of 1.79x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [RAMCOCEM], F4 [FY2025 Q2]: RAMCOCEM: Low Interest Coverage Ratio of 1.35x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [RAMCOCEM], F5 [FY2025 Q2]: RAMCOCEM: Net Profit collapsed by 57.4% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:33], [INFO], [RAMCOCEM], F4 [FY2025 Q1]: RAMCOCEM: Low Interest Coverage Ratio of 1.42x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [RAMCOCEM], F5 [FY2025 Q1]: RAMCOCEM: Net Profit collapsed by 50.8% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:33], [INFO], [THERMAX], Analyzing THERMAX
+[2026-02-21 12:14:33], [DEBUG], [THERMAX], No flags detected for THERMAX
+[2026-02-21 12:14:33], [INFO], [TIMKEN], Analyzing TIMKEN
+[2026-02-21 12:14:33], [DEBUG], [TIMKEN], No flags detected for TIMKEN
+[2026-02-21 12:14:33], [INFO], [TITAGARH], Analyzing TITAGARH
+[2026-02-21 12:14:33], [DEBUG], [TITAGARH], No flags detected for TITAGARH
+[2026-02-21 12:14:33], [INFO], [TORNTPHARM], Analyzing TORNTPHARM
+[2026-02-21 12:14:33], [DEBUG], [TORNTPHARM], No flags detected for TORNTPHARM
+[2026-02-21 12:14:33], [INFO], [TORNTPOWER], Analyzing TORNTPOWER
+[2026-02-21 12:14:33], [DEBUG], [TORNTPOWER], No flags detected for TORNTPOWER
+[2026-02-21 12:14:33], [INFO], [TARIL], Analyzing TARIL
+[2026-02-21 12:14:33], [DEBUG], [TARIL], No flags detected for TARIL
+[2026-02-21 12:14:33], [INFO], [TRENT], Analyzing TRENT
+[2026-02-21 12:14:33], [DEBUG], [TRENT], No flags detected for TRENT
+[2026-02-21 12:14:33], [INFO], [TRIDENT], Analyzing TRIDENT
+[2026-02-21 12:14:33], [DEBUG], [TRIDENT], No flags detected for TRIDENT
+[2026-02-21 12:14:33], [INFO], [TRIVENI], Analyzing TRIVENI
+[2026-02-21 12:14:33], [INFO], [TRIVENI], F4 [FY2025 Q3]: TRIVENI: Low Interest Coverage Ratio of 2.29x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [TRIVENI], F5 [FY2025 Q3]: TRIVENI: Net Profit collapsed by 78.2% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:33], [INFO], [TRIVENI], F4 [FY2025 Q2]: TRIVENI: Low Interest Coverage Ratio of 1.27x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [TRIVENI], F5 [FY2025 Q2]: TRIVENI: Net Profit collapsed by 91.1% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:33], [INFO], [TRIVENI], F5 [FY2025 Q1]: TRIVENI: Net Profit collapsed by 54.2% from FY2024 Q1 to FY2025 Q1.
+[2026-02-21 12:14:33], [INFO], [TRITURBINE], Analyzing TRITURBINE
+[2026-02-21 12:14:33], [DEBUG], [TRITURBINE], No flags detected for TRITURBINE
+[2026-02-21 12:14:33], [INFO], [TIINDIA], Analyzing TIINDIA
+[2026-02-21 12:14:33], [DEBUG], [TIINDIA], No flags detected for TIINDIA
+[2026-02-21 12:14:33], [INFO], [UCOBANK], Analyzing UCOBANK
+[2026-02-21 12:14:33], [INFO], [UCOBANK], F4 [FY2025 Q3]: UCOBANK: Low Interest Coverage Ratio of 1.25x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [UCOBANK], F4 [FY2025 Q2]: UCOBANK: Low Interest Coverage Ratio of 1.24x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [UCOBANK], F4 [FY2025 Q1]: UCOBANK: Low Interest Coverage Ratio of 1.23x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [UNOMINDA], Analyzing UNOMINDA
+[2026-02-21 12:14:33], [DEBUG], [UNOMINDA], No flags detected for UNOMINDA
+[2026-02-21 12:14:33], [INFO], [UPL], Analyzing UPL
+[2026-02-21 12:14:33], [INFO], [UPL], F4 [FY2025 Q3]: UPL: Low Interest Coverage Ratio of 0.96x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [UPL], F5 [FY2025 Q3]: UPL: Net Profit collapsed by 121.3% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:33], [INFO], [UPL], F4 [FY2025 Q2]: UPL: Low Interest Coverage Ratio of 0.63x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [UPL], F5 [FY2025 Q2]: UPL: Net Profit collapsed by 194.8% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:33], [INFO], [UPL], F4 [FY2025 Q1]: UPL: Low Interest Coverage Ratio of 0.64x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [UTIAMC], Analyzing UTIAMC
+[2026-02-21 12:14:33], [DEBUG], [UTIAMC], No flags detected for UTIAMC
+[2026-02-21 12:14:33], [INFO], [UNIONBANK], Analyzing UNIONBANK
+[2026-02-21 12:14:33], [INFO], [UNIONBANK], F4 [FY2025 Q3]: UNIONBANK: Low Interest Coverage Ratio of 1.33x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [UNIONBANK], F4 [FY2025 Q2]: UNIONBANK: Low Interest Coverage Ratio of 1.33x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [UNIONBANK], F4 [FY2025 Q1]: UNIONBANK: Low Interest Coverage Ratio of 1.30x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [UBL], Analyzing UBL
+[2026-02-21 12:14:33], [DEBUG], [UBL], No flags detected for UBL
+[2026-02-21 12:14:33], [INFO], [UNITDSPR], Analyzing UNITDSPR
+[2026-02-21 12:14:33], [DEBUG], [UNITDSPR], No flags detected for UNITDSPR
+[2026-02-21 12:14:33], [INFO], [USHAMART], Analyzing USHAMART
+[2026-02-21 12:14:33], [DEBUG], [USHAMART], No flags detected for USHAMART
+[2026-02-21 12:14:33], [INFO], [VGUARD], Analyzing VGUARD
+[2026-02-21 12:14:33], [DEBUG], [VGUARD], No flags detected for VGUARD
+[2026-02-21 12:14:33], [INFO], [DBREALTY], Analyzing DBREALTY
+[2026-02-21 12:14:33], [INFO], [DBREALTY], F4 [FY2025 Q3]: DBREALTY: Low Interest Coverage Ratio of -2.02x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [DBREALTY], F5 [FY2025 Q3]: DBREALTY: Net Profit collapsed by 108.8% from FY2024 Q3 to FY2025 Q3.
+[2026-02-21 12:14:33], [INFO], [DBREALTY], F4 [FY2025 Q2]: DBREALTY: Low Interest Coverage Ratio of -3.82x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [DBREALTY], F5 [FY2025 Q2]: DBREALTY: Net Profit collapsed by 114.3% from FY2024 Q2 to FY2025 Q2.
+[2026-02-21 12:14:33], [INFO], [DBREALTY], F4 [FY2025 Q1]: DBREALTY: Low Interest Coverage Ratio of 0.47x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [VTL], Analyzing VTL
+[2026-02-21 12:14:33], [DEBUG], [VTL], No flags detected for VTL
+[2026-02-21 12:14:33], [INFO], [VBL], Analyzing VBL
+[2026-02-21 12:14:33], [DEBUG], [VBL], No flags detected for VBL
+[2026-02-21 12:14:33], [INFO], [MANYAVAR], Analyzing MANYAVAR
+[2026-02-21 12:14:33], [DEBUG], [MANYAVAR], No flags detected for MANYAVAR
+[2026-02-21 12:14:33], [INFO], [VEDL], Analyzing VEDL
+[2026-02-21 12:14:33], [DEBUG], [VEDL], No flags detected for VEDL
+[2026-02-21 12:14:33], [INFO], [VENTIVE], Analyzing VENTIVE
+[2026-02-21 12:14:33], [DEBUG], [VENTIVE], No flags detected for VENTIVE
+[2026-02-21 12:14:33], [INFO], [VIJAYA], Analyzing VIJAYA
+[2026-02-21 12:14:33], [DEBUG], [VIJAYA], No flags detected for VIJAYA
+[2026-02-21 12:14:33], [INFO], [VMM], Analyzing VMM
+[2026-02-21 12:14:33], [DEBUG], [VMM], No flags detected for VMM
+[2026-02-21 12:14:33], [INFO], [IDEA], Analyzing IDEA
+[2026-02-21 12:14:33], [INFO], [IDEA], F4 [FY2025 Q3]: IDEA: Low Interest Coverage Ratio of -0.12x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [IDEA], F4 [FY2025 Q2]: IDEA: Low Interest Coverage Ratio of -0.12x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [IDEA], F4 [FY2025 Q1]: IDEA: Low Interest Coverage Ratio of -0.16x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [VOLTAS], Analyzing VOLTAS
+[2026-02-21 12:14:33], [DEBUG], [VOLTAS], No flags detected for VOLTAS
+[2026-02-21 12:14:33], [INFO], [WAAREEENER], Analyzing WAAREEENER
+[2026-02-21 12:14:33], [DEBUG], [WAAREEENER], No flags detected for WAAREEENER
+[2026-02-21 12:14:33], [INFO], [WELCORP], Analyzing WELCORP
+[2026-02-21 12:14:33], [DEBUG], [WELCORP], No flags detected for WELCORP
+[2026-02-21 12:14:33], [INFO], [WELSPUNLIV], Analyzing WELSPUNLIV
+[2026-02-21 12:14:33], [DEBUG], [WELSPUNLIV], No flags detected for WELSPUNLIV
+[2026-02-21 12:14:33], [INFO], [WHIRLPOOL], Analyzing WHIRLPOOL
+[2026-02-21 12:14:33], [DEBUG], [WHIRLPOOL], No flags detected for WHIRLPOOL
+[2026-02-21 12:14:33], [INFO], [WOCKPHARMA], Analyzing WOCKPHARMA
+[2026-02-21 12:14:33], [INFO], [WOCKPHARMA], F4 [FY2025 Q3]: WOCKPHARMA: Low Interest Coverage Ratio of 1.03x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [WOCKPHARMA], F4 [FY2025 Q2]: WOCKPHARMA: Low Interest Coverage Ratio of 0.90x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [WOCKPHARMA], F4 [FY2025 Q1]: WOCKPHARMA: Low Interest Coverage Ratio of 0.92x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [YESBANK], Analyzing YESBANK
+[2026-02-21 12:14:33], [INFO], [YESBANK], F4 [FY2025 Q3]: YESBANK: Low Interest Coverage Ratio of 1.13x in FY2025 Q3 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [YESBANK], F4 [FY2025 Q2]: YESBANK: Low Interest Coverage Ratio of 1.13x in FY2025 Q2 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [YESBANK], F4 [FY2025 Q1]: YESBANK: Low Interest Coverage Ratio of 1.13x in FY2025 Q1 (Threshold: 2.5x).
+[2026-02-21 12:14:33], [INFO], [ZFCVINDIA], Analyzing ZFCVINDIA
+[2026-02-21 12:14:33], [DEBUG], [ZFCVINDIA], No flags detected for ZFCVINDIA
+[2026-02-21 12:14:33], [INFO], [ZEEL], Analyzing ZEEL
+[2026-02-21 12:14:33], [DEBUG], [ZEEL], No flags detected for ZEEL
+[2026-02-21 12:14:33], [INFO], [ZENTEC], Analyzing ZENTEC
+[2026-02-21 12:14:33], [DEBUG], [ZENTEC], No flags detected for ZENTEC
+[2026-02-21 12:14:33], [INFO], [ZENSARTECH], Analyzing ZENSARTECH
+[2026-02-21 12:14:33], [DEBUG], [ZENSARTECH], No flags detected for ZENSARTECH
+[2026-02-21 12:14:33], [INFO], [ZYDUSLIFE], Analyzing ZYDUSLIFE
+[2026-02-21 12:14:33], [DEBUG], [ZYDUSLIFE], No flags detected for ZYDUSLIFE
+[2026-02-21 12:14:33], [INFO], [20MICRONS], Analyzing 20MICRONS
+[2026-02-21 12:14:33], [DEBUG], [20MICRONS], No flags detected for 20MICRONS
+[2026-02-21 12:14:33], [INFO], [ENGINE], ============================================================
+[2026-02-21 12:14:33], [INFO], [ENGINE], Finished. Total flags detected: 687
+[2026-02-21 12:14:33], [INFO], [ENGINE], ============================================================

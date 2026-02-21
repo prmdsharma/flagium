@@ -179,3 +179,24 @@ def trigger_full_ingestion(background_tasks: BackgroundTasks, current_user: dict
     background_tasks.add_task(ingest_all)
     
     return {"message": "Full ingestion job triggered in background"}
+
+from fastapi.responses import FileResponse
+import os
+
+@router.get("/docs/{filename}")
+def get_admin_document(filename: str, current_user: dict = Depends(get_current_user)):
+    # RBAC: Only admin can access technical docs
+    if current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Admin privileges required")
+
+    # Prevent directory traversal
+    safe_filename = os.path.basename(filename)
+    docs_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs")
+    file_path = os.path.join(docs_dir, safe_filename)
+
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Document not found")
+        
+    media_type = "text/html" if safe_filename.endswith(".html") else "text/markdown"
+
+    return FileResponse(file_path, media_type=media_type)

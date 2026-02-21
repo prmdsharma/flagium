@@ -63,8 +63,4 @@ def ping():
         "message": "Flagium API is live"
     }
 
-# Serve Technical Documentation (Redundant mounts)
-docs_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs")
-if os.path.exists(docs_path):
-    app.mount("/api/docs", StaticFiles(directory=docs_path, html=True), name="docs_prefix")
-    app.mount("/docs", StaticFiles(directory=docs_path, html=True), name="docs_root")
+

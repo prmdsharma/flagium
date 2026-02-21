@@ -47,36 +47,36 @@ export default function Companies() {
                 <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/20 dark:shadow-none flex flex-col items-center justify-center relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent z-0"></div>
                     <span className="text-xs font-black text-slate-400 uppercase tracking-widest relative z-10 mb-2">Total Monitored</span>
-                    <span className="text-6xl font-black text-slate-900 dark:text-white tracking-tight relative z-10">{data.companies.length}</span>
+                    <span className="text-5xl font-black text-slate-900 dark:text-white tracking-tight relative z-10">{data.companies.length}</span>
                 </div>
 
                 <div className="bg-gradient-to-b from-red-50 to-white dark:from-red-900/10 dark:to-slate-900 p-8 rounded-[2rem] border border-red-100 dark:border-red-900/20 shadow-xl shadow-red-500/5 dark:shadow-none flex flex-col items-center justify-center relative overflow-hidden">
                     <span className="text-[10px] font-black text-red-500 dark:text-red-400 uppercase tracking-widest relative z-10 mb-2 flex items-center gap-1.5 bg-red-100 dark:bg-red-900/30 px-3 py-1 rounded-full">
                         High Risk Entities
                     </span>
-                    <span className="text-6xl font-black text-red-600 dark:text-red-400 tracking-tight relative z-10">{flaggedCount}</span>
+                    <span className="text-5xl font-black text-red-600 dark:text-red-400 tracking-tight relative z-10">{flaggedCount}</span>
                 </div>
 
                 <div className="bg-gradient-to-b from-emerald-50 to-white dark:from-emerald-900/10 dark:to-slate-900 p-8 rounded-[2rem] border border-emerald-100 dark:border-emerald-900/20 shadow-xl shadow-emerald-500/5 dark:shadow-none flex flex-col items-center justify-center relative overflow-hidden">
                     <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest relative z-10 mb-2 flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full">
                         Clean Entities
                     </span>
-                    <span className="text-6xl font-black text-emerald-500 tracking-tight relative z-10">{cleanCount}</span>
+                    <span className="text-5xl font-black text-emerald-500 tracking-tight relative z-10">{cleanCount}</span>
                 </div>
             </div>
 
             {/* 2. Prominent Search Bar with Dropdown */}
-            <div className={`relative group max-w-3xl mx-auto mt-12 z-50 transition-all duration-300 ${isFocused && search.trim() ? "-translate-y-4 shadow-2xl shadow-blue-500/20" : ""}`} ref={searchContainerRef}>
+            <div className={`relative group w-full mx-auto mt-12 z-50 transition-all duration-300 ${isFocused && search.trim() ? "-translate-y-4 shadow-2xl shadow-blue-500/20" : ""}`} ref={searchContainerRef}>
                 <div className="absolute inset-0 bg-blue-500/5 dark:bg-blue-500/10 rounded-2xl blur-xl transition-all group-focus-within:bg-blue-500/20 duration-500"></div>
                 <div className={`relative bg-white dark:bg-slate-900 border-2 ${isFocused && search.trim() && searchResults.length > 0 ? "rounded-t-2xl border-b-transparent dark:border-b-transparent" : "rounded-2xl"} border-slate-100 dark:border-slate-800 shadow-sm transition-all focus-within:ring-4 focus-within:ring-blue-500/20 focus-within:border-blue-500 flex items-center`}>
                     <div className="pl-6 text-blue-500">
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
                     <input
                         type="text"
-                        className="w-full bg-transparent border-none pl-4 pr-6 py-5 text-lg font-bold outline-none text-slate-900 dark:text-white placeholder:text-slate-400 placeholder:font-medium"
+                        className="w-full bg-transparent border-none pl-5 pr-6 py-6 text-xl font-bold outline-none text-slate-900 dark:text-white placeholder:text-slate-400 placeholder:font-medium"
                         placeholder="Search by ticker symbol or company name..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}

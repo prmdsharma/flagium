@@ -30,6 +30,11 @@ def calculate_risk_score(flags):
             "expl": "Promoters have pledged a significant portion of shares.",
             "threshold": "Pledge > 20%",
         },
+        "Profit Collapse": {
+            "cat": "Earnings Quality", "impact": 5,
+            "expl": "Significant decline in operating profitability.",
+            "threshold": "Profit < 0"
+        },
     }
 
     # 1. Deduplicate flags by flag_code
@@ -41,8 +46,8 @@ def calculate_risk_score(flags):
     unique_flags = list(unique_flag_map.values())
     
     processed_flags = []
-    cat_scores = {"Balance Sheet Stress": 0, "Earnings Quality": 0, "Governance": 0, "Valuation": 0}
-    max_cat_scores = {"Balance Sheet Stress": 25, "Earnings Quality": 20, "Governance": 20, "Valuation": 15}
+    cat_scores = {"Balance Sheet Stress": 0, "Earnings Quality": 0, "Governance": 0, "Valuation": 0, "Operational": 0}
+    max_cat_scores = {"Balance Sheet Stress": 25, "Earnings Quality": 20, "Governance": 20, "Valuation": 15, "Operational": 20}
     
     total_risk_weight = 0
     
@@ -58,7 +63,7 @@ def calculate_risk_score(flags):
         meta = enrichment_map.get(f['flag_name'])
         if not meta:
              meta = {
-                 "cat": "Other Risk", "impact": 10, 
+                 "cat": "Operational", "impact": 4, 
                  "expl": f.get('message', 'Flag triggered based on thresholds.'),
                  "threshold": "Limit Breached"
              }
@@ -84,7 +89,7 @@ def calculate_risk_score(flags):
         if meta['cat'] in cat_scores:
             cat_scores[meta['cat']] += weight
         else:
-            cat_scores["Balance Sheet Stress"] += weight
+            cat_scores["Operational"] += weight
 
     # 0-100 Scale
     risk_score = min(100, total_risk_weight)

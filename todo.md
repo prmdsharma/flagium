@@ -11,3 +11,15 @@
   - [ ] If a flag appears **one time** (e.g., single penalty).
   - [ ] If a flag appears **multiple times** (e.g., escalating penalty).
   - [x] If a flag appeared **in the past** but not recently (e.g., decaying penalty).
+
+## 3. Institutional Risk Model (Advanced Phases)
+To evolve Flagium AI into a serious institutional-grade risk monitoring platform, the following modules are planned:
+
+- [ ] **Debt Maturity Ladder Analysis**: Granular breakdown of short-term vs long-term refinancing risks.
+- [ ] **Advanced Liquidity Ratios**: Integration of Quick Ratio and Current Ratio thresholds.
+- [ ] **Covenant Breach Probability**: Predictive modeling of debt covenant triggers.
+- [ ] **Off-Balance Sheet Exposure**: Tracking contingent liabilities and hidden risks.
+- [ ] **Working Capital Deterioration**: Monitoring inventory/debtor cycles and cash conversion.
+- [ ] **Altman Z-Score Model**: Composite scoring for bankruptcy prediction.
+- [ ] **Sector Normalization**: Adjusting risk weights based on industry-specific averages.
+- [ ] **Macro Sensitivity**: Stress testing against interest rates and inflation shocks.

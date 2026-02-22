@@ -309,7 +309,12 @@ def dashboard(current_user: dict = Depends(get_current_user)):
     company_flags = _query(
         """SELECT c.id, c.ticker, c.name, c.sector,
                   COUNT(f.id) AS flag_count,
-                  SUM(CASE WHEN f.severity = 'HIGH' THEN 3 WHEN f.severity = 'MEDIUM' THEN 2 ELSE 1 END) AS risk_score,
+                  SUM(CASE 
+                      WHEN f.severity = 'HIGH' THEN 3 
+                      WHEN f.severity = 'MEDIUM' THEN 2 
+                      WHEN f.severity IS NOT NULL THEN 1 
+                      ELSE 0 
+                  END) AS risk_score,
                   MAX(f.severity) AS highest_severity,
                   MAX(f.created_at) AS last_triggered,
                   GROUP_CONCAT(DISTINCT f.period_type) AS period_types

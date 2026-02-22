@@ -168,15 +168,6 @@ def run_flags(ticker=None, backfill_quarters=1):
             # For backfill, we iterate through periods
             for year, quarter in target_quarters:
                 
-                # Clear existing flags for this SPECIFIC Company + Year + Quarter
-                query_del = """
-                    DELETE FROM flags 
-                    WHERE company_id = %s 
-                      AND fiscal_year = %s 
-                      AND fiscal_quarter = %s
-                """
-                cursor.execute(query_del, (cid, year, quarter))
-
                 company_flags = 0
                 
                 # Run each flag
@@ -235,11 +226,16 @@ def run_flags(ticker=None, backfill_quarters=1):
 
 
 def save_flag(cursor, company_id, result):
-    """Insert flag into database."""
+    """Insert or Update flag into database (Idempotent)."""
     query = """
         INSERT INTO flags 
         (company_id, flag_code, flag_name, severity, period_type, fiscal_year, fiscal_quarter, message, details)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            severity = VALUES(severity),
+            message = VALUES(message),
+            details = VALUES(details),
+            created_at = CURRENT_TIMESTAMP
     """
     cursor.execute(query, (
         company_id,
@@ -247,7 +243,7 @@ def save_flag(cursor, company_id, result):
         result["flag_name"],
         result["severity"],
         result.get("period_type", "annual"),
-        result.get("fiscal_year"),
+        result.get("fiscal_year", 0),
         result.get("fiscal_quarter", 0),
         result["message"],
         json.dumps(result["details"])

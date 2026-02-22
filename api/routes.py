@@ -182,26 +182,45 @@ def get_company(ticker: str, current_user: dict = Depends(get_current_user)):
 # ──────────────────────────────────────────────
 
 @router.get("/flags", tags=["Flags"])
-def list_flags(severity: str = None, current_user: dict = Depends(get_current_user)):
-    """List all active flags, optionally filtered by severity."""
+def list_flags(severity: str = None, user_only: bool = True, current_user: dict = Depends(get_current_user)):
+    """List all active flags, optionally filtered by severity or user's portfolio."""
+    
+    where_clauses = []
+    params = []
+    
     if severity:
-        rows = _query(
-            """SELECT f.*, fd.category, fd.impact_weight, c.ticker, c.name AS company_name
-               FROM flags f 
-               JOIN companies c ON f.company_id = c.id
-               LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code
-               WHERE f.severity = %s
-               ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC, f.period_type, c.ticker, f.flag_code""",
-            (severity.upper(),),
-        )
-    else:
-        rows = _query(
-            """SELECT f.*, fd.category, fd.impact_weight, c.ticker, c.name AS company_name
-               FROM flags f 
-               JOIN companies c ON f.company_id = c.id
-               LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code
-               ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC, f.period_type, f.severity DESC, c.ticker, f.flag_code"""
-        )
+        where_clauses.append("f.severity = %s")
+        params.append(severity.upper())
+    
+    if user_only:
+        # Join with portfolios and portfolio_items to filter by user's stocks
+        where_clauses.append("""
+            f.company_id IN (
+                SELECT pi.company_id 
+                FROM portfolio_items pi
+                JOIN portfolios p ON pi.portfolio_id = p.id
+                WHERE p.user_id = %s
+            )
+        """)
+        params.append(current_user["id"])
+    
+    where_sql = ""
+    if where_clauses:
+        where_sql = "WHERE " + " AND ".join(where_clauses)
+    
+    query = f"""
+        SELECT f.*, fd.category, fd.impact_weight, c.ticker, c.name AS company_name
+        FROM flags f 
+        JOIN companies c ON f.company_id = c.id
+        LEFT JOIN flag_definitions fd ON f.flag_code = fd.flag_code
+        {where_sql}
+        ORDER BY f.fiscal_year DESC, f.fiscal_quarter DESC, f.period_type, f.severity DESC, c.ticker, f.flag_code
+    """
+    
+    # print(f"QUERY: {query}")
+    # print(f"PARAMS: {params}")
+    
+    rows = _query(query, tuple(params) if params else None)
 
     for r in rows:
         if isinstance(r["details"], str):

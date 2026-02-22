@@ -30,53 +30,36 @@ export default function GlobalHeader() {
         }
     }, [user]);
 
-    // Mock Notifications (Replace with API/Context later)
+    // Real Notifications
     useEffect(() => {
         if (!user) return;
 
-        const mockNotifications = [
-            {
-                id: 1,
-                title: "Critical Risk Alert",
-                message: "TATASTEEL crossed 'Default Probability' threshold.",
-                timeAgo: "2 hours ago",
-                severity: "CRITICAL",
-                read: false,
-                link: "/company/TATASTEEL",
-                company: "TATASTEEL"
-            },
-            {
-                id: 2,
-                title: "New Deterioration",
-                message: "RELIANCE showing early signs of 'Governance' flag.",
-                timeAgo: "5 hours ago",
-                severity: "HIGH",
-                read: false,
-                link: "/company/RELIANCE",
-                company: "RELIANCE"
-            },
-            {
-                id: 3,
-                title: "Portfolio Update",
-                message: "Your 'High Growth Tech' portfolio risk score increased by +1.2.",
-                timeAgo: "1 day ago",
-                severity: "MEDIUM",
-                read: true,
-                link: "/portfolio",
-                company: null
-            }
-        ];
+        import("../api").then(({ api }) => {
+            api.getFlags({ user_only: true })
+                .then(data => {
+                    const realNotifications = data.flags.map(f => ({
+                        id: `${f.ticker}-${f.flag_code}-${f.fiscal_year}-${f.fiscal_quarter}`,
+                        title: f.severity === 'HIGH' ? "High Risk Alert" : "Risk Signal",
+                        message: f.message,
+                        timeAgo: f.created_at ? new Date(f.created_at).toLocaleDateString() : "Recently",
+                        severity: f.severity,
+                        read: false,
+                        link: `/company/${f.ticker}`,
+                        company: f.ticker
+                    }));
 
-        // Load read state from localStorage
-        const readIds = JSON.parse(localStorage.getItem("flagium_read_notifications") || "[]");
-        const updatedNotifs = mockNotifications.map(n => ({
-            ...n,
-            read: n.read || readIds.includes(n.id)
-        }));
+                    // Load read state from localStorage
+                    const readIds = JSON.parse(localStorage.getItem("flagium_read_notifications") || "[]");
+                    const updatedNotifs = realNotifications.map(n => ({
+                        ...n,
+                        read: readIds.includes(n.id)
+                    }));
 
-        setNotifications(updatedNotifs);
-        setUnreadCount(updatedNotifs.filter(n => !n.read).length);
-
+                    setNotifications(updatedNotifs);
+                    setUnreadCount(updatedNotifs.filter(n => !n.read).length);
+                })
+                .catch(console.error);
+        });
     }, [user]);
 
     const handleMarkAllRead = () => {

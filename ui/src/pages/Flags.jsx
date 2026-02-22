@@ -9,7 +9,9 @@ export default function Flags() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        api.getFlags(filter).then(setData).finally(() => setLoading(false));
+        api.getFlags({ severity: filter, user_only: true })
+            .then(setData)
+            .finally(() => setLoading(false));
     }, [filter]);
 
     if (loading) return <div className="loading"><div className="spinner" /> Loading flags…</div>;
@@ -17,10 +19,10 @@ export default function Flags() {
 
     return (
         <>
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
                 <div>
                     <h1 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tight mb-1">Red Flags</h1>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{data.count} active signals across constituency</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{data.count} active signals in your portfolio</p>
                 </div>
 
                 {/* Severity Filter */}

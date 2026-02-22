@@ -63,7 +63,13 @@ export const api = {
   getDashboard: () => fetchJSON("/dashboard"),
   getCompanies: () => fetchJSON("/companies"),
   getCompany: (ticker) => fetchJSON(`/companies/${ticker}`),
-  getFlags: (severity) => fetchJSON(`/flags${severity ? `?severity=${severity}` : ""}`),
+  getFlags: (options = {}) => {
+    const params = new URLSearchParams();
+    if (options.severity) params.append("severity", options.severity);
+    if (options.user_only) params.append("user_only", "true");
+    const query = params.toString();
+    return fetchJSON(`/flags${query ? `?${query}` : ""}`);
+  },
   getFlagsForCompany: (ticker) => fetchJSON(`/flags/${ticker}`),
 
   // Portfolios

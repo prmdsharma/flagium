@@ -89,6 +89,8 @@ export default function GlobalHeader() {
         { name: "Market Risk Monitor (Beta)", path: "/market-monitor", type: "link" },
         { name: "Companies", path: "/companies", type: "link" },
         { name: "Flag Library", path: "/flags", type: "link" },
+        { name: "Methodology", path: "/methodology", type: "link" },
+        { name: "About", path: "/about", type: "link" },
     ];
 
     if (user?.role === 'admin') {

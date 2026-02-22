@@ -89,17 +89,18 @@ XBRL_TAG_MAP = {
         "MiscellaneousIncome",
     ],
     "net_profit": [
-        "ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates", # Banking headliner
-        "ProfitOrLossAttributableToOwnersOfParent", # Standard headliner (Consolidated)
-        "ProfitLossAttributableToOwnersOfParent", # Standard variant
-        "ProfitLossForPeriod",   # Standard headliner (Standalone)
+        "ProfitLossForPeriod",   # Standard total profit
         "ProfitLossAfterTax",
         "NetProfitLossAfterTax",
+        "ProfitLossAfterTaxesMinorityInterestAndShareOfProfitLossOfAssociates",
+        "ProfitLossForThePeriod",
+        "ProfitLoss",
         "ProfitAfterTax",
         "NetProfitAfterTaxes",
-        "ProfitLoss",
-        "ProfitLossForThePeriod",
         "ProfitLossFromOrdinaryActivitiesAfterTax",
+        # Lower priority: Attributable to Owners (Shareholder specific)
+        "ProfitOrLossAttributableToOwnersOfParent", 
+        "ProfitLossAttributableToOwnersOfParent",
     ],
     "profit_before_tax": [
         "ProfitLossBeforeTax",
